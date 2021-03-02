@@ -1,0 +1,17 @@
+# Module configuration
+module.tx_qbank_user_qbankmedia {
+    view {
+        templateRootPaths {
+            0 = EXT:qbank/Resources/Private/Backend/Templates/
+            1 = {$module.tx_qbank_media.view.templateRootPath}
+        }
+        partialRootPaths {
+            0 = EXT:qbank/Resources/Private/Backend/Partials/
+            1 = {$module.tx_qbank_media.view.partialRootPath}
+        }
+        layoutRootPaths {
+            0 = EXT:qbank/Resources/Private/Backend/Layouts/
+            1 = {$module.tx_qbank_media.view.layoutRootPath}
+        }
+    }
+}
