@@ -22,6 +22,7 @@ $EM_CONF[$_EXTKEY] = [
     'autoload' => [
         'classmap' => [
             'Pixelant\\Qbank\\' => 'Classes',
+            'QBNK\\QBank\\API\\' => 'Contrib/qbnk/qbank3api-phpwrapper',
         ],
     ],
 ];

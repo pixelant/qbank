@@ -1,0 +1,32 @@
+body, html, #wrapper {
+    height: 100%;
+}
+#wrapper {
+    padding-bottom: 5px;
+}
+#overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.7);
+    z-index:2;
+}
+#overlay span.icon {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    display: block;
+    font-size: 1.4em;
+    color: #FF8700;
+    padding: 1.5em;
+}
+#nprogress .spinner {
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+}

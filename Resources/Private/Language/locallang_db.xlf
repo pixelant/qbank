@@ -4,7 +4,13 @@
 		<header/>
 		<body>
 			<trans-unit id="tx_qbank_domain_model_qbankmedia" resname="tx_qbank_domain_model_qbankmedia">
-				<source>Qbank Media</source>
+				<source>QBank Media</source>
+			</trans-unit>
+			<trans-unit id="tx_qbank_media.template_settings">
+				<source>Template Settings</source>
+			</trans-unit>
+			<trans-unit id="tx_qbank_media.general_settings">
+				<source>QBank Settings</source>
 			</trans-unit>
 		</body>
 	</file>

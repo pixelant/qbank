@@ -1,5 +1,5 @@
 # Module configuration
-module.tx_qbank_user_qbankmedia {
+module.tx_qbank_file_qbankmedia {
     view {
         templateRootPaths {
             0 = EXT:qbank/Resources/Private/Backend/Templates/
@@ -13,5 +13,8 @@ module.tx_qbank_user_qbankmedia {
             0 = EXT:qbank/Resources/Private/Backend/Layouts/
             1 = {$module.tx_qbank_media.view.layoutRootPath}
         }
+    }
+    settings {
+        targetFolderIdentifier = {$module.tx_qbank_media.settings.targetFolderIdentifier}
     }
 }
