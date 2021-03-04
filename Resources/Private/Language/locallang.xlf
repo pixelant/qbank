@@ -6,6 +6,21 @@
 			<trans-unit id="tx_qbank_domain_model_qbankmedia" resname="tx_qbank_domain_model_qbankmedia">
 				<source>Qbank Media</source>
 			</trans-unit>
+			<trans-unit id="ImportQbankMedia">
+				<source>Use media from QBank</source>
+			</trans-unit>
+			<trans-unit id="button.add_media">
+				<source>Use media from QBank</source>
+			</trans-unit>
+			<trans-unit id="button.submit">
+				<source>Submit</source>
+			</trans-unit>
+			<trans-unit id="button.cancel">
+				<source>Cancel</source>
+			</trans-unit>
+			<trans-unit id="button.search">
+				<source>Search</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

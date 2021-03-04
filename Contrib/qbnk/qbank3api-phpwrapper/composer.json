@@ -1,0 +1,36 @@
+{
+  "name": "qbnk/qbank3api-phpwrapper",
+  "description": "A PHP-Wrapper for QBank 3's API. Provides a simple way to communicate with QBank 3 from PHP.",
+  "keywords": [
+    "qbank",
+    "api"
+  ],
+  "authors": [
+    {
+      "name": "QBNK Dev-team",
+      "email": "support@qbank.se",
+      "homepage": "http://qbank.se"
+    }
+  ],
+  "support": {
+    "email": "support@qbank.se"
+  },
+  "require": {
+    "php": ">=5.5",
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "^6.5",
+    "sainsburys/guzzle-oauth2-plugin": "~3.0",
+    "doctrine/cache": "~1.8",
+    "psr/log": "~1.0"
+  },
+  "prefer-stable": true,
+  "suggest": {
+    "monolog/monolog": "Great logging alternative."
+  },
+  "autoload": {
+    "psr-4": {
+      "QBNK\\QBank\\API\\": "."
+    }
+  },
+  "license": "MIT"
+}

@@ -8,7 +8,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Pixelant\\Qbank\\": "Classes"
+            "Pixelant\\Qbank\\": "Classes",
+            "QBNK\\QBank\\API\\": "Contrib/qbnk/qbank3api-phpwrapper"
         }
     },
     "autoload-dev": {
