@@ -8,6 +8,7 @@ namespace Pixelant\Qbank\FormEngine\Container;
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Utility\QbankUtility;
+use TYPO3\CMS\Backend\Form\Container\InlineControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
@@ -16,7 +17,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 /**
  * Inserts the "Add from QBank" button into file and media fields in the
  */
-class QbankSelectorButtonContainer extends \TYPO3\CMS\Backend\Form\Container\InlineControlContainer
+class QbankSelectorButtonContainer extends InlineControlContainer
 {
     /**
      * @param array $inlineConfiguration
