@@ -8,6 +8,7 @@ namespace Pixelant\Qbank\FormEngine\Container;
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Utility\QbankUtility;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -50,7 +51,7 @@ class QbankSelectorButtonContainer extends \TYPO3\CMS\Backend\Form\Container\Inl
             return '';
         }
 
-        $allowed = $groupFieldConfiguration['allowed'];
+        $allowed = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['allowed'];
         $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
             $this->data['inlineFirstPid']
         );
@@ -60,8 +61,8 @@ class QbankSelectorButtonContainer extends \TYPO3\CMS\Backend\Form\Container\Inl
         $buttonLabel = htmlspecialchars(LocalizationUtility::translate('selector-button-control.label', 'qbank'));
         $titleText = htmlspecialchars(LocalizationUtility::translate('selector-button-control.title', 'qbank'));
 
-        $button =
-            '<button type="button" class="btn btn-default t3js-qbank-view-btn qbank' . $this->inlineData['config'][$objectName]['md5'] . '"
+        $button = '
+            <button type="button" class="btn btn-default t3js-qbank-view-btn qbank' . $this->inlineData['config'][$objectName]['md5'] . '"
                 data-title="' . htmlspecialchars($titleText) . '"
                 data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
