@@ -12,3 +12,6 @@ hostUrl =
 
 # cat=basic/enable/5; type=string; label=Qbank GUI base URL (with):
 guiBaseUrl =
+
+# cat=basic/enable/6; type=string; label=Target folder for downloaded files:
+downloadFolder = 1:user_upload/qbank

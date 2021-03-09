@@ -52,6 +52,13 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected string $hostUrl;
 
     /**
+     * Local target folder, for example "1:user_upload/qbank"
+     *
+     * @var string
+     */
+    protected string $downloadFolder;
+
+    /**
      * Base URL for QBank GUI
      *
      * @var string
@@ -67,6 +74,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         $this->password = getenv('APP_QBANK_PASSWORD') ?? $configuration['password'];
         $this->hostUrl = getenv('APP_QBANK_HOSTURL') ?? $configuration['hostUrl'];
         $this->guiBaseUrl = getenv('APP_QBANK_GUIBASEURL') ?? $configuration['guiBaseUrl'];
+        $this->guiBaseUrl = getenv('APP_QBANK_DOWNLOADFOLDER') ?? $configuration['downloadFolder'];
     }
 
     /**
@@ -147,5 +155,21 @@ class ExtensionConfigurationManager implements SingletonInterface
     public function setGuiBaseUrl(string $guiBaseUrl)
     {
         $this->guiBaseUrl = $guiBaseUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalTarget(): string
+    {
+        return $this->localTarget;
+    }
+
+    /**
+     * @param string $localTarget
+     */
+    public function setLocalTarget(string $localTarget)
+    {
+        $this->localTarget = $localTarget;
     }
 }
