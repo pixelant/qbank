@@ -11,6 +11,13 @@ $rendererRegistry->registerRendererClass(
     \Pixelant\Qbank\Rendering\QbankRenderer::class
 );
 
+// Register inlineController override to add the QBank button
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1433198160] = [
+    'nodeName' => 'inline',
+    'priority' => 50,
+    'class' => \Pixelant\Qbank\CustomControls\QbankCustomControl::class,
+];
+
 // Register an custom mime-type for QBank videos
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['FileInfo']['fileExtensionToMimeType']['qbank'] = 'video/qbank';
 

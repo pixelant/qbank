@@ -6,12 +6,15 @@
 			<trans-unit id="tx_qbank_domain_model_qbankmedia" resname="tx_qbank_domain_model_qbankmedia">
 				<source>Qbank Media</source>
 			</trans-unit>
-			<trans-unit id="ImportQbankMedia">
-				<source>Use media from QBank</source>
-			</trans-unit>
-			<trans-unit id="button.add_media">
-				<source>Use media from QBank</source>
-			</trans-unit>
+			<trans-unit id="qbank_view.button">
+                <source>Use media from QBank</source>
+            </trans-unit>
+            <trans-unit id="qbank_view.header">
+                <source>Use media from QBank</source>
+            </trans-unit>
+			<trans-unit id="qbank_view.error-no-storage-access">
+                <source>Please make sure you have access to the QBank file mount. This is needed to use the QBank file picker</source>
+            </trans-unit>
 			<trans-unit id="button.submit">
 				<source>Submit</source>
 			</trans-unit>

@@ -4,12 +4,14 @@
     "description": "",
     "authors": [],
     "require": {
-        "typo3/cms-core": "^10.4"
+        "typo3/cms-core": "^10.4",
+        "typo3/cms-filemetadata": "^10.4",
+        "qbnk/qbank3api-phpwrapper": "^1.0",
+        "qbnk/guzzle5-oauth2-subscriber": "^0.1"
     },
     "autoload": {
         "psr-4": {
-            "Pixelant\\Qbank\\": "Classes",
-            "QBNK\\QBank\\API\\": "Contrib/qbnk/qbank3api-phpwrapper"
+            "Pixelant\\Qbank\\": "Classes"
         }
     },
     "autoload-dev": {

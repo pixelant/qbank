@@ -2,7 +2,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Qbank',
-    'description' => 'Connects QBank version 3 to TYPO3',
+    'description' => 'Connects QBank version 1 to TYPO3',
     'category' => 'plugin',
     'author' => '',
     'author_email' => '',
@@ -21,8 +21,7 @@ $EM_CONF[$_EXTKEY] = [
     ],
     'autoload' => [
         'classmap' => [
-            'Pixelant\\Qbank\\' => 'Classes',
-            'QBNK\\QBank\\API\\' => 'Contrib/qbnk/qbank3api-phpwrapper',
+            'Pixelant\\Qbank\\' => 'Classes'
         ],
     ],
 ];

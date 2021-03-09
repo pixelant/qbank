@@ -5,106 +5,83 @@ namespace Pixelant\Qbank\CustomControls;
 use Pixelant\Qbank\Utility\QbankUtility;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Resource\Folder;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
-class QbankCustomControl
+class QbankCustomControl extends \TYPO3\CMS\Backend\Form\Container\InlineControlContainer
 {
-    public function render($parameters, $pObj)
+    /**
+     * @param array $inlineConfiguration
+     * @return string
+     */
+    protected function renderPossibleRecordsSelectorTypeGroupDB(array $inlineConfiguration)
     {
-        $groupFieldConfiguration = $parameters['config']['selectorOrUniqueConfiguration']['config'];
-        if (!is_array($groupFieldConfiguration)) {
-            $groupFieldConfiguration = $parameters['config']['foreign_selector_fieldTcaOverride']['config'];
-        }
-        $maxFileSize = GeneralUtility::getMaxUploadFileSize() * 1024;
-        $allowed = $groupFieldConfiguration['appearance']['elementBrowserAllowed'];
-        $objectPrefix = $parameters['nameObject'] . '-' . $parameters['config']['foreign_table'];
-        $nameObjectParts = GeneralUtility::trimExplode('-', $parameters['nameObject']);
-        $target_folder = QbankUtility::getSettingTargetFolderIdentifier();
+        $selector = parent::renderPossibleRecordsSelectorTypeGroupDB($inlineConfiguration);
+        $button = $this->renderQBankButton($inlineConfiguration);
 
-        $browserParams = $target_folder . '|' . $maxFileSize . '|' . $allowed . '|' . $objectPrefix . '|||';
-        $onClick = 'setFormValueOpenBrowser(' . GeneralUtility::quoteJSvalue('qbankfile') . ', ' . GeneralUtility::quoteJSvalue($browserParams) . '); return false;';
-        $createNewRelationText = QbankUtility::getLabel('ImportQbankMedia', null, true);
-        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class);
+        // Inject button before help-block
+        if (strpos($selector, '</div><div class="help-block">') > 0) {
+            $selector = str_replace('</div><div class="help-block">', $button . '</div><div class="help-block">', $selector);
+        // Try to inject it into the form-control container
+        } elseif (preg_match('/<\/div><\/div>$/i', $selector)) {
+            $selector = preg_replace('/<\/div><\/div>$/i', $button . '</div></div>', $selector);
+        } else {
+            $selector .= $button;
+        }
+
+        return $selector;
+    }
+
+    /**
+     * @param array $inlineConfiguration
+     * @return string
+     */
+    protected function renderQBankButton(array $inlineConfiguration): string
+    {
+        $languageService = $this->getLanguageService();
+        $target_folder = QbankUtility::getSettingTargetFolderIdentifier();
+        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ResourceFactory::class);
         $folder = $resourceFactory->getFolderObjectFromCombinedIdentifier($target_folder);
         if (
             $folder instanceof Folder
             && $folder->getStorage()->checkUserActionPermission('add', 'File')
         ) {
+            $groupFieldConfiguration = $inlineConfiguration['selectorOrUniqueConfiguration']['config'];
+            $foreign_table = $inlineConfiguration['foreign_table'];
+            $allowed = $groupFieldConfiguration['allowed'];
+            $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix($this->data['inlineFirstPid']);
+            $objectPrefix = $currentStructureDomObjectIdPrefix . '-' . $foreign_table;
+            $nameObject = $currentStructureDomObjectIdPrefix;
+
+            // $this->requireJsModules[] = 'TYPO3/CMS/Qbank/Qbank';
+            $buttonText = htmlspecialchars(LocalizationUtility::translate('qbank_view.button', 'qbank'));
+            $titleText = htmlspecialchars(LocalizationUtility::translate('qbank_view.header', 'qbank'));
+            $button = '
+                <button type="button" class="btn btn-default t3js-qbank-view-btn qbankFile' . $this->inlineData['config'][$nameObject]['md5'] . '"
+                    data-qbank-compact-view-url="' . htmlspecialchars($compactViewUrl) . '"
+                    data-target-folder="' . htmlspecialchars($folder->getCombinedIdentifier()) . '"
+                    data-title="' . htmlspecialchars($titleText) . '"
+                    data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
+                    data-file-allowed="' . htmlspecialchars($allowed) . '"
+                    >
+                    ' . $this->iconFactory->getIcon('actions-cloud', Icon::SIZE_SMALL)->render() . '
+                    ' . $buttonText .
+                '</button>';
+
+            return $button;
             $qbankButton .= $this->getAddButton(
                 $objectPrefix,
                 $folder,
                 $onClick
             );
             $qbankButton .= '<div class="form-group">' . $buttons . '</div>';
+        } else {
+            $errorText = htmlspecialchars(LocalizationUtility::translate('qbank_view.error-no-storage-access', 'qbank'));
+
+            return '&nbsp;<div class="alert alert-danger" style="display: inline-block">
+                ' . $this->iconFactory->getIcon('actions-cloud', Icon::SIZE_SMALL)->render() . '
+                ' . $errorText . '
+                </div>';
         }
-
-        return $qbankButton;
-    }
-
-    protected function getButtonClass()
-    {
-        return 'btn btn-default inlineNewQbankRelationButton qbankFile';
-    }
-
-    /**
-     * Returns the HTML markup for the "Add media from XXX" button.
-     * @param string $objectPrefix
-     * @param Folder $folder
-     * @param string $onClick
-     * @return string
-     */
-    protected function getAddButton(string $objectPrefix, Folder $folder, $onClick)
-    {
-        $buttonAttributes = [
-            'data-file-irre-object' => htmlspecialchars($objectPrefix),
-            'data-target-folder' => htmlspecialchars($folder->getCombinedIdentifier()),
-        ];
-        $buttonAttributes = array_merge($buttonAttributes, self::getAddButtonAttributes());
-
-        $additionalAttributes = '';
-        foreach ($buttonAttributes as $property => $value) {
-            $additionalAttributes .= sprintf(' %s="%s" ', $property, $value);
-        }
-
-        return '<button type="button" onclick="' . htmlspecialchars($onClick) . '" class="' . self::getButtonClass() . '"
-                        ' . $additionalAttributes . '
-                    >
-                    ' . self::getAddButtonIcon() . '
-                    ' . LocalizationUtility::translate('button.add_media', 'qbank') .
-                '</button>
-               ';
-    }
-
-    /**
-     * Returns the markup for the icon of the "Add media" button.
-     * @return string
-     */
-    public function getAddButtonIcon(): string
-    {
-        return '<span class="t3js-icon icon icon-size-small icon-state-default icon-actions-online-media-add" data-identifier="actions-shutterstock-media-add">
-                <span class="icon-markup">
-                    <svg class="icon-color" role="img"><use xlink:href="/typo3/sysext/core/Resources/Public/Icons/T3Icons/sprites/actions.svg#actions-cloud" /></svg>
-                </span>
-            </span>';
-    }
-
-    /**
-     * Returns the additional attributes added to the "Add media button", so they can be used in Javascript later.
-     * @return array
-     */
-    public function getAddButtonAttributes(): array
-    {
-        $buttonLabel = LocalizationUtility::translate('button.add_media', 'qbank');
-        $submitButtonLabel = LocalizationUtility::translate('button.submit', 'qbank');
-        $cancelLabel = LocalizationUtility::translate('button.cancel', 'qbank');
-        $placeholderLabel = LocalizationUtility::translate('placeholder.search', 'qbank');
-
-        return [
-            'title' => $buttonLabel,
-            'data-btn-submit' => $submitButtonLabel,
-            'data-placeholder' => $placeholderLabel,
-            'data-btn-cancel' => $cancelLabel,
-        ];
     }
 }
