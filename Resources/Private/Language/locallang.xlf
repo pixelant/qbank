@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="EXT:qbank/Resources/Private/Language/locallang" date="2021-03-01T18:52:08Z" product-name="qbank">
+		<header/>
+		<body>
+			<trans-unit id="selector-button-control.label">
+				<source>Use media from QBank</source>
+			</trans-unit>
+			<trans-unit id="selector-button-control.title">
+				<source>Use media from QBank</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
