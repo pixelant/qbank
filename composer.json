@@ -2,8 +2,18 @@
 	"name": "pixelant/qbank",
 	"type": "typo3-cms-extension",
 	"description": "",
-	"authors": [],
+	"license": ["GPL-2.0-or-later"],
+	"keywords": ["typo3", "qbank"],
+	"authors": [
+		{
+			"name": "Pixelant",
+			"email": "info@pixelant.net",
+			"homepage": "https://www.pixelant.net",
+			"role": "Developer"
+		}
+	],
 	"require": {
+		"php": "^7.4",
 		"typo3/cms-core": "^10.4",
 		"typo3/cms-filemetadata": "^10.4",
 		"qbnk/qbank3api-phpwrapper": "^1.0"
