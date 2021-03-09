@@ -7,6 +7,8 @@ namespace Pixelant\Qbank\Utility;
 
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
+use QBNK\QBank\API\Credentials;
+use QBNK\QBank\API\QBankApi;
 use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\Exception\InvalidConfigurationException;
@@ -62,5 +64,24 @@ class QbankUtility
         }
 
         return $downloadFolder;
+    }
+
+    public static function getAccessToken(): string
+    {
+        /** @var ExtensionConfigurationManager $extensionConfigurationManager */
+        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+
+        $credentials = new Credentials(
+            $extensionConfigurationManager->getClientId(),
+            $extensionConfigurationManager->getUsername(),
+            $extensionConfigurationManager->getPassword()
+        );
+
+        $qbank = new QBankApi(
+            'https://' .  $extensionConfigurationManager->getHost() . '/',
+            $credentials
+        );
+
+        return $qbank->getTokens()['accessToken']->getToken();
     }
 }

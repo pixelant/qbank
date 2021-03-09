@@ -12,6 +12,7 @@ use TYPO3\CMS\Backend\Form\Container\InlineControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -52,6 +53,8 @@ class QbankSelectorButtonContainer extends InlineControlContainer
             return '';
         }
 
+        $this->addJavaScriptConfiguration();
+
         $allowed = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['allowed'];
         $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
             $this->data['inlineFirstPid']
@@ -69,12 +72,37 @@ class QbankSelectorButtonContainer extends InlineControlContainer
                 data-title="' . htmlspecialchars($titleText) . '"
                 data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
+                data-qbank-token="' . QbankUtility::getAccessToken() . '"
                 >
                 ' . $this->iconFactory->getIcon('actions-cloud', Icon::SIZE_SMALL)->render() . '
                 ' . $buttonLabel .
             '</button>';
 
         return $button;
+    }
+
+    /**
+     * Populates a configuration array that will be available in JavaScript as TYPO3.settings.FormEngineInline.qbank.
+     *
+     * Properties:
+     *
+     *   token - The qbank access token
+     *
+     */
+    protected function addJavaScriptConfiguration()
+    {
+        if (isset($this->inlineData['qbank'])) {
+            return;
+        }
+
+        /** @var ExtensionConfigurationManager $extensionConfigurationManager */
+        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+
+        $configuration = [];
+        $configuration['token'] = QbankUtility::getAccessToken();
+        $configuration['host'] = $extensionConfigurationManager->getHost();
+
+        $this->inlineData['qbank'] = $configuration;
     }
 
 }
