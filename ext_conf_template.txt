@@ -1,0 +1,14 @@
+# cat=basic/enable/1; type=string; label=Qbank Client ID (40 characters):
+clientId =
+
+# cat=basic/enable/2; type=string; label=Qbank Username:
+username =
+
+# cat=basic/enable/3; type=string; label=Qbank User Password:
+password =
+
+# cat=basic/enable/4; type=string; label=Qbank host URL (without http.//):
+hostUrl =
+
+# cat=basic/enable/5; type=string; label=Qbank GUI base URL (with):
+guiBaseUrl =
