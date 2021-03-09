@@ -1,7 +1,7 @@
 {
 	"name": "pixelant/qbank",
 	"type": "typo3-cms-extension",
-	"description": "",
+	"description": "Integration of QBank DAM for TYPO3",
 	"license": ["GPL-2.0-or-later"],
 	"keywords": ["typo3", "qbank"],
 	"authors": [
