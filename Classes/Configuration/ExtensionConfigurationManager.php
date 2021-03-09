@@ -65,16 +65,20 @@ class ExtensionConfigurationManager implements SingletonInterface
      */
     protected string $guiBaseUrl;
 
+    /**
+     * ExtensionConfigurationManager constructor.
+     * @param ExtensionConfiguration $extensionConfiguration
+     */
     public function __construct(ExtensionConfiguration $extensionConfiguration)
     {
         $configuration = $extensionConfiguration->get('qbank');
 
-        $this->clientId = getenv('APP_QBANK_CLIENTID') ?? $configuration['clientId'];
-        $this->username = getenv('APP_QBANK_USERNAME') ?? $configuration['username'];
-        $this->password = getenv('APP_QBANK_PASSWORD') ?? $configuration['password'];
-        $this->hostUrl = getenv('APP_QBANK_HOSTURL') ?? $configuration['hostUrl'];
-        $this->guiBaseUrl = getenv('APP_QBANK_GUIBASEURL') ?? $configuration['guiBaseUrl'];
-        $this->guiBaseUrl = getenv('APP_QBANK_DOWNLOADFOLDER') ?? $configuration['downloadFolder'];
+        $this->clientId = getenv('APP_QBANK_CLIENTID') ?: $configuration['clientId'];
+        $this->username = getenv('APP_QBANK_USERNAME') ?: $configuration['username'];
+        $this->password = getenv('APP_QBANK_PASSWORD') ?: $configuration['password'];
+        $this->hostUrl = getenv('APP_QBANK_HOSTURL') ?: $configuration['hostUrl'];
+        $this->guiBaseUrl = getenv('APP_QBANK_GUIBASEURL') ?: $configuration['guiBaseUrl'];
+        $this->guiBaseUrl = getenv('APP_QBANK_DOWNLOADFOLDER') ?: $configuration['downloadFolder'];
     }
 
     /**
