@@ -56,14 +56,16 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
             $this->data['inlineFirstPid']
         );
-        $objectPrefix = $currentStructureDomObjectIdPrefix . '-' . $foreign_table;
+        $objectPrefix = $currentStructureDomObjectIdPrefix . '-' . $inlineConfiguration['foreign_table'];
         $objectName = $currentStructureDomObjectIdPrefix;
+
+        $this->requireJsModules[] = 'TYPO3/CMS/Qbank/Qbank';
 
         $buttonLabel = htmlspecialchars(LocalizationUtility::translate('selector-button-control.label', 'qbank'));
         $titleText = htmlspecialchars(LocalizationUtility::translate('selector-button-control.title', 'qbank'));
 
         $button = '
-            <button type="button" class="btn btn-default t3js-qbank-view-btn qbank' . $this->inlineData['config'][$objectName]['md5'] . '"
+            <button type="button" class="btn btn-default t3js-qbank-selector-btn"
                 data-title="' . htmlspecialchars($titleText) . '"
                 data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
