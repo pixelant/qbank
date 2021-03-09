@@ -78,7 +78,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         $this->password = getenv('APP_QBANK_PASSWORD') ?: (string)$configuration['password'];
         $this->hostUrl = getenv('APP_QBANK_HOSTURL') ?: (string)$configuration['hostUrl'];
         $this->guiBaseUrl = getenv('APP_QBANK_GUIBASEURL') ?: (string)$configuration['guiBaseUrl'];
-        $this->guiBaseUrl = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
+        $this->downloadFolder = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
     }
 
     /**
@@ -164,16 +164,16 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @return string
      */
-    public function getLocalTarget(): string
+    public function getDownloadFolder(): string
     {
-        return $this->localTarget;
+        return $this->downloadFolder;
     }
 
     /**
-     * @param string $localTarget
+     * @param string $downloadFolder
      */
-    public function setLocalTarget(string $localTarget)
+    public function setDownloadFolder(string $downloadFolder)
     {
-        $this->localTarget = $localTarget;
+        $this->downloadFolder = $downloadFolder;
     }
 }
