@@ -18,7 +18,7 @@ use TYPO3\CMS\Core\SingletonInterface;
  *   - APP_QBANK_CLIENTID
  *   - APP_QBANK_USERNAME
  *   - APP_QBANK_PASSWORD
- *   - APP_QBANK_HOSTURL
+ *   - APP_QBANK_HOST
  *   - APP_QBANK_GUIBASEURL
  */
 class ExtensionConfigurationManager implements SingletonInterface
@@ -45,11 +45,11 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected string $password;
 
     /**
-     * QBank host URL
+     * QBank host domain
      *
      * @var string
      */
-    protected string $hostUrl;
+    protected string $host;
 
     /**
      * Local target folder, for example "1:user_upload/qbank"
@@ -76,7 +76,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         $this->clientId = getenv('APP_QBANK_CLIENTID') ?: (string)$configuration['clientId'];
         $this->username = getenv('APP_QBANK_USERNAME') ?: (string)$configuration['username'];
         $this->password = getenv('APP_QBANK_PASSWORD') ?: (string)$configuration['password'];
-        $this->hostUrl = getenv('APP_QBANK_HOSTURL') ?: (string)$configuration['hostUrl'];
+        $this->host = getenv('APP_QBANK_HOST') ?: (string)$configuration['host'];
         $this->guiBaseUrl = getenv('APP_QBANK_GUIBASEURL') ?: (string)$configuration['guiBaseUrl'];
         $this->downloadFolder = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
     }
@@ -132,17 +132,17 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @return string
      */
-    public function getHostUrl(): string
+    public function getHost(): string
     {
-        return $this->hostUrl;
+        return $this->host;
     }
 
     /**
-     * @param string $hostUrl
+     * @param string $host
      */
-    public function setHostUrl(string $hostUrl)
+    public function setHost(string $host)
     {
-        $this->hostUrl = $hostUrl;
+        $this->host = $host;
     }
 
     /**

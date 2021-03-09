@@ -7,8 +7,8 @@ username =
 # cat=basic/enable/3; type=string; label=Qbank User Password:
 password =
 
-# cat=basic/enable/4; type=string; label=Qbank host URL (without http.//):
-hostUrl =
+# cat=basic/enable/4; type=string; label=Qbank host domain (without http.//):
+host =
 
 # cat=basic/enable/5; type=string; label=Qbank GUI base URL (with):
 guiBaseUrl =
