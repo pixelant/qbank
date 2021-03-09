@@ -1,0 +1,26 @@
+{
+	"name": "pixelant/qbank",
+	"type": "typo3-cms-extension",
+	"description": "",
+	"authors": [],
+	"require": {
+		"typo3/cms-core": "^10.4",
+		"typo3/cms-filemetadata": "^10.4",
+		"qbnk/qbank3api-phpwrapper": "^1.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Pixelant\\Qbank\\": "Classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Pixelant\\Qbank\\Tests\\": "Tests"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "qbank"
+		}
+	}
+}
