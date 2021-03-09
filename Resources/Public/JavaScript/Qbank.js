@@ -69,7 +69,7 @@ define([
     var selectorPlugin = $(this).data('qbankSelectorPlugin');
     if (!selectorPlugin) {
       selectorPlugin = new QbankSelectorPlugin(this);
-      $(this).data('qbankSelectorPlugin', selectorPlugin);
+      //$(this).data('qbankSelectorPlugin', selectorPlugin);
     }
 
     selectorPlugin.openModal();
