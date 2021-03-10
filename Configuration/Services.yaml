@@ -6,3 +6,6 @@ services:
 
   Pixelant\Qbank\:
     resource: '../Classes/*'
+
+  Pixelant\Qbank\Controller\SelectorController:
+    public: true

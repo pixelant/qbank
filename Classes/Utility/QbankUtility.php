@@ -24,9 +24,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QbankUtility
 {
     /**
-     * @var QBankApi
+     * @var QBankApi|null
      */
-    protected static QBankApi $api;
+    protected static ?QBankApi $api = null;
 
     /**
      * Returns the download folder object if it is writeable and accessible for the current backend user. The folder is
@@ -91,7 +91,7 @@ class QbankUtility
             $extensionConfigurationManager->getPassword()
         );
 
-        self::$api = QBankApi(
+        self::$api = new QBankApi(
             'https://' .  $extensionConfigurationManager->getHost() . '/',
             $credentials
         );

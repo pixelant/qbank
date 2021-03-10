@@ -9,6 +9,9 @@
 			<trans-unit id="selector-button-control.title">
 				<source>Use media from QBank</source>
 			</trans-unit>
+			<trans-unit id="download_file.error.zero_media_identifier">
+				<source>The QBank media could not be downloaded because the identifier was zero.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
