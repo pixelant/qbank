@@ -16,7 +16,20 @@ define([
     var self = this;
 
     self.addMedia = function (media) {
-      console.log('add media', media);
+      NProgress.start();
+
+      $.ajax(
+        TYPO3.settings.ajaxUrls['qbank_download_file'],
+        {
+          data: {
+            objectId: media.objectId,
+          },
+          method: 'POST',
+          done: function () {
+            console.log('done')
+          }
+        }
+      )
     }
 
     self.openModal = function () {
@@ -58,7 +71,8 @@ define([
               $('iframe', modal).height($('.modal-body', modal).innerHeight());
             },
             onSelect: function(media, crop, previousUsage) {
-              console.log('selected', media, crop, previousUsage);
+              self.$modal.modal('hide');
+              self.addMedia(media);
             }
           });
         }
