@@ -66,7 +66,12 @@ class QbankUtility
         return $downloadFolder;
     }
 
-    public static function getAccessToken(): string
+    /**
+     * Returns an authenticated QBank API object.
+     *
+     * @return QBankApi
+     */
+    public static function getApi(): QBankApi
     {
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
         $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
@@ -77,11 +82,19 @@ class QbankUtility
             $extensionConfigurationManager->getPassword()
         );
 
-        $qbank = new QBankApi(
+        return new QBankApi(
             'https://' .  $extensionConfigurationManager->getHost() . '/',
             $credentials
         );
+    }
 
-        return $qbank->getTokens()['accessToken']->getToken();
+    /**
+     * Returns an access token, e.g. for JavaScript use.
+     *
+     * @return string
+     */
+    public static function getAccessToken(): string
+    {
+        return self::getApi()->getTokens()['accessToken']->getToken();
     }
 }
