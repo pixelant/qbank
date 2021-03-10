@@ -22,7 +22,7 @@ define([
         TYPO3.settings.ajaxUrls['qbank_download_file'],
         {
           data: {
-            objectId: media.objectId,
+            mediaId: media.mediaId,
           },
           method: 'POST',
           done: function () {
