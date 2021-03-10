@@ -24,6 +24,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class QbankUtility
 {
     /**
+     * @var QBankApi
+     */
+    protected static QBankApi $api;
+
+    /**
      * Returns the download folder object if it is writeable and accessible for the current backend user. The folder is
      * created if it doesn't exist.
      *
@@ -73,6 +78,10 @@ class QbankUtility
      */
     public static function getApi(): QBankApi
     {
+        if (self::$api !== null) {
+            return self::$api;
+        }
+
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
         $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
 
@@ -82,10 +91,12 @@ class QbankUtility
             $extensionConfigurationManager->getPassword()
         );
 
-        return new QBankApi(
+        self::$api = QBankApi(
             'https://' .  $extensionConfigurationManager->getHost() . '/',
             $credentials
         );
+
+        return self::$api;
     }
 
     /**
