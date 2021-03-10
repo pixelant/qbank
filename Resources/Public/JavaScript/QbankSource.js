@@ -3,7 +3,7 @@
  * Qbank API communication
  */
 // https://connector.qbank.se/qbank-connector.min.js
-define(['jquery', 'TYPO3/CMS/Qbank/qbank-connector.min'], function($) {
+define(['jquery', 'TYPO3/CMS/Qbank/qbank-connector'], function($) {
 
   /**
    * the main popover object
