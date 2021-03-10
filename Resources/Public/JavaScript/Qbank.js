@@ -49,7 +49,10 @@ define([
               },
               imageTool: false,
               upload: false,
-              download: false
+              download: false,
+              detail: {
+                showUseOriginalButton: false
+              }
             },
             onReady: function() {
               $('iframe', modal).height($('.modal-body', modal).innerHeight());
