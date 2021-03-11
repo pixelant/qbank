@@ -9,8 +9,9 @@ define([
   'TYPO3/CMS/Backend/Modal',
   'TYPO3/CMS/Backend/Severity',
   'TYPO3/CMS/Backend/Utility/MessageUtility',
+  'TYPO3/CMS/Core/Ajax/AjaxRequest',
   'TYPO3/CMS/Qbank/QbankSource'
-], function($, NProgress, Modal, Severity, MessageUtility) {
+], function($, NProgress, Modal, Severity, MessageUtility, AjaxRequest) {
   'use strict';
 
   var QbankSelectorPlugin = function(element) {
@@ -19,52 +20,77 @@ define([
     self.$button = $(element);
     self.irreObjectId = self.$button.data('fileIrreObject');
 
+    /**
+     * Adds QBank media to file IRRE element.
+     *
+     * @param media
+     */
     self.addMedia = function (media) {
       NProgress.start();
 
-      $.ajax(
-        TYPO3.settings.ajaxUrls['qbank_download_file'],
-        {
-          data: {
-            mediaId: media.mediaId,
-          },
-          method: 'POST'
-        }
-      )
-      .done(function (data) {
-        MessageUtility.MessageUtility.send({
-          actionName: 'typo3:foreignRelation:insert',
-          objectGroup: self.irreObjectId,
-          table: 'sys_file',
-          uid: data.fileUid,
-        });
-      })
-      .fail(function (response, message) {
-        var errorMessage = 'The request could not be completed due to an error. (' + message + ')';
+      const request = new AjaxRequest(TYPO3.settings.ajaxUrls['qbank_download_file']);
 
-        if (message === 'error') {
-          errorMessage = response.responseJSON.message;
-        }
+      request.post({
+        mediaId: media.mediaId
+      }).then(
+        async function(response) {
+          const data = await response.resolve();
 
-        var errorModal = Modal.confirm(
-          'ERROR',
-          errorMessage,
-          Severity.error,
-          [{
-            text: TYPO3.lang['button.ok'] || 'OK',
-            btnClass: 'btn-' + Severity.getCssClass(Severity.error),
-            name: 'ok',
-            active: true,
-          }]
-        ).on('confirm.button.ok', function() {
-          errorModal.modal('hide');
-        });
-      })
-      .always(function () {
-        NProgress.done();
+          if (response.response.status !== 200 || !data.success) {
+            var errorMessage = 'The request could not be completed due to an error.';
+console.log(response, data);
+            if (data.message) {
+              errorMessage = data.message;
+            }
+
+            self.displayError(errorMessage);
+
+            NProgress.done();
+
+            return;
+          }
+
+          MessageUtility.MessageUtility.send({
+            actionName: 'typo3:foreignRelation:insert',
+            objectGroup: self.irreObjectId,
+            table: 'sys_file',
+            uid: data.fileUid,
+          });
+
+          NProgress.done();
+        },
+        function (error) {
+          self.displayError('The request failed due to an error: ' + error.status + ' ' + error.statusText);
+
+          NProgress.done();
+        }
+      );
+    }
+
+    /**
+     * Displays an error message in a modal.
+     *
+     * @param message The error message to display
+     */
+    self.displayError = function (message) {
+      const errorModal = Modal.confirm(
+        'ERROR',
+        message,
+        Severity.error,
+        [{
+          text: TYPO3.lang['button.ok'] || 'OK',
+          btnClass: 'btn-' + Severity.getCssClass(Severity.error),
+          name: 'ok',
+          active: true,
+        }]
+      ).on('confirm.button.ok', function() {
+        errorModal.modal('hide');
       });
     }
 
+    /**
+     * Opens the QBank selector inside a modal.
+     */
     self.openModal = function () {
       self.$modal = Modal.advanced({
         type: Modal.types.default,
@@ -119,13 +145,8 @@ define([
     var selectorPlugin = $(this).data('qbankSelectorPlugin');
     if (!selectorPlugin) {
       selectorPlugin = new QbankSelectorPlugin(this);
-      //$(this).data('qbankSelectorPlugin', selectorPlugin);
     }
 
     selectorPlugin.openModal();
-  });
-
-  document.addEventListener('QbankAddMedia', function (event) {
-    selectorPlugin.addMedia();
   });
 });

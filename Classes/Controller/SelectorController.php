@@ -85,6 +85,8 @@ class SelectorController
      */
     protected function getSuccessResponse(array $data): JsonResponse
     {
+        $data['success'] = true;
+
         return GeneralUtility::makeInstance(JsonResponse::class)
             ->withStatus(200)
             ->setPayload($data);
