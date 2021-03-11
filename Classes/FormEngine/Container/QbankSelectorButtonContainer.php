@@ -55,12 +55,12 @@ class QbankSelectorButtonContainer extends InlineControlContainer
 
         $this->addJavaScriptConfiguration();
 
-        $allowed = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['allowed'];
+        $allowed =
+            $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
         $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
             $this->data['inlineFirstPid']
         );
         $objectPrefix = $currentStructureDomObjectIdPrefix . '-' . $inlineConfiguration['foreign_table'];
-        $objectName = $currentStructureDomObjectIdPrefix;
 
         $this->requireJsModules[] = 'TYPO3/CMS/Qbank/Qbank';
 

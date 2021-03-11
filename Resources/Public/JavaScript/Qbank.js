@@ -14,11 +14,14 @@ define([
 ], function($, NProgress, Modal, Severity, MessageUtility, AjaxRequest) {
   'use strict';
 
+  MessageUtility = MessageUtility.MessageUtility;
+
   var QbankSelectorPlugin = function(element) {
     var self = this;
 
     self.$button = $(element);
     self.irreObjectId = self.$button.data('fileIrreObject');
+    self.allowedExtensions = self.$button.data('fileAllowed').split(',');
 
     /**
      * Adds QBank media to file IRRE element.
@@ -38,7 +41,7 @@ define([
 
           if (response.response.status !== 200 || !data.success) {
             var errorMessage = 'The request could not be completed due to an error.';
-console.log(response, data);
+
             if (data.message) {
               errorMessage = data.message;
             }
@@ -50,7 +53,7 @@ console.log(response, data);
             return;
           }
 
-          MessageUtility.MessageUtility.send({
+          MessageUtility.send({
             actionName: 'typo3:foreignRelation:insert',
             objectGroup: self.irreObjectId,
             table: 'sys_file',
@@ -86,6 +89,21 @@ console.log(response, data);
       ).on('confirm.button.ok', function() {
         errorModal.modal('hide');
       });
+    }
+
+    /**
+     * Returns true if the media can be inserted.
+     *
+     * @param media result from QBank
+     * @returns {boolean}
+     */
+    self.validateMedia = function (media) {
+      if (self.allowedExtensions.indexOf(media.extension) === -1) {
+        self.displayError('The file extension "' + media.extension + '" is not allowed here.');
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -131,7 +149,9 @@ console.log(response, data);
             },
             onSelect: function(media, crop, previousUsage) {
               self.$modal.modal('hide');
-              self.addMedia(media);
+              if (self.validateMedia(media)) {
+                self.addMedia(media);
+              }
             }
           });
         }
