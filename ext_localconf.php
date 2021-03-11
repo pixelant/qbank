@@ -8,3 +8,12 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1615293157] = [
     'priority' => 50,
     'class' => \Pixelant\Qbank\FormEngine\Container\QbankSelectorButtonContainer::class,
 ];
+
+$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+    \TYPO3\CMS\Core\Imaging\IconRegistry::class
+);
+$iconRegistry->registerIcon(
+    'tx-qbank-logo',
+    \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+    ['source' => 'EXT:qbank/Resources/Public/Icons/qbank-logo.svg']
+);
