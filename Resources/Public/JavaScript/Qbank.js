@@ -10,8 +10,16 @@ define([
   'TYPO3/CMS/Backend/Severity',
   'TYPO3/CMS/Backend/Utility/MessageUtility',
   'TYPO3/CMS/Core/Ajax/AjaxRequest',
+  'TYPO3/CMS/Core/DocumentService',
   'TYPO3/CMS/Qbank/QbankSource'
-], function($, NProgress, Modal, Severity, MessageUtility, AjaxRequest) {
+], function(
+  $,
+  NProgress,
+  Modal, Severity,
+  MessageUtility,
+  AjaxRequest,
+  DocumentService
+) {
   'use strict';
 
   MessageUtility = MessageUtility.MessageUtility;
@@ -159,17 +167,19 @@ define([
     };
   }
 
-  $(document).on('click', '.t3js-qbank-selector-btn', function (event) {
-    event.preventDefault();
+  DocumentService.ready().then(function () {
+    $(document).on('click', '.t3js-qbank-selector-btn', function (event) {
+      event.preventDefault();
 
-    var selectorPlugin = $(this).data('qbankSelectorPlugin');
-    if (!selectorPlugin) {
-      selectorPlugin = new QbankSelectorPlugin(this);
-    }
+      var selectorPlugin = $(this).data('qbankSelectorPlugin');
+      if (!selectorPlugin) {
+        selectorPlugin = new QbankSelectorPlugin(this);
+      }
 
-    selectorPlugin.openModal();
+      selectorPlugin.openModal();
+    });
+
+    // Enable the button so it can't be clicked too early.
+    $('.t3js-qbank-selector-btn').removeAttr('disabled');
   });
-
-  // Enable the button so it can't be clicked too early.
-  $('.t3js-qbank-selector-btn').removeAttr('disabled');
 });
