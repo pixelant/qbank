@@ -48,7 +48,7 @@ define([
           const data = await response.resolve();
 
           if (response.response.status !== 200 || !data.success) {
-            var errorMessage = 'The request could not be completed due to an error.';
+            var errorMessage = TYPO3.lang['qbank.modal.request-failed'];
 
             if (data.message) {
               errorMessage = data.message;
@@ -71,7 +71,7 @@ define([
           NProgress.done();
         },
         function (error) {
-          self.displayError('The request failed due to an error: ' + error.status + ' ' + error.statusText);
+          self.displayError(TYPO3.lang['qbank.modal.request-failed-error'] + error.status + ' ' + error.statusText);
 
           NProgress.done();
         }
@@ -85,7 +85,7 @@ define([
      */
     self.displayError = function (message) {
       const errorModal = Modal.confirm(
-        'ERROR',
+        TYPO3.lang['qbank.modal.error-title'],
         message,
         Severity.error,
         [{
@@ -107,7 +107,7 @@ define([
      */
     self.validateMedia = function (media) {
       if (self.allowedExtensions.indexOf(media.extension) === -1) {
-        self.displayError('The file extension "' + media.extension + '" is not allowed here.');
+        self.displayError(TYPO3.lang['qbank.modal.illegal-extension'].replace('{0}', media.extension));
         return false;
       }
 

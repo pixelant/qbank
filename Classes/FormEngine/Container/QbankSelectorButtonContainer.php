@@ -10,6 +10,7 @@ use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Utility\QbankUtility;
 use TYPO3\CMS\Backend\Form\Container\InlineControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -54,6 +55,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         }
 
         $this->addJavaScriptConfiguration();
+        $this->JavaScriptLocalization();
 
         $allowed =
             $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
@@ -83,14 +85,33 @@ class QbankSelectorButtonContainer extends InlineControlContainer
     }
 
     /**
+     * Adds localization string for JavaScript use.
+     *
+     * @return void
+     */
+    protected function JavaScriptLocalization(): void
+    {
+        /** @var PageRenderer $pageRenderer */
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+
+        $pageRenderer->addInlineLanguageLabelArray([
+            'qbank.modal.error-title' => $this->translate('js.modal.error-title'),
+            'qbank.modal.request-failed' => $this->translate('js.modal.request-failed'),
+            'qbank.modal.request-failed-error' => $this->translate('js.modal.request-failed-error'),
+            'qbank.modal.illegal-extension' => $this->translate('js.modal.illegal-extension'),
+        ]);
+    }
+
+    /**
      * Populates a configuration array that will be available in JavaScript as TYPO3.settings.FormEngineInline.qbank.
      *
      * Properties:
      *
      *   token - The qbank access token
      *
+     * @return void
      */
-    protected function addJavaScriptConfiguration()
+    protected function addJavaScriptConfiguration(): void
     {
         if (isset($this->inlineData['qbank'])) {
             return;
@@ -106,4 +127,14 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         $this->inlineData['qbank'] = $configuration;
     }
 
+    /**
+     * Returns a translated string for $key.
+     *
+     * @param $key
+     * @return string|null
+     */
+    protected function translate($key)
+    {
+        return LocalizationUtility::translate($key, 'qbank');
+    }
 }
