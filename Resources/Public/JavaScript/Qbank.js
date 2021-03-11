@@ -8,12 +8,16 @@ define([
   'nprogress',
   'TYPO3/CMS/Backend/Modal',
   'TYPO3/CMS/Backend/Severity',
+  'TYPO3/CMS/Backend/Utility/MessageUtility',
   'TYPO3/CMS/Qbank/QbankSource'
-], function($, NProgress, Modal, Severity) {
+], function($, NProgress, Modal, Severity, MessageUtility) {
   'use strict';
 
   var QbankSelectorPlugin = function(element) {
     var self = this;
+
+    self.$button = $(element);
+    self.irreObjectId = self.$button.data('fileIrreObject');
 
     self.addMedia = function (media) {
       NProgress.start();
@@ -24,12 +28,41 @@ define([
           data: {
             mediaId: media.mediaId,
           },
-          method: 'POST',
-          done: function () {
-            console.log('done')
-          }
+          method: 'POST'
         }
       )
+      .done(function (data) {
+        MessageUtility.MessageUtility.send({
+          actionName: 'typo3:foreignRelation:insert',
+          objectGroup: self.irreObjectId,
+          table: 'sys_file',
+          uid: data.fileUid,
+        });
+      })
+      .fail(function (response, message) {
+        var errorMessage = 'The request could not be completed due to an error. (' + message + ')';
+
+        if (message === 'error') {
+          errorMessage = response.responseJSON.message;
+        }
+
+        var errorModal = Modal.confirm(
+          'ERROR',
+          errorMessage,
+          Severity.error,
+          [{
+            text: TYPO3.lang['button.ok'] || 'OK',
+            btnClass: 'btn-' + Severity.getCssClass(Severity.error),
+            name: 'ok',
+            active: true,
+          }]
+        ).on('confirm.button.ok', function() {
+          errorModal.modal('hide');
+        });
+      })
+      .always(function () {
+        NProgress.done();
+      });
     }
 
     self.openModal = function () {

@@ -70,7 +70,11 @@ class SelectorController
             ->withStatus(
                 500,
                 $message
-            );
+            )
+            ->setPayload([
+                'success' => false,
+                'message' => $message
+            ]);
     }
 
     /**
