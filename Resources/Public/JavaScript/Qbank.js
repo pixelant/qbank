@@ -149,4 +149,7 @@ console.log(response, data);
 
     selectorPlugin.openModal();
   });
+
+  // Enable the button so it can't be clicked too early.
+  $('.t3js-qbank-selector-btn').removeAttr('disabled');
 });

@@ -73,6 +73,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
                 data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
                 data-qbank-token="' . QbankUtility::getAccessToken() . '"
+                disabled
                 >
                 ' . $this->iconFactory->getIcon('tx-qbank-logo', Icon::SIZE_SMALL)->render() . '
                 ' . $buttonLabel .
