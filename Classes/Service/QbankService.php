@@ -76,6 +76,8 @@ class QbankService implements SingletonInterface
         $file = $downloadFolder->createFile($media->getFilename());
         $file->setContents(fread($fileResource, $media->getSize()));
 
+        $this->updateFileRecord($file->getUid(), true, false, $id);
+
         return $file;
     }
 
@@ -105,6 +107,50 @@ class QbankService implements SingletonInterface
         }
 
         return $this->resourceFactory->getFileObject($fileUid);
+    }
+
+    /**
+     * Update a sys_file record with QBank timestamp and relation information
+     *
+     * @param int $fileUid The local file UID
+     * @param bool $changedFile True if file has been changed
+     * @param bool $changedMetadata True if metadata has been changed
+     * @param int $qbankId The QBank media ID. Not needed unless it's the first time record is written.
+     */
+    protected function updateFileRecord(
+        int $fileUid,
+        bool $changedFile,
+        bool $changedMetadata,
+        int $qbankId = 0
+    )
+    {
+        $queryBuilder = $this->getFileQueryBuilder();
+        $queryBuilder->update('sys_file');
+
+        if ($changedFile) {
+            $queryBuilder->set(
+                'tx_qbank_file_timestamp',
+                time()
+            );
+        }
+
+        if ($changedMetadata) {
+            $queryBuilder->set(
+                'tx_qbank_metadata_timestamp',
+                time()
+            );
+        }
+
+        if ($qbankId > 0) {
+            $queryBuilder->set(
+                'tx_qbank_id',
+                $qbankId
+            );
+        }
+
+        $queryBuilder
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($fileUid, \PDO::PARAM_INT)))
+            ->execute();
     }
 
     /**
