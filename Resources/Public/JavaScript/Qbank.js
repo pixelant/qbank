@@ -11,7 +11,7 @@ define([
   'TYPO3/CMS/Backend/Utility/MessageUtility',
   'TYPO3/CMS/Core/Ajax/AjaxRequest',
   'TYPO3/CMS/Core/DocumentService',
-  'TYPO3/CMS/Qbank/QbankSource'
+  'TYPO3/CMS/Qbank/qbank-connector'
 ], function(
   $,
   NProgress,
@@ -125,43 +125,50 @@ define([
         severity: Severity.default,
         size: Modal.sizes.full,
         callback: function(modal) {
-          $('.modal-body', modal).empty();
-
-          var qbankConnector = new QBankConnector({
-            api: {
-              host: TYPO3.settings.FormEngineInline.qbank.host,
-              access_token: TYPO3.settings.FormEngineInline.qbank.token,
-              protocol: 'https'
-            },
-            gui: {
-              basehref: 'https://' + TYPO3.settings.FormEngineInline.qbank.host + '/connector/'
+          self.$qBankIframe = window.QBCJQ('<iframe/>').hide().load(function () {
+            if (!self.qbankConnector) {
+              self.qbankConnector = new QBankConnector({
+                api: {
+                  host: TYPO3.settings.FormEngineInline.qbank.host,
+                  access_token: TYPO3.settings.FormEngineInline.qbank.token,
+                  protocol: 'https'
+                },
+                gui: {
+                  basehref: 'https://' + TYPO3.settings.FormEngineInline.qbank.host + '/connector/'
+                }
+              });
             }
-          });
 
-          var mediaPicker = new qbankConnector.mediaPicker({
-            container: $('.modal-body', modal),
-            modules: {
-              content: {
-                header: false,
-                details: false
+            var mediaPicker = new self.qbankConnector.mediaPicker({
+              container: self.$qBankIframe,
+              modules: {
+                content: {
+                  header: false,
+                  details: false
+                },
+                imageTool: false,
+                upload: false,
+                download: false,
+                detail: {
+                  showUseOriginalButton: false
+                }
               },
-              imageTool: false,
-              upload: false,
-              download: false,
-              detail: {
-                showUseOriginalButton: false
+              onReady: function () {
+                $('iframe', modal).height($('.modal-body', modal).innerHeight());
+                self.$qBankIframe.show();
+              },
+              onSelect: function (media, crop, previousUsage) {
+                self.$modal.modal('hide');
+                self.$modal = null;
+
+                if (self.validateMedia(media)) {
+                  self.addMedia(media);
+                }
               }
-            },
-            onReady: function() {
-              $('iframe', modal).height($('.modal-body', modal).innerHeight());
-            },
-            onSelect: function(media, crop, previousUsage) {
-              self.$modal.modal('hide');
-              if (self.validateMedia(media)) {
-                self.addMedia(media);
-              }
-            }
+            });
           });
+
+          $('.modal-body', modal).append(self.$qBankIframe);
         }
       });
     };
@@ -174,6 +181,7 @@ define([
       var selectorPlugin = $(this).data('qbankSelectorPlugin');
       if (!selectorPlugin) {
         selectorPlugin = new QbankSelectorPlugin(this);
+        $(this).data('qbankSelectorPlugin', selectorPlugin);
       }
 
       selectorPlugin.openModal();

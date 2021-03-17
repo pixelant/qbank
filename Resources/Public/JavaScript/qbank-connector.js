@@ -4881,15 +4881,23 @@
                 return authPopup;
             };
             this._buildPicker = function(container) {
-                var iframe = QBCJQ("<iframe/>").css({
+                if (!jQuery.nodeName(container, "iframe")) {
+                    var iframe = container;
+                } else {
+                    var iframe = QBCJQ("<iframe/>").appendTo(container);
+                }
+
+                iframe.css({
                     "min-width": "100%",
                     "min-height": "100%",
                     border: "0",
                     margin: "0",
                     padding: "0"
-                }).attr("id", this.config.iframeid).appendTo(container);
+                }).attr("id", this.config.iframeid);
+
                 //Fix for firefox which doesn't allow immediate write to the iframe once it's created
                 iframe.contents()[0].write('<!doctype html><html><!doctype html>\x3c!--[if IE 8 ]><html class="ie8"><![endif]--\x3e\x3c!--[if IE 9 ]><html class="ie9"> <![endif]--\x3e\x3c!--[if (gt IE 9)|!(IE)]>\x3c!--\x3e<html>\x3c!--<![endif]--\x3e<head><head></head><body></body></html>');
+
                 _document = iframe.contents();
                 q("head").append(require("./templates/head.hbs")(this.config));
                 q("body").append(require("./templates/index.hbs")(this.config));
