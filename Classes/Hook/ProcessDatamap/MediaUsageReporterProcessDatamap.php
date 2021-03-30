@@ -5,23 +5,27 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Hook\ProcessDatamap;
 
+use Pixelant\Qbank\Service\QbankService;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
  * Reports to QBank about media usage.
  */
 class MediaUsageReporterProcessDatamap
 {
-    public function processDatamap_postProcessFieldArray(
-        string $status,
-        string $table,
-        int $id,
-        array $fieldArray,
+    public function processDatamap_afterAllOperations(
         DataHandler $dataHandler
     )
     {
-        if ($table === 'sys_file_reference' && $status === 'new' && $fieldArray['tx_qbank_id']) {
-
+        foreach ($dataHandler->datamap['sys_file_reference'] ?? [] as $id => $record) {
+            // Only process new records
+            if (!MathUtility::canBeInterpretedAsInteger($id)) {
+                GeneralUtility::makeInstance(QbankService::class)->reportMediaUsageInFileReference(
+                    $dataHandler->substNEWwithIDs[$id]
+                );
+            }
         }
     }
 }

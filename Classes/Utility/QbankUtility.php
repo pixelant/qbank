@@ -39,7 +39,7 @@ class QbankUtility
         /** @var ResourceFactory $resourceFactory */
         $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
-        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+        $extensionConfigurationManager = self::getConfigurationManager();
 
         try {
             $downloadFolderPath = $extensionConfigurationManager->getDownloadFolder();
@@ -83,7 +83,7 @@ class QbankUtility
         }
 
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
-        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+        $extensionConfigurationManager = self::getConfigurationManager();
 
         $credentials = new Credentials(
             $extensionConfigurationManager->getClientId(),
@@ -107,5 +107,16 @@ class QbankUtility
     public static function getAccessToken(): string
     {
         return self::getApi()->getTokens()['accessToken']->getToken();
+    }
+
+    /**
+     * Get the configuration manager object.
+     *
+     * @return ExtensionConfigurationManager
+     */
+    public static function getConfigurationManager(): ExtensionConfigurationManager
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
     }
 }

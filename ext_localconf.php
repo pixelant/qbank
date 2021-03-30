@@ -1,4 +1,6 @@
 <?php
+defined('TYPO3_MODE') || die;
+
 // Add the QBank selector
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ElementBrowsers']['qbank'] = \Pixelant\Qbank\FormEngine\FieldControl\QbankElementBrowser::class;
 

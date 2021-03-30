@@ -66,6 +66,11 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected string $guiBaseUrl;
 
     /**
+     * @var int
+     */
+    protected int $sessionSource;
+
+    /**
      * ExtensionConfigurationManager constructor.
      * @param ExtensionConfiguration $extensionConfiguration
      */
@@ -79,6 +84,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         $this->host = getenv('APP_QBANK_HOST') ?: (string)$configuration['host'];
         $this->guiBaseUrl = getenv('APP_QBANK_GUIBASEURL') ?: (string)$configuration['guiBaseUrl'];
         $this->downloadFolder = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
+        $this->sessionSource = (int)(getenv('APP_QBANK_SESSIONSOURCE') ?: $configuration['sessionSource']);
     }
 
     /**
@@ -175,5 +181,21 @@ class ExtensionConfigurationManager implements SingletonInterface
     public function setDownloadFolder(string $downloadFolder)
     {
         $this->downloadFolder = $downloadFolder;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSessionSource()
+    {
+        return $this->sessionSource;
+    }
+
+    /**
+     * @param int $sessionSource
+     */
+    public function setSessionSource(int $sessionSource)
+    {
+        $this->sessionSource = $sessionSource;
     }
 }

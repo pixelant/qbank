@@ -15,3 +15,6 @@ guiBaseUrl =
 
 # cat=basic/enable/6; type=string; label=Target folder for downloaded files:
 downloadFolder = 1:user_upload/qbank
+
+# cat=basic/enable/7; type=int; label=Event session source ID
+sessionSource =
