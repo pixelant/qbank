@@ -310,10 +310,10 @@ class QbankService implements SingletonInterface
     {
         return (int)(
             BackendUtility::getRecord(
-                    'sys_file',
-                    $fileId,
-                    'tx_qbank_id'
-                ) ?? ['tx_qbank_id' => 0]
+                'sys_file',
+                $fileId,
+                'tx_qbank_id'
+            ) ?? ['tx_qbank_id' => 0]
         )['tx_qbank_id'];
     }
 
