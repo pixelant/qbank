@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event;
-
 
 use Pixelant\Qbank\Service\QbankService;
 use Psr\EventDispatcher\StoppableEventInterface;
@@ -55,7 +53,7 @@ class FileReferenceUrlEvent implements StoppableEventInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isPropagationStopped(): bool
     {
@@ -73,7 +71,7 @@ class FileReferenceUrlEvent implements StoppableEventInterface
     /**
      * @param string $url
      */
-    public function setUrl(string $url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }

@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event;
-
 
 use Pixelant\Qbank\Service\QbankService;
 use Psr\EventDispatcher\StoppableEventInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
- * Event for retrieving a page title
+ * Event for retrieving a page title.
  */
 class ResolvePageTitleEvent implements StoppableEventInterface
 {
@@ -49,7 +47,7 @@ class ResolvePageTitleEvent implements StoppableEventInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isPropagationStopped(): bool
     {
@@ -67,7 +65,7 @@ class ResolvePageTitleEvent implements StoppableEventInterface
     /**
      * @param string $title
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -97,11 +95,11 @@ class ResolvePageTitleEvent implements StoppableEventInterface
     }
 
     /**
-     * Sets the page title based on a page ID
+     * Sets the page title based on a page ID.
      *
      * @param int $pageId
      */
-    public function setPageTitleFromPageId(int $pageId)
+    public function setPageTitleFromPageId(int $pageId): void
     {
         if ($pageId === 0) {
             $this->setTitle('');

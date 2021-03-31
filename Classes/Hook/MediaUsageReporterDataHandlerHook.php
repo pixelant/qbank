@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Hook;
 
 use Pixelant\Qbank\Service\QbankService;
@@ -22,7 +21,7 @@ class MediaUsageReporterDataHandlerHook
      */
 
     // phpcs:ignore
-    public function processDatamap_afterAllOperations(DataHandler $dataHandler)
+    public function processDatamap_afterAllOperations(DataHandler $dataHandler): void
     {
         foreach ($dataHandler->datamap['sys_file_reference'] ?? [] as $id => $record) {
             // Only process new records
@@ -51,7 +50,7 @@ class MediaUsageReporterDataHandlerHook
         int $id,
         $value,
         DataHandler $dataHandler
-    ) {
+    ): void {
         if ($table === 'sys_file_reference') {
             switch ($command) {
                 case 'move':
@@ -59,12 +58,15 @@ class MediaUsageReporterDataHandlerHook
                     $qbankService = GeneralUtility::makeInstance(QbankService::class);
                     $qbankService->removeMediaUsageInFileReference($id);
                     $qbankService->reportMediaUsageInFileReference($id);
+
                     break;
                 case 'delete':
                     GeneralUtility::makeInstance(QbankService::class)->removeMediaUsageInFileReference($id);
+
                     break;
                 case 'undelete':
                     GeneralUtility::makeInstance(QbankService::class)->reportMediaUsageInFileReference($id);
+
                     break;
             }
         }

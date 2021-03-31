@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Utility;
-
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use QBNK\QBank\API\Credentials;
@@ -12,8 +10,6 @@ use QBNK\QBank\API\QBankApi;
 use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
 use TYPO3\CMS\Core\Resource\Exception\InvalidConfigurationException;
-use TYPO3\CMS\Core\Resource\Exception\InvalidFolderException;
-use TYPO3\CMS\Core\Resource\Exception\InvalidTargetFolderException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -92,7 +88,7 @@ class QbankUtility
         );
 
         self::$api = new QBankApi(
-            'https://' .  $extensionConfigurationManager->getHost() . '/',
+            'https://' . $extensionConfigurationManager->getHost() . '/',
             $credentials
         );
 
@@ -116,7 +112,7 @@ class QbankUtility
      */
     public static function getConfigurationManager(): ExtensionConfigurationManager
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        // @noinspection PhpIncompatibleReturnTypeInspection
         return GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
     }
 }

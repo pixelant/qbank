@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Configuration;
-
 
 use InvalidArgumentException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
@@ -29,40 +27,39 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *   - APP_QBANK_DOWNLOADFOLDER
  *   - APP_QBANK_SESSIONSOURCE
  *   - APP_QBANK_DEPLOYMENTSITES
- *
  */
 class ExtensionConfigurationManager implements SingletonInterface
 {
     /**
-     * QBank client ID
+     * QBank client ID.
      *
      * @var string
      */
     protected $clientId;
 
     /**
-     * QBank username
+     * QBank username.
      *
      * @var string
      */
     protected $username;
 
     /**
-     * QBank password
+     * QBank password.
      *
      * @var string
      */
     protected $password;
 
     /**
-     * QBank host domain
+     * QBank host domain.
      *
      * @var string
      */
     protected $host;
 
     /**
-     * Local target folder, for example "1:user_upload/qbank"
+     * Local target folder, for example "1:user_upload/qbank".
      *
      * @var string
      */
@@ -107,29 +104,31 @@ class ExtensionConfigurationManager implements SingletonInterface
      * @param int $pageId
      * @param int $languageId
      */
-    public function configureForPage(int $pageId, int $languageId = 0)
+    public function configureForPage(int $pageId, int $languageId = 0): void
     {
         try {
             $this->configureForSite(
                 GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($pageId),
                 $languageId
             );
-        } catch (SiteNotFoundException $exception) {}
+        } catch (SiteNotFoundException $exception) {
+        }
     }
 
     /**
-     * Add site-specific configuration
+     * Add site-specific configuration.
      *
      * @param Site $site
      * @param int $languageId
      */
-    public function configureForSite(Site $site, int $languageId = 0)
+    public function configureForSite(Site $site, int $languageId = 0): void
     {
         $language = null;
 
         try {
             $language = $site->getLanguageById($languageId);
-        } catch (InvalidArgumentException $exception) {}
+        } catch (InvalidArgumentException $exception) {
+        }
 
         if ($language !== null) {
             $languageConfiguration = $language->toArray();
@@ -165,7 +164,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param string $clientId
      */
-    public function setClientId(string $clientId)
+    public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
     }
@@ -181,7 +180,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param string $username
      */
-    public function setUsername(string $username)
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
@@ -197,7 +196,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param string $password
      */
-    public function setPassword(string $password)
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
@@ -213,7 +212,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param string $host
      */
-    public function setHost(string $host)
+    public function setHost(string $host): void
     {
         $this->host = $host;
     }
@@ -229,7 +228,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param string $downloadFolder
      */
-    public function setDownloadFolder(string $downloadFolder)
+    public function setDownloadFolder(string $downloadFolder): void
     {
         $this->downloadFolder = $downloadFolder;
     }
@@ -245,7 +244,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param int $sessionSource
      */
-    public function setSessionSource(int $sessionSource)
+    public function setSessionSource(int $sessionSource): void
     {
         $this->sessionSource = $sessionSource;
     }
@@ -261,7 +260,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @param array $deploymentSites
      */
-    public function setDeploymentSites(array $deploymentSites)
+    public function setDeploymentSites(array $deploymentSites): void
     {
         $this->deploymentSites = $deploymentSites;
     }

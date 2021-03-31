@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event\FileReferenceUrlEventHandler;
-
 
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEventHandlerInterface;
@@ -19,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ContentElementFileReferenceUrlEventHandler implements FileReferenceUrlEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(FileReferenceUrlEvent $event): void
     {

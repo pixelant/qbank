@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Repository;
-
 
 use Pixelant\Qbank\Utility\QbankUtility;
 use QBNK\QBank\API\Model\MediaUsage;
@@ -19,7 +17,7 @@ class MediaUsageRepository extends AbstractRepository
      *
      * @param MediaUsage $mediaUsage
      */
-    public function add(MediaUsage $mediaUsage)
+    public function add(MediaUsage $mediaUsage): void
     {
         $sessionSourceId = $this->getSessionSourceId();
 
@@ -49,7 +47,7 @@ class MediaUsageRepository extends AbstractRepository
      * @param int $qbankId
      * @param string $localId Usually a record <tablename>_<uid>
      */
-    public function removeOneByQbankAndLocalId(int $qbankId, string $localId)
+    public function removeOneByQbankAndLocalId(int $qbankId, string $localId): void
     {
         $usage = $this->findByQbankAndLocalId($qbankId, $localId)[0];
 

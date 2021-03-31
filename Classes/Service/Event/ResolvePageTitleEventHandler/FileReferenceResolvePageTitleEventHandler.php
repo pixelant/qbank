@@ -14,7 +14,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 class FileReferenceResolvePageTitleEventHandler implements ResolvePageTitleEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(ResolvePageTitleEvent $event): void
     {

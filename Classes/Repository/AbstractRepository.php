@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Repository;
-
 
 use Pixelant\Qbank\Utility\QbankUtility;
 use QBNK\QBank\API\QBankApi;

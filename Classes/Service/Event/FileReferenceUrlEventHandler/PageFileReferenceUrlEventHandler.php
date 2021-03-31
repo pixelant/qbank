@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event\FileReferenceUrlEventHandler;
-
 
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEventHandlerInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
@@ -20,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PageFileReferenceUrlEventHandler implements FileReferenceUrlEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(FileReferenceUrlEvent $event): void
     {
