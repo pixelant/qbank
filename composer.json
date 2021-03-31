@@ -95,7 +95,7 @@
 		"fix:php:sniff": ".Build/vendor/bin/phpcs Classes Configuration Tests",
 		"link-extension": [
 			"@php -r 'is_dir($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/\") || mkdir($extFolder, 0777, true);'",
-			"@php -r 'file_exists($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/tea\") || symlink(__DIR__,$extFolder);'"
+			"@php -r 'file_exists($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/qbank\") || symlink(__DIR__,$extFolder);'"
 		],
 		"prepare-release": [
 			".gitignore",
