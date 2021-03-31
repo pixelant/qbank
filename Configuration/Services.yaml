@@ -1,0 +1,36 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Pixelant\Qbank\:
+    resource: '../Classes/*'
+
+  Pixelant\Qbank\Controller\SelectorController:
+    public: true
+
+  Pixelant\Qbank\Service\Event\FileReferenceUrlEventHandler\ContentElementFileReferenceUrlEventHandler:
+    tags:
+      - name: event.listener
+        identifier: contentElementLocationUrl
+        event: Pixelant\Qbank\Service\Event\FileReferenceUrlEvent
+
+  Pixelant\Qbank\Service\Event\FileReferenceUrlEventHandler\PageFileReferenceUrlEventHandler:
+    tags:
+      - name: event.listener
+        identifier: pageLocationUrl
+        event: Pixelant\Qbank\Service\Event\FileReferenceUrlEvent
+
+  Pixelant\Qbank\Service\Event\ResolvePageTitleEventHandler\FileReferenceResolvePageTitleEventHandler:
+    tags:
+      - name: event.listener
+        identifier: fileReferencePageTitle
+        event: Pixelant\Qbank\Service\Event\ResolvePageTitleEvent
+        before: defaultPageTitle
+
+  Pixelant\Qbank\Service\Event\ResolvePageTitleEventHandler\DefaultResolvePageTitleEventHandler:
+    tags:
+      - name: event.listener
+        identifier: defaultPageTitle
+        event: Pixelant\Qbank\Service\Event\ResolvePageTitleEvent

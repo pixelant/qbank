@@ -1,19 +1,11 @@
-# Exclude PHPStorm indexing files
-/.idea
-
-# Exclude OSX index files
-.DS_Store
-
-# Composer
+/*.idea
 /.Build/*
-/composer.lock
-
-# TYPO3 9
-/var
-
-# Coding style
 /.php_cs.cache
-
-# Documentation
-/Documentation-GENERATED-temp
-/tempfile.sh
+/Documentation-GENERATED-temp/
+/Resources/Private/node_modules/
+/Resources/Private/package-lock.json
+/Resources/Private/yarn-error.log
+/Resources/Private/yarn.lock
+/composer.lock
+/nbproject
+/var

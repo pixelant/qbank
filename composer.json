@@ -2,8 +2,14 @@
 	"name": "pixelant/qbank",
 	"type": "typo3-cms-extension",
 	"description": "Integration of QBank DAM for TYPO3",
-	"license": ["GPL-2.0-or-later"],
-	"keywords": ["typo3", "qbank"],
+	"keywords": [
+		"typo3",
+		"qbank",
+		"integration"
+	],
+	"license": [
+		"GPL-2.0-or-later"
+	],
 	"authors": [
 		{
 			"name": "Pixelant",
@@ -14,9 +20,33 @@
 	],
 	"require": {
 		"php": "^7.2",
+		"qbnk/qbank3api-phpwrapper": "^3.4",
 		"typo3/cms-core": "^10.4",
-		"typo3/cms-filemetadata": "^10.4",
-		"qbnk/qbank3api-phpwrapper": "^3.4"
+		"typo3/cms-filemetadata": "^10.4"
+	},
+	"replace": {
+		"typo3-ter/qbank": "self.version"
+	},
+	"require-dev": {
+		"codeception/codeception": "^4.1.5",
+		"helhum/typo3-composer-setup": "^0.5.7",
+		"nimut/testing-framework": "^5.0.3",
+		"phpunit/phpunit": "^7.5.20",
+		"seld/jsonlint": "^1.8",
+		"typo3/cms-fluid-styled-content": "^9.5 || ^10.4"
+	},
+	"config": {
+		"preferred-install": {
+			"*": "dist"
+		},
+		"sort-packages": true,
+		"vendor-dir": ".Build/vendor"
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "qbank",
+			"web-dir": ".Build/public"
+		}
 	},
 	"autoload": {
 		"psr-4": {
@@ -28,9 +58,69 @@
 			"Pixelant\\Qbank\\Tests\\": "Tests"
 		}
 	},
-	"extra": {
-		"typo3/cms": {
-			"extension-key": "qbank"
-		}
+	"prefer-stable": true,
+	"scripts": {
+		"post-autoload-dump": [
+			"@link-extension"
+		],
+		"ci": [
+			"@ci:static"
+		],
+		"ci:composer:normalize": "php ./tools/composer-normalize --dry-run",
+		"ci:dynamic": [
+			"@ci:tests"
+		],
+		"ci:json:lint": "find . ! -path '*.Build/*' -name '*.json' | xargs .Build/vendor/bin/jsonlint -q",
+		"ci:php": [
+			"@ci:php:cs-fixer",
+			"@ci:php:sniff"
+		],
+		"ci:php:copypaste": "php ./tools/phpcpd Classes Configuration Tests",
+		"ci:php:cs-fixer": "php ./tools/php-cs-fixer fix --config .php_cs.php -v --dry-run --using-cache false --diff --diff-format=udiff",
+		"ci:php:lint": "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l",
+		"ci:php:sniff": "php ./tools/phpcs Classes Configuration Tests",
+		"ci:php:stan": "php ./tools/phpstan analyse Classes",
+		"ci:static": [
+			"@ci:php:lint",
+			"@ci:php:sniff",
+			"@ci:ts:lint"
+		],
+		"ci:tests": [
+			"@ci:tests:unit",
+			"@ci:tests:functional"
+		],
+		"ci:tests:functional": "find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo \"Running functional test suite {}\"; .Build/vendor/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';",
+		"ci:tests:unit": ".Build/vendor/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit",
+		"ci:ts:lint": "php ./tools/typo3-typoscript-lint -c Configuration/TsLint.yml --ansi -n --fail-on-warnings -vvv Configuration/TypoScript",
+		"ci:yaml:lint": "find . ! -path '*.Build/*' ! -path '*Resources/Private/node_modules/*' -name '*.yml' | xargs php ./tools/yaml-lint",
+		"fix:php": [
+			"@fix:php:cs",
+			"@fix:php:sniff"
+		],
+		"fix:php:cs": "./tools/php-cs-fixer fix --config .php_cs.php",
+		"fix:php:sniff": ".Build/vendor/bin/phpcs Classes Configuration Tests",
+		"link-extension": [
+			"@php -r 'is_dir($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/\") || mkdir($extFolder, 0777, true);'",
+			"@php -r 'file_exists($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/qbank\") || symlink(__DIR__,$extFolder);'"
+		],
+		"prepare-release": [
+			".gitignore",
+			"rm -rf .Build",
+			"rm -rf .github",
+			"rm -rf .gitlab",
+			"rm -rf Tests",
+			"rm -rf tools",
+			"rm .editorconfig",
+			"rm .gitattributes",
+			"rm .php_cs.php",
+			"rm Resources/Private/.eslintignore",
+			"rm Resources/Private/.eslintrc.json",
+			"rm Resources/Private/.prettierrc.js",
+			"rm Resources/Private/package.json",
+			"rm Resources/Private/stylelint.config.js",
+			"rm codeception.yml",
+			"rm phive.xml",
+			"rm phpcs.xml"
+		]
 	}
 }
