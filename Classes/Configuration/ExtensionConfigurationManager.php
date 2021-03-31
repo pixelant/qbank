@@ -111,7 +111,7 @@ class ExtensionConfigurationManager implements SingletonInterface
                 GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($pageId),
                 $languageId
             );
-        // phpcs:ignore
+            // phpcs:ignore
         } catch (SiteNotFoundException $exception) {
             // If there is no site for this page, we can't fetch site configuration.
         }
@@ -129,7 +129,7 @@ class ExtensionConfigurationManager implements SingletonInterface
 
         try {
             $language = $site->getLanguageById($languageId);
-        // phpcs:ignore
+            // phpcs:ignore
         } catch (InvalidArgumentException $exception) {
             // If we can't get the language, we can't configure for it.
         }

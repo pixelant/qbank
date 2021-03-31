@@ -314,7 +314,7 @@ class QbankService implements SingletonInterface
             $fileId,
             'tx_qbank_id'
         ) ?? [
-            'tx_qbank_id' => 0
+            'tx_qbank_id' => 0,
         ])['tx_qbank_id'];
     }
 
