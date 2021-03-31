@@ -129,12 +129,12 @@ define([
             if (!self.qbankConnector) {
               self.qbankConnector = new QBankConnector({
                 api: {
-                  host: TYPO3.settings.FormEngineInline.qbank.host,
-                  access_token: TYPO3.settings.FormEngineInline.qbank.token,
+                  host: TYPO3.settings.qbank.host,
+                  access_token: TYPO3.settings.qbank.token,
                   protocol: 'https'
                 },
                 gui: {
-                  basehref: 'https://' + TYPO3.settings.FormEngineInline.qbank.host + '/connector/'
+                  basehref: 'https://' + TYPO3.settings.qbank.host + '/connector/'
                 }
               });
             }
