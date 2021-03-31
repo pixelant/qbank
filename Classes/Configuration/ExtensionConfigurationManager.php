@@ -26,7 +26,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *   - APP_QBANK_USERNAME
  *   - APP_QBANK_PASSWORD
  *   - APP_QBANK_HOST
- *   - APP_QBANK_GUIBASEURL
+ *   - APP_QBANK_DOWNLOADFOLDER
+ *   - APP_QBANK_SESSIONSOURCE
+ *   - APP_QBANK_DEPLOYMENTSITES
+ *
  */
 class ExtensionConfigurationManager implements SingletonInterface
 {
