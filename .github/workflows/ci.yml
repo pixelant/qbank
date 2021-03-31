@@ -86,27 +86,27 @@ jobs:
           - "json:lint"
           - "php:cs-fixer"
           - "php:sniff"
-          - "php:stan"
+#          - "php:stan"
         php-version:
           - 7.4
-  code-quality-frontend:
-    name: "Code quality frontend checks"
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        command:
-          - "style"
-          - "js"
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
-      - name: "Install modules"
-        working-directory: ./Resources/Private
-        run: yarn
-      - name: "Run command"
-        working-directory: ./Resources/Private
-        run: "yarn lint:${{ matrix.command }}"
+#  code-quality-frontend:
+#    name: "Code quality frontend checks"
+#    runs-on: ubuntu-20.04
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        command:
+#          - "style"
+#          - "js"
+#    steps:
+#      - name: "Checkout"
+#        uses: actions/checkout@v2
+#      - name: "Install modules"
+#        working-directory: ./Resources/Private
+#        run: yarn
+#      - name: "Run command"
+#        working-directory: ./Resources/Private
+#        run: "yarn lint:${{ matrix.command }}"
   xliff-lint:
     name: "Xliff linter"
     runs-on: ubuntu-20.04
