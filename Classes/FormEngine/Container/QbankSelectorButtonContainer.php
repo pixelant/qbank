@@ -133,7 +133,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      * @param $key
      * @return string|null
      */
-    protected function translate($key)
+    protected function translate(string $key): ?string
     {
         return LocalizationUtility::translate($key, 'qbank');
     }
