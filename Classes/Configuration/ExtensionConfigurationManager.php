@@ -112,6 +112,7 @@ class ExtensionConfigurationManager implements SingletonInterface
                 $languageId
             );
         } catch (SiteNotFoundException $exception) {
+            // If there is no site for this page, we can't fetch site configuration.
         }
     }
 
@@ -128,6 +129,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         try {
             $language = $site->getLanguageById($languageId);
         } catch (InvalidArgumentException $exception) {
+            // If we can't get the language, we can't configure for it.
         }
 
         if ($language !== null) {
