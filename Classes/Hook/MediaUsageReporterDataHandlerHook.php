@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace Pixelant\Qbank\Hook\ProcessDatamap;
+namespace Pixelant\Qbank\Hook;
 
 use Pixelant\Qbank\Service\QbankService;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -13,7 +13,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 /**
  * Reports to QBank about media usage.
  */
-class MediaUsageReporterProcessDatamap
+class MediaUsageReporterDataHandlerHook
 {
     /**
      * @param DataHandler $dataHandler
@@ -30,14 +30,12 @@ class MediaUsageReporterProcessDatamap
         }
     }
 
-    public function processCmdmap_postProcess(
+    public function processCmdmap_preProcess(
         string $command,
         string $table,
         int $id,
-        array $value,
-        DataHandler $dataHandler,
-        array $pasteUpdate,
-        array $pasteDatamap
+        $value,
+        DataHandler $dataHandler
     ) {
         if ($table === 'sys_file_reference') {
             switch ($command) {

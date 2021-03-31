@@ -113,10 +113,6 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      */
     protected function addJavaScriptConfiguration(): void
     {
-        if (isset($this->inlineData['qbank'])) {
-            return;
-        }
-
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
         $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
 
@@ -124,7 +120,10 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         $configuration['token'] = QbankUtility::getAccessToken();
         $configuration['host'] = $extensionConfigurationManager->getHost();
 
-        $this->inlineData['qbank'] = $configuration;
+        /** @var PageRenderer $pageRenderer */
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+
+        $pageRenderer->addInlineSettingArray('qbank', $configuration);
     }
 
     /**

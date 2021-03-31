@@ -174,6 +174,30 @@ class QbankService implements SingletonInterface
     }
 
     /**
+     * Remove a media usage from a file reference.
+     *
+     * @param int $fileReferenceId
+     */
+    public function removeMediaUsageInFileReference(int $fileReferenceId)
+    {
+        /** @var FileReference $fileReference */
+        $fileReference = GeneralUtility::makeInstance(ResourceFactory::class)->getFileReferenceObject($fileReferenceId);
+
+        /** @var File $file */
+        $file = $fileReference->getOriginalFile();
+
+        if (!$this->isQbankFile($file->getUid())) {
+            return;
+        }
+
+        $this->removeMediaUsage(
+            $file->getUid(),
+            'sys_file_reference',
+            $fileReferenceId
+        );
+    }
+
+    /**
      * Report media usage in table sys_file_reference to QBank.
      *
      * @param int $fileReferenceId A sys_file_reference record UID
@@ -199,6 +223,24 @@ class QbankService implements SingletonInterface
             $url,
             'sys_file_reference',
             $fileReferenceId
+        );
+    }
+
+    /**
+     * Remove media usage in a specific record.
+     *
+     * @param int $fileId
+     * @param string $table
+     * @param int $recordUid
+     */
+    protected function removeMediaUsage(int $fileId, string $table, int $recordUid)
+    {
+        /** @var MediaUsageRepository $usageRepository */
+        $usageRepository = GeneralUtility::makeInstance(MediaUsageRepository::class);
+
+        $usageRepository->removeOneByQbankAndLocalId(
+            $this->getQbankMediaIdentifierForFile($fileId),
+            $table . '_' . $recordUid
         );
     }
 
