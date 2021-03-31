@@ -7,8 +7,10 @@ namespace Pixelant\Qbank\Utility;
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use QBNK\QBank\API\Credentials;
 use QBNK\QBank\API\QBankApi;
+use TYPO3\CMS\Core\Resource\Exception\ExistingTargetFolderException;
 use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
+use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderWritePermissionsException;
 use TYPO3\CMS\Core\Resource\Exception\InvalidConfigurationException;
 use TYPO3\CMS\Core\Resource\Folder;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
@@ -29,6 +31,7 @@ class QbankUtility
      * created if it doesn't exist.
      *
      * @return Folder|null
+     * @throws InvalidConfigurationException
      */
     public static function getDownloadFolder(): ?Folder
     {

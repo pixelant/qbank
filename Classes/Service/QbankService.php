@@ -262,9 +262,10 @@ class QbankService implements SingletonInterface
             new ResolvePageTitleEvent($table, $recordUid, $this)
         )->getTitle() ?? '';
 
-        $createdByName = $GLOBALS['BE_USER']->user['realName'] !== ''
-            ? $GLOBALS['BE_USER']->user['realName'] . ' (' . $GLOBALS['BE_USER']->user['username'] . ')'
-            : $GLOBALS['BE_USER']->user['username'];
+        $createdByName = $GLOBALS['BE_USER']->user['username'];
+        if ($GLOBALS['BE_USER']->user['realName'] !== '') {
+            $createdByName = $GLOBALS['BE_USER']->user['realName'] . ' (' . $GLOBALS['BE_USER']->user['username'] . ')';
+        }
 
         $createdByEmail = $GLOBALS['BE_USER']->user['email'];
 
@@ -308,13 +309,13 @@ class QbankService implements SingletonInterface
      */
     protected function getQbankMediaIdentifierForFile(int $fileId): int
     {
-        return (int)(
-            BackendUtility::getRecord(
-                'sys_file',
-                $fileId,
-                'tx_qbank_id'
-            ) ?? ['tx_qbank_id' => 0]
-        )['tx_qbank_id'];
+        return (int)(BackendUtility::getRecord(
+            'sys_file',
+            $fileId,
+            'tx_qbank_id'
+        ) ?? [
+            'tx_qbank_id' => 0
+        ])['tx_qbank_id'];
     }
 
     /**

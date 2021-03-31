@@ -29,7 +29,11 @@ class QbankSelectorButtonContainer extends InlineControlContainer
 
         // Inject button before help-block
         if (strpos($selector, '</div><div class="help-block">') > 0) {
-            $selector = str_replace('</div><div class="help-block">', $button . '</div><div class="help-block">', $selector);
+            $selector = str_replace(
+                '</div><div class="help-block">',
+                $button . '</div><div class="help-block">',
+                $selector
+            );
         // Try to inject it into the form-control container
         } elseif (preg_match('/<\/div><\/div>$/i', $selector)) {
             $selector = preg_replace('/<\/div><\/div>$/i', $button . '</div></div>', $selector);
@@ -51,10 +55,10 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         }
 
         $this->addJavaScriptConfiguration();
-        $this->JavaScriptLocalization();
+        $this->javaScriptLocalization();
 
-        $allowed =
-            $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
+        $allowed
+            = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
         $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
             $this->data['inlineFirstPid']
         );
@@ -85,7 +89,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      *
      * @return void
      */
-    protected function JavaScriptLocalization(): void
+    protected function javaScriptLocalization(): void
     {
         /** @var PageRenderer $pageRenderer */
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
@@ -151,14 +155,16 @@ class QbankSelectorButtonContainer extends InlineControlContainer
             $languageId = (int)$this->data['databaseRow'][$languageField][0];
         }
 
-        $pageId = $this->data['tableName'] === 'pages'
-            ? $this->data['defaultLanguageRow']['uid']
-            : $this->data['defaultLanguageRow']['pid'];
+        $pageId = $this->data['defaultLanguageRow']['pid'];
+        if ($this->data['tableName'] === 'pages') {
+            $pageId = $this->data['defaultLanguageRow']['uid'];
+        }
 
         if ($pageId === null) {
-            $pageId = $this->data['tableName'] === 'pages'
-                ? $this->data['databaseRow']['uid']
-                : $this->data['databaseRow']['pid'];
+            $pageId = $this->data['databaseRow']['pid'];
+            if ($this->data['tableName'] === 'pages') {
+                $pageId = $this->data['databaseRow']['uid'];
+            }
         }
 
         $extensionConfigurationManager->configureForPage(
