@@ -116,9 +116,11 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
         $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
 
-        $configuration = [];
-        $configuration['token'] = QbankUtility::getAccessToken();
-        $configuration['host'] = $extensionConfigurationManager->getHost();
+        $configuration = [
+            'token' => QbankUtility::getAccessToken(),
+            'host' => $extensionConfigurationManager->getHost(),
+            'deploymentSites' => $extensionConfigurationManager->getDeploymentSites(),
+        ];
 
         /** @var PageRenderer $pageRenderer */
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);

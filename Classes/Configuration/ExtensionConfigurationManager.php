@@ -8,6 +8,7 @@ namespace Pixelant\Qbank\Configuration;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Configuration manager for QBank. Fetches configuration from environment variables with fallback to extension
@@ -64,6 +65,11 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected int $sessionSource;
 
     /**
+     * @var array
+     */
+    protected array $deploymentSites;
+
+    /**
      * ExtensionConfigurationManager constructor.
      * @param ExtensionConfiguration $extensionConfiguration
      */
@@ -77,6 +83,11 @@ class ExtensionConfigurationManager implements SingletonInterface
         $this->host = getenv('APP_QBANK_HOST') ?: (string)$configuration['host'];
         $this->downloadFolder = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
         $this->sessionSource = (int)(getenv('APP_QBANK_SESSIONSOURCE') ?: $configuration['sessionSource']);
+        $this->deploymentSites = GeneralUtility::intExplode(
+            ',',
+            getenv('APP_QBANK_DEPLOYMENTSITES') ?: (string)$configuration['deploymentSites'],
+            true
+        );
     }
 
     /**
@@ -173,5 +184,21 @@ class ExtensionConfigurationManager implements SingletonInterface
     public function setSessionSource(int $sessionSource)
     {
         $this->sessionSource = $sessionSource;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeploymentSites(): array
+    {
+        return $this->deploymentSites;
+    }
+
+    /**
+     * @param array $deploymentSites
+     */
+    public function setDeploymentSites(array $deploymentSites)
+    {
+        $this->deploymentSites = $deploymentSites;
     }
 }

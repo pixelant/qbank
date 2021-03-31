@@ -131,7 +131,10 @@ define([
                 api: {
                   host: TYPO3.settings.qbank.host,
                   access_token: TYPO3.settings.qbank.token,
-                  protocol: 'https'
+                  protocol: 'https',
+                  search: {
+                    deploymentSiteIds: TYPO3.settings.qbank.deploymentSites
+                  }
                 },
                 gui: {
                   basehref: 'https://' + TYPO3.settings.qbank.host + '/connector/'
