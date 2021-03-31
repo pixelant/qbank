@@ -111,8 +111,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      */
     protected function addJavaScriptConfiguration(): void
     {
-        /** @var ExtensionConfigurationManager $extensionConfigurationManager */
-        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+        $extensionConfigurationManager = $this->getExtensionConfigurationManager();
 
         $configuration = [
             'token' => QbankUtility::getAccessToken(),
@@ -135,5 +134,40 @@ class QbankSelectorButtonContainer extends InlineControlContainer
     protected function translate($key)
     {
         return LocalizationUtility::translate($key, 'qbank');
+    }
+
+    /**
+     * Get an instance of this extension's configuration manager.
+     *
+     * @return ExtensionConfigurationManager
+     */
+    protected function getExtensionConfigurationManager(): ExtensionConfigurationManager
+    {
+        /** @var ExtensionConfigurationManager $extensionConfigurationManager */
+        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+
+        $languageField = $GLOBALS['TCA'][$this->data['tableName']]['ctrl']['languageField'];
+
+        $languageId = -1;
+        if ($languageField) {
+            $languageId = (int)$this->data['databaseRow'][$languageField][0];
+        }
+
+        $pageId = $this->data['tableName'] === 'pages'
+            ? $this->data['defaultLanguageRow']['uid']
+            : $this->data['defaultLanguageRow']['pid'];
+
+        if ($pageId === null) {
+            $pageId = $this->data['tableName'] === 'pages'
+                ? $this->data['databaseRow']['uid']
+                : $this->data['databaseRow']['pid'];
+        }
+
+        $extensionConfigurationManager->configureForPage(
+            $pageId,
+            $languageId
+        );
+
+        return $extensionConfigurationManager;
     }
 }

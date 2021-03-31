@@ -7,7 +7,11 @@ namespace Pixelant\Qbank\Configuration;
 
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -88,6 +92,57 @@ class ExtensionConfigurationManager implements SingletonInterface
             getenv('APP_QBANK_DEPLOYMENTSITES') ?: (string)$configuration['deploymentSites'],
             true
         );
+    }
+
+    /**
+     * Add page-specific configuration.
+     *
+     * @param int $pageId
+     * @param int $languageId
+     */
+    public function configureForPage(int $pageId, int $languageId = 0)
+    {
+        try {
+            $this->configureForSite(
+                GeneralUtility::makeInstance(SiteFinder::class)->getSiteByPageId($pageId),
+                $languageId
+            );
+        } catch (SiteNotFoundException $exception) {}
+    }
+
+    /**
+     * Add site-specific configuration
+     *
+     * @param Site $site
+     * @param int $languageId
+     */
+    public function configureForSite(Site $site, int $languageId = 0)
+    {
+        try {
+            $language = $site->getLanguageById($languageId);
+        } catch (\InvalidArgumentException $exception) {}
+
+        if ($language !== null) {
+            $languageConfiguration = $language->toArray();
+
+            if ($languageConfiguration['qbank_deploymentSites']) {
+                $this->deploymentSites = GeneralUtility::intExplode(
+                    ',',
+                    $languageConfiguration['qbank_deploymentSites'],
+                    true
+                );
+
+                return;
+            }
+        }
+
+        if ($site->getConfiguration()['qbank_deploymentSites']) {
+            $this->deploymentSites = GeneralUtility::intExplode(
+                ',',
+                $site->getConfiguration()['qbank_deploymentSites'],
+                true
+            );
+        }
     }
 
     /**
