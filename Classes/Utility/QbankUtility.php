@@ -26,7 +26,7 @@ class QbankUtility
     /**
      * @var QBankApi|null
      */
-    protected static ?QBankApi $api = null;
+    protected static $api = null;
 
     /**
      * Returns the download folder object if it is writeable and accessible for the current backend user. The folder is
