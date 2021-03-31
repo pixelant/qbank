@@ -16,8 +16,12 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 class MediaUsageReporterDataHandlerHook
 {
     /**
+     * Report media usage.
+     *
      * @param DataHandler $dataHandler
      */
+
+    // phpcs:ignore
     public function processDatamap_afterAllOperations(DataHandler $dataHandler)
     {
         foreach ($dataHandler->datamap['sys_file_reference'] ?? [] as $id => $record) {
@@ -30,6 +34,17 @@ class MediaUsageReporterDataHandlerHook
         }
     }
 
+    /**
+     * Handle deletes, undeletes, and moves.
+     *
+     * @param string $command
+     * @param string $table
+     * @param int $id
+     * @param $value
+     * @param DataHandler $dataHandler
+     */
+
+    // phpcs:ignore
     public function processCmdmap_preProcess(
         string $command,
         string $table,
