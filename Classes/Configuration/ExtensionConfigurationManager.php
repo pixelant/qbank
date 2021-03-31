@@ -6,11 +6,13 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Configuration;
 
 
+use InvalidArgumentException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
-use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -33,49 +35,51 @@ class ExtensionConfigurationManager implements SingletonInterface
      *
      * @var string
      */
-    protected string $clientId;
+    protected $clientId;
 
     /**
      * QBank username
      *
      * @var string
      */
-    protected string $username;
+    protected $username;
 
     /**
      * QBank password
      *
      * @var string
      */
-    protected string $password;
+    protected $password;
 
     /**
      * QBank host domain
      *
      * @var string
      */
-    protected string $host;
+    protected $host;
 
     /**
      * Local target folder, for example "1:user_upload/qbank"
      *
      * @var string
      */
-    protected string $downloadFolder;
+    protected $downloadFolder;
 
     /**
      * @var int
      */
-    protected int $sessionSource;
+    protected $sessionSource;
 
     /**
      * @var array
      */
-    protected array $deploymentSites;
+    protected $deploymentSites;
 
     /**
      * ExtensionConfigurationManager constructor.
      * @param ExtensionConfiguration $extensionConfiguration
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __construct(ExtensionConfiguration $extensionConfiguration)
     {
@@ -118,9 +122,11 @@ class ExtensionConfigurationManager implements SingletonInterface
      */
     public function configureForSite(Site $site, int $languageId = 0)
     {
+        $language = null;
+
         try {
             $language = $site->getLanguageById($languageId);
-        } catch (\InvalidArgumentException $exception) {}
+        } catch (InvalidArgumentException $exception) {}
 
         if ($language !== null) {
             $languageConfiguration = $language->toArray();
@@ -228,7 +234,7 @@ class ExtensionConfigurationManager implements SingletonInterface
     /**
      * @return int
      */
-    public function getSessionSource()
+    public function getSessionSource(): int
     {
         return $this->sessionSource;
     }

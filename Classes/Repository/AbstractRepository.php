@@ -11,7 +11,10 @@ use QBNK\QBank\API\QBankApi;
 
 class AbstractRepository
 {
-    protected QBankApi $api;
+    /**
+     * @var QBankApi
+     */
+    protected $api;
 
     public function __construct()
     {

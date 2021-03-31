@@ -14,7 +14,7 @@ class MediaRepository extends AbstractRepository
     /**
      * @var array<MediaResponse> Key is the media ID
      */
-    protected static array $mediaCache = [];
+    protected static $mediaCache = [];
 
     /**
      * Retrieve a media item.
