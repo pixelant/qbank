@@ -2,8 +2,14 @@
 	"name": "pixelant/qbank",
 	"type": "typo3-cms-extension",
 	"description": "Integration of QBank DAM for TYPO3",
-	"license": ["GPL-2.0-or-later"],
-	"keywords": ["typo3", "qbank", "integration"],
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"keywords": [
+		"typo3",
+		"qbank",
+		"integration"
+	],
 	"authors": [
 		{
 			"name": "Pixelant",
@@ -14,9 +20,9 @@
 	],
 	"require": {
 		"php": "^7.2",
+		"qbnk/qbank3api-phpwrapper": "^3.4",
 		"typo3/cms-core": "^10.4",
-		"typo3/cms-filemetadata": "^10.4",
-		"qbnk/qbank3api-phpwrapper": "^3.4"
+		"typo3/cms-filemetadata": "^10.4"
 	},
 	"replace": {
 		"typo3-ter/qbank": "self.version"
@@ -29,16 +35,6 @@
 		"seld/jsonlint": "^1.8",
 		"typo3/cms-fluid-styled-content": "^9.5 || ^10.4"
 	},
-	"autoload": {
-		"psr-4": {
-			"Pixelant\\Qbank\\": "Classes"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Pixelant\\Qbank\\Tests\\": "Tests"
-		}
-	},
 	"config": {
 		"preferred-install": {
 			"*": "dist"
@@ -50,6 +46,16 @@
 		"typo3/cms": {
 			"extension-key": "qbank",
 			"web-dir": ".Build/public"
+		}
+	},
+	"autoload": {
+		"psr-4": {
+			"Pixelant\\Qbank\\": "Classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Pixelant\\Qbank\\Tests\\": "Tests"
 		}
 	},
 	"prefer-stable": true,
