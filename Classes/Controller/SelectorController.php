@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Controller;
-
 
 use Pixelant\Qbank\Service\QbankService;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,14 +11,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
- * Controller handling Ajax calls relating to the QBank file selector
+ * Controller handling Ajax calls relating to the QBank file selector.
  */
 class SelectorController
 {
     /**
      * @var QbankService
      */
-    protected QbankService $qbankService;
+    protected $qbankService;
 
     /**
      * SelectorController constructor.
@@ -30,7 +28,6 @@ class SelectorController
     {
         $this->qbankService = $qbankService;
     }
-
 
     /**
      * Downloads a file to TYPO3's local filesystem (if it doesn't already exist) and returns the file UID.
@@ -73,7 +70,7 @@ class SelectorController
             )
             ->setPayload([
                 'success' => false,
-                'message' => $message
+                'message' => $message,
             ]);
     }
 
