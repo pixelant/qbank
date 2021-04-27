@@ -13,7 +13,7 @@ Configuration options can also be set using environment variables. These will ov
 
 ### Available global configuration options
 
-####Basic
+#### Basic
 
 * **Qbank Client ID** (40 characters)<br>Environment variable: APP_QBANK_CLIENTID
 * **Qbank Username**<br>Environment variable: APP_QBANK_USERNAME
