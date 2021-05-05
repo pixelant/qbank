@@ -54,11 +54,23 @@ class QbankSelectorButtonContainer extends InlineControlContainer
             return '';
         }
 
-        $this->addJavaScriptConfiguration();
+        try {
+            $accessToken = QbankUtility::getAccessToken();
+        } catch (\Throwable $th) {
+            return '';
+        }
+
+        $this->addJavaScriptConfiguration($accessToken);
         $this->javaScriptLocalization();
 
         $allowed
             = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
+        $allowedArray = GeneralUtility::trimExplode(',', $allowed, true);
+        if (empty($allowedArray)) {
+            $allowedArray = GeneralUtility::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'], true);
+        }
+        $allowed = implode(',', $allowedArray);
+
         $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
             $this->data['inlineFirstPid']
         );
@@ -74,7 +86,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
                 data-title="' . htmlspecialchars($titleText) . '"
                 data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
-                data-qbank-token="' . QbankUtility::getAccessToken() . '"
+                data-qbank-token="' . $accessToken . '"
                 disabled
                 >
                 ' . $this->iconFactory->getIcon('tx-qbank-logo', Icon::SIZE_SMALL)->render() . '
@@ -109,14 +121,15 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      *
      *   token - The qbank access token
      *
+     * @param string $accessToken
      * @return void
      */
-    protected function addJavaScriptConfiguration(): void
+    protected function addJavaScriptConfiguration(string $accessToken): void
     {
         $extensionConfigurationManager = $this->getExtensionConfigurationManager();
 
         $configuration = [
-            'token' => QbankUtility::getAccessToken(),
+            'token' => $accessToken,
             'host' => $extensionConfigurationManager->getHost(),
             'deploymentSites' => $extensionConfigurationManager->getDeploymentSites(),
         ];
