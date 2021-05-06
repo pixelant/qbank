@@ -64,7 +64,8 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         $this->javaScriptLocalization();
 
         $allowed
-            = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
+            = $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['qbankBrowserAllowed']
+            ?? $inlineConfiguration['selectorOrUniqueConfiguration']['config']['appearance']['elementBrowserAllowed'];
         $allowedArray = GeneralUtility::trimExplode(',', $allowed, true);
         if (empty($allowedArray)) {
             $allowedArray = GeneralUtility::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'], true);
