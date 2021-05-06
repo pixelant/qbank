@@ -210,6 +210,11 @@ class QbankService implements SingletonInterface
             new FileReferenceUrlEvent($fileReference, $this)
         )->getUrl() ?? '';
 
+        // No FileReferenceUrlEvent generated usage for file.
+        if ($url === '') {
+            return;
+        }
+
         $this->reportMediaUsage(
             $file->getUid(),
             $url,
