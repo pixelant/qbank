@@ -89,6 +89,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
                 data-file-irre-object="' . htmlspecialchars($objectPrefix) . '"
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
                 data-qbank-token="' . $accessToken . '"
+                ' . $this->inlineStyleAttribute() . '
                 disabled
                 >
                 ' . $this->iconFactory->getIcon('tx-qbank-logo', Icon::SIZE_SMALL)->render() . '
@@ -145,7 +146,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
     /**
      * Returns a translated string for $key.
      *
-     * @param $key
+     * @param string $key
      * @return string|null
      */
     protected function translate(string $key): ?string
@@ -188,5 +189,38 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         );
 
         return $extensionConfigurationManager;
+    }
+
+    /**
+     * Generate inline style attribute if needed.
+     * Partly based on render function of
+     * TYPO3\CMS\Backend\Form\Container\InlineControlContainer.
+     *
+     * @return string
+     */
+    protected function inlineStyleAttribute(): string
+    {
+        $inlineStyle = [];
+        $parameterArray = $this->data['parameterArray'];
+
+        $config = $parameterArray['fieldConf']['config'];
+        $isReadOnly = isset($config['readOnly']) && $config['readOnly'];
+
+        $numberOfFullLocalizedChildren = 0;
+        foreach ($parameterArray['fieldConf']['children'] as $child) {
+            if (!$child['isInlineDefaultLanguageRecordInLocalizedParentContext']) {
+                $numberOfFullLocalizedChildren++;
+            }
+        }
+
+        if ($isReadOnly || $numberOfFullLocalizedChildren >= $config['maxitems']) {
+            $inlineStyle[] = 'display: none';
+        }
+
+        if (count($inlineStyle) > 0) {
+            return 'style="' . implode(';', $inlineStyle) . '"';
+        }
+
+        return '';
     }
 }
