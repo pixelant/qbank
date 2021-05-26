@@ -26,6 +26,39 @@
 			<trans-unit id="js.modal.illegal-extension">
 				<source>The file extension "{0}" is not allowed here.</source>
 			</trans-unit>
+
+			<!-- QBank Management -->
+
+			<trans-unit id="be.menu_item.overview">
+				<source>Overview</source>
+			</trans-unit>
+			<trans-unit id="be.menu_item.mappings">
+				<source>Mappings</source>
+			</trans-unit>
+			<trans-unit id="be.menu_item.list">
+				<source>List</source>
+			</trans-unit>
+			<trans-unit id="be.button.add_mapping">
+				<source>Add new mapping</source>
+			</trans-unit>
+			<trans-unit id="be.overview.title">
+				<source>Overview</source>
+			</trans-unit>
+			<trans-unit id="be.overview.description">
+				<source>Overview of QBank integration.</source>
+			</trans-unit>
+			<trans-unit id="be.mappings.title">
+				<source>Mappings</source>
+			</trans-unit>
+			<trans-unit id="be.mappings.description">
+				<source>Manage mappings between QBank and TYPO3 properties.</source>
+			</trans-unit>
+			<trans-unit id="be.list.title">
+				<source>List</source>
+			</trans-unit>
+			<trans-unit id="be.list.description">
+				<source>View list of QBank files used in TYPO3.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -4705,7 +4705,7 @@
                 return n;
             }).pop();
             if (poppedpath === "connector" || poppedpath === "qbank-connector") {
-                this.config.gui.basehref += "/web/";
+                this.config.gui.basehref += "web";
             }
             if (this.config.deploymentSite) {
                 var md5 = require("./includes/modules/md5.js");

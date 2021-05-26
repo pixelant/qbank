@@ -7,9 +7,11 @@ namespace Pixelant\Qbank\Service;
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\MediaUsageRepository;
+use Pixelant\Qbank\Repository\PropertyTypeRepository;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\ResolvePageTitleEvent;
 use QBNK\QBank\API\Model\MediaUsage;
+use QBNK\QBank\API\Model\PropertyType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -370,5 +372,32 @@ class QbankService implements SingletonInterface
         }
 
         return $language->getTwoLetterIsoCode();
+    }
+
+    /**
+     * List all propertysets defined in QBank.
+     *
+     * @return void
+     */
+    public function fetchPropertyTypes()
+    {
+        /** @var PropertyTypeRepository $propertyTypeRepository */
+        $propertyTypeRepository = GeneralUtility::makeInstance(PropertyTypeRepository::class);
+
+        return $propertyTypeRepository->findAll();
+    }
+
+    /**
+     * List all propertysets defined in QBank.
+     *
+     * @return PropertyType|null
+     * @param mixed $systemName
+     */
+    public function fetchPropertyTypeBySystemName($systemName)
+    {
+        /** @var PropertyTypeRepository $propertyTypeRepository */
+        $propertyTypeRepository = GeneralUtility::makeInstance(PropertyTypeRepository::class);
+
+        return $propertyTypeRepository->findBySystemName($systemName);
     }
 }
