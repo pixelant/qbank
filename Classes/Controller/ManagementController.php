@@ -101,6 +101,11 @@ final class ManagementController
         }
         $this->initializeView($action);
 
+        $actionFunction = $action . 'Action';
+        if (method_exists($this, $actionFunction)) {
+            $this->$actionFunction();
+        }
+
         $this->moduleTemplate->setContent($this->view->render());
 
         return new HtmlResponse($this->moduleTemplate->renderContent());

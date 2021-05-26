@@ -9,4 +9,9 @@
     <h1><f:translate key="be.overview.title" /></h1>
     <p><f:translate key="be.overview.description" /></p>
 
+    <f:if condition="{propertyTypes}">
+        <f:for each="{propertyTypes}" as="propertyType" iteration="i">
+            <p>{propertyType.name} - [{propertyType.systemName}] - {propertyType.description} - {propertyType.dataTypeId}</p>
+        </f:for>
+    </f:if>
 </f:section>
