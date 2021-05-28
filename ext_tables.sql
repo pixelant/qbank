@@ -9,3 +9,13 @@ CREATE TABLE sys_file (
 
 	KEY qbank (tx_qbank_id),
 );
+
+#
+# Table structure for table 'tx_qbank_domain_model_mapping'
+#
+CREATE TABLE tx_qbank_domain_model_mapping (
+	source_property varchar(255) DEFAULT '' NOT NULL,
+	target_property varchar(255) DEFAULT '' NOT NULL,
+
+	KEY index_property (source_property(80),target_property(80))
+);

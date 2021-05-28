@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+	<file t3:id="1622208975" source-language="en" datatype="plaintext" original="EXT:qbank/Resources/Private/Language/locallang_db.xlf" date="2021-05-28T15:30:00Z" product-name="qbank">
+		<header/>
+		<body>
+			<trans-unit id="tx_qbank_domain_model_mapping" resname="tx_qbank_domain_model_mapping">
+				<source>QBank mapping</source>
+			</trans-unit>
+			<trans-unit id="tx_qbank_domain_model_mapping.source_property" resname="tx_qbank_domain_model_mapping.source_property">
+				<source>QBank property</source>
+			</trans-unit>
+			<trans-unit id="tx_qbank_domain_model_mapping.target_property" resname="tx_qbank_domain_model_mapping.target_property">
+				<source>TYPO3 property</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

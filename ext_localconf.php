@@ -13,11 +13,26 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1615293157] = [
     'class' => \Pixelant\Qbank\FormEngine\Container\QbankSelectorButtonContainer::class,
 ];
 
+// Inject tx_qbank_domain_model_mapping into valuepicker form
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord']
+[\Pixelant\Qbank\FormDataProvider\ItemDataProvider::class] = [
+    'depends' => [
+        \TYPO3\CMS\Backend\Form\FormDataProvider\TcaInputPlaceholders::class,
+    ],
+];
+
 $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
     \TYPO3\CMS\Core\Imaging\IconRegistry::class
 );
+
 $iconRegistry->registerIcon(
     'tx-qbank-logo',
     \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
     ['source' => 'EXT:qbank/Resources/Public/Icons/qbank-logo.svg']
+);
+
+$iconRegistry->registerIcon(
+    'mimetypes-x-qbank-mapping',
+    \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+    ['source' => 'EXT:qbank/Resources/Public/Icons/mimetypes-x-qbank-mapping.svg']
 );

@@ -169,7 +169,7 @@ final class ManagementController
                     'record_edit',
                     [
                         'edit' => [
-                            'sys_redirect' => ['new'],
+                            'tx_qbank_domain_model_mapping' => ['new'],
                         ],
                         'returnUrl' => (string)$uriBuilder->buildUriFromRoute('file_qbank', ['action' => 'mappings']),
                     ]
