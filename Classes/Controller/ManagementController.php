@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Controller;
 
 use Pixelant\Qbank\Service\QbankService;
+use Pixelant\Qbank\Repository\MappingRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -191,11 +192,20 @@ final class ManagementController
      */
     private function overviewAction(): void
     {
-        $propertyTypes = $this->qbankService->fetchPropertyTypes();
-        $bySystemName = $this->qbankService->fetchPropertyTypeBySystemName('akeywordsystemname');
-        $this->view->assign('propertyTypes', $propertyTypes);
+        // $propertyTypes = $this->qbankService->fetchPropertyTypes();
+        // $bySystemName = $this->qbankService->fetchPropertyTypeBySystemName('akeywordsystemname');
+        // $this->view->assign('propertyTypes', $propertyTypes);
     }
 
+    /**
+     * Mapping.
+     */
+    private function mappingsAction(): void
+    {
+        $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
+        $mappings = $mappingRepository->findAll();
+        $this->view->assign('mappings', $mappings);
+    }
     /**
      * @return BackendUserAuthentication
      */

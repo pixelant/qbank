@@ -12,6 +12,16 @@
 			<trans-unit id="mlang_tabs_tab">
 				<source>QBank</source>
 			</trans-unit>
+			<trans-unit id="record_disabled">
+				<source>Disabled</source>
+			</trans-unit>
+			<trans-unit id="source_property">
+				<source>QBank property (system name)</source>
+			</trans-unit>
+			<trans-unit id="target_property">
+				<source>TYPO3 property</source>
+			</trans-unit>
+
 		</body>
 	</file>
 </xliff>

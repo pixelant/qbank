@@ -377,9 +377,9 @@ class QbankService implements SingletonInterface
     /**
      * List all propertysets defined in QBank.
      *
-     * @return void
+     * @return PropertyType[]
      */
-    public function fetchPropertyTypes()
+    public function fetchPropertyTypes(): array
     {
         /** @var PropertyTypeRepository $propertyTypeRepository */
         $propertyTypeRepository = GeneralUtility::makeInstance(PropertyTypeRepository::class);
