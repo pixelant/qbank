@@ -86,14 +86,14 @@ return [
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
+                'minitems' => 1,
+                'maxitems' => 1,
+                'size' => 1,
+                'default' => '',
                 'items' => [
                     ['', '']
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\QbankProperyItemsProcFunc::class . '->itemsProcFunc',
-                'default' => '',
-                'minitems' => 0,
-                'maxitems' => 1,
-                'size' => 1,
             ],
         ],
         'target_property' => [
@@ -102,18 +102,25 @@ return [
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                // items will be extended by local tx_qbank_domain_model_mapping records using dataprovider Pixelant\Qbank\FormDataProvider\ItemDataProvider
-                'minitems' => 0,
+                'minitems' => 1,
                 'maxitems' => 1,
                 'size' => 1,
+                'default' => '',
                 'items' => [
-                    ['LLL:EXT:redirects/Resources/Private/Language/locallang_db.xlf:sys_redirect.target_statuscode.301', 301],
-                    ['LLL:EXT:redirects/Resources/Private/Language/locallang_db.xlf:sys_redirect.target_statuscode.302', 302],
-                    ['LLL:EXT:redirects/Resources/Private/Language/locallang_db.xlf:sys_redirect.target_statuscode.303', 303],
-                    ['LLL:EXT:redirects/Resources/Private/Language/locallang_db.xlf:sys_redirect.target_statuscode.307', 307],
+                    [
+                        'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.name',
+                        'sys_file.name',
+                    ],
+                    [
+                        'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.description',
+                        'sys_file_metadata.description',
+                    ],
+                    [
+                        'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.alternative',
+                        'sys_file_metadata.alternative',
+                    ],
                 ],
-                'default' => 307,
-                'size' => 1,
+                'itemsProcFunc' => Pixelant\Qbank\FormEngine\Typo3ProperyItemsProcFunc::class . '->itemsProcFunc',
             ],
         ],
     ],
