@@ -15,17 +15,16 @@ declare(strict_types=1);
  * The TYPO3 project - inspiring people to share!
  */
 
-namespace Pixelant\Qbank\FormDataProvider;
+namespace Pixelant\Qbank\FormEngine;
 
 use Pixelant\Qbank\Service\QbankService;
-use TYPO3\CMS\Backend\Form\FormDataProviderInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Inject available QBank properties into items
  * @internal
  */
-class ItemDataProvider implements FormDataProviderInterface
+class QbankProperyItemsProcFunc
 {
     /**
      * @var QbankService
@@ -42,26 +41,18 @@ class ItemDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * Add QBank properties into $result data array
+     * Add two items to existing ones
      *
-     * @param array $result Initialized result array
-     * @return array Result filled with more data
+     * @param array $params
      */
-    public function addData(array $result): array
+    public function itemsProcFunc(&$params): void
     {
-        if (
-            $result['tableName'] === 'tx_qbank_domain_model_mapping'
-            && isset($result['processedTca']['columns']['source_property'])
-        ) {
-            $propertyTypes = $this->qbankService->fetchPropertyTypes();
-            foreach ($propertyTypes as $propertyType) {
-                $result['processedTca']['columns']['source_property']['config']['items'][]
-                    = [
-                        $propertyType->getName(),
-                        $propertyType->getSystemName(),
-                    ];
-            }
+        $propertyTypes = $this->qbankService->fetchPropertyTypes();
+        foreach ($propertyTypes as $propertyType) {
+            $params['items'][] = [
+                $propertyType->getName(),
+                $propertyType->getSystemName(),
+            ];
         }
-        return $result;
     }
 }

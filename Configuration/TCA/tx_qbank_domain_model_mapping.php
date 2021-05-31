@@ -86,7 +86,11 @@ return [
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
-                // items will be extended by local tx_qbank_domain_model_mapping records using dataprovider Pixelant\Qbank\FormDataProvider\ItemDataProvider
+                'items' => [
+                    ['', '']
+                ],
+                'itemsProcFunc' => Pixelant\Qbank\FormEngine\QbankProperyItemsProcFunc::class . '->itemsProcFunc',
+                'default' => '',
                 'minitems' => 0,
                 'maxitems' => 1,
                 'size' => 1,
