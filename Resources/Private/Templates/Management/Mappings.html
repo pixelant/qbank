@@ -29,7 +29,7 @@
             <tbody>
                 <f:for each="{mappings}" as="mapping">
                     <tr>
-                        <td>{mapping.source_property}</td>
+                        <td>{propertyTypes.{mapping.source_property}.name} ({mapping.source_property})</td>
                         <td>
                             <f:alias map="{
                                 disable: '{f:translate(key: \'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:record_disabled\')}',
@@ -46,7 +46,7 @@
                             <core:iconForRecord table="tx_qbank_domain_model_mapping" row="{mapping}" /></span>
                             </f:alias>
                             <be:link.editRecord returnUrl="{returnUrl}" table="tx_qbank_domain_model_mapping" uid="{mapping.uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}: {mapping.target_property}">
-                                {mapping.target_property -> f:format.crop(maxCharacters:100)}
+                                {f:translate(key: 'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:{mapping.target_property}')} ({mapping.target_property})
                             </be:link.editRecord>
                         </td>
                         <td>

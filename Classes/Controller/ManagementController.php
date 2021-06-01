@@ -204,7 +204,11 @@ final class ManagementController
     {
         $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
         $mappings = $mappingRepository->findAll();
+
+        $propertyTypes = $this->qbankService->fetchPropertyTypes();
+
         $this->view->assign('mappings', $mappings);
+        $this->view->assign('propertyTypes', $propertyTypes);
     }
     /**
      * @return BackendUserAuthentication

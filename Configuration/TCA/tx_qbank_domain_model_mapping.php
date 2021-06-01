@@ -108,16 +108,16 @@ return [
                 'default' => '',
                 'items' => [
                     [
-                        'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.name',
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.name',
                         'sys_file.name',
                     ],
                     [
-                        'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.description',
-                        'sys_file_metadata.description',
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.description',
+                        'sys_file.description',
                     ],
                     [
-                        'LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.alternative',
-                        'sys_file_metadata.alternative',
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.alternative',
+                        'sys_file.alternative',
                     ],
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\Typo3ProperyItemsProcFunc::class . '->itemsProcFunc',

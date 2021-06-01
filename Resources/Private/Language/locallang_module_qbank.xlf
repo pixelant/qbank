@@ -21,7 +21,66 @@
 			<trans-unit id="target_property">
 				<source>TYPO3 property</source>
 			</trans-unit>
-
+			<trans-unit id="sys_file.name" resname="sys_file.name">
+				<source>Filename</source>
+			</trans-unit>
+			<trans-unit id="sys_file.description" resname="sys_file.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="sys_file.alternative" resname="sys_file.alternative">
+				<source>Alternative Text</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.keywords" resname="sys_file_metadata.keywords">
+				<source>Keywords</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.caption" resname="sys_file_metadata.caption">
+				<source>Caption</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.creator_tool" resname="sys_file_metadata.creator_tool">
+				<source>Creator Tool</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.download_name" resname="sys_file_metadata.download_name">
+				<source>Download Name</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.creator" resname="sys_file_metadata.creator">
+				<source>Creator</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.publisher" resname="sys_file_metadata.publisher">
+				<source>Publisher</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.source" resname="sys_file_metadata.source">
+				<source>Source</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.copyright" resname="sys_file_metadata.copyright">
+				<source>Copyright</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.location_country" resname="sys_file_metadata.location_country">
+				<source>Country</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.location_region" resname="sys_file_metadata.location_region">
+				<source>Region</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.location_city" resname="sys_file_metadata.location_city">
+				<source>City</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.latitude" resname="sys_file_metadata.latitude">
+				<source>Latitude</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.longitude" resname="sys_file_metadata.longitude">
+				<source>Longitude</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.ranking" resname="sys_file_metadata.ranking">
+				<source>Ranking</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.content_creation_date" resname="sys_file_metadata.content_creation_date">
+				<source>Content Creation Date</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.content_modification_date" resname="sys_file_metadata.content_modification_date">
+				<source>Content Modification Date</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.note" resname="sys_file_metadata.note">
+				<source>Note</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
