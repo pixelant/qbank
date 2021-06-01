@@ -19,6 +19,7 @@ namespace Pixelant\Qbank\Controller;
 
 use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Repository\MappingRepository;
+use Pixelant\Qbank\Repository\QbankFileRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -192,9 +193,9 @@ final class ManagementController
      */
     private function overviewAction(): void
     {
-        // $propertyTypes = $this->qbankService->fetchPropertyTypes();
+        $propertyTypes = $this->qbankService->fetchPropertyTypes();
         // $bySystemName = $this->qbankService->fetchPropertyTypeBySystemName('akeywordsystemname');
-        // $this->view->assign('propertyTypes', $propertyTypes);
+        $this->view->assign('propertyTypes', $propertyTypes);
     }
 
     /**
@@ -205,11 +206,39 @@ final class ManagementController
         $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
         $mappings = $mappingRepository->findAll();
 
+        /*
+        foreach ($mappings as $mapping) {
+            list($table, $column) = GeneralUtility::trimExplode('.', $mapping['target_property']);
+            // @TODO: Start of debug, remember to remove when debug is done!
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(
+                [
+                    'details' => array('@' => date('Y-m-d H:i:s'), 'class' => __CLASS__, 'function' => __FUNCTION__, 'file' => __FILE__, 'line' => __LINE__),
+                    '$table' => $table,
+                    '$column' => $column,
+                    'TCA' => $GLOBALS['TCA'][$table]['columns'][$column]['config'],
+                ],
+                date('Y-m-d H:i:s') . ' : ' . __METHOD__ . ' : ' . __LINE__
+            );
+            // @TODO: End of debug, remember to remove when debug is done!
+        }
+        */
+
         $propertyTypes = $this->qbankService->fetchPropertyTypes();
 
         $this->view->assign('mappings', $mappings);
         $this->view->assign('propertyTypes', $propertyTypes);
     }
+
+    /**
+     * List.
+     */
+    private function listAction(): void
+    {
+        $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
+        $qbankFiles = $qbankFileRepository->findAll();
+        $this->view->assign('qbankFiles', $qbankFiles);
+    }
+
     /**
      * @return BackendUserAuthentication
      */
