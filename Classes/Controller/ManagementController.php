@@ -74,7 +74,7 @@ final class ManagementController
     /**
      * Actions to create menu for.
      */
-    private array $actions = ['overview', 'mappings', 'list'];
+    private $actions = ['overview', 'mappings', 'list'];
 
     /**
      * ManagementController constructor.
