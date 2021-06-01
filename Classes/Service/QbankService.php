@@ -125,6 +125,16 @@ class QbankService implements SingletonInterface
     }
 
     /**
+     * Returns a QueryBuilder object for the sys_file table.
+     *
+     * @return QueryBuilder
+     */
+    protected function getFileQueryBuilder(): QueryBuilder
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file');
+    }
+
+    /**
      * Update a sys_file record with QBank timestamp and relation information.
      *
      * @param int $fileUid The local file UID
@@ -192,6 +202,51 @@ class QbankService implements SingletonInterface
     }
 
     /**
+     * Returns true if the sys_file uid suppplied in $fileId is a QBank file.
+     *
+     * @param int $fileId
+     */
+    protected function isQbankFile(int $fileId): bool
+    {
+        return (bool)$this->getQbankMediaIdentifierForFile($fileId);
+    }
+
+    /**
+     * Returns the QBank media ID for the sys_file UID supplied in $fileId.
+     *
+     * @param int $fileId
+     * @return int The QBank media ID. Zero if not found or file is not QBank media.
+     */
+    protected function getQbankMediaIdentifierForFile(int $fileId): int
+    {
+        return (int)(BackendUtility::getRecord(
+            'sys_file',
+            $fileId,
+            'tx_qbank_id'
+        ) ?? [
+            'tx_qbank_id' => 0,
+        ])['tx_qbank_id'];
+    }
+
+    /**
+     * Remove media usage in a specific record.
+     *
+     * @param int $fileId
+     * @param string $table
+     * @param int $recordUid
+     */
+    protected function removeMediaUsage(int $fileId, string $table, int $recordUid): void
+    {
+        /** @var MediaUsageRepository $usageRepository */
+        $usageRepository = GeneralUtility::makeInstance(MediaUsageRepository::class);
+
+        $usageRepository->removeOneByQbankAndLocalId(
+            $this->getQbankMediaIdentifierForFile($fileId),
+            $table . '_' . $recordUid
+        );
+    }
+
+    /**
      * Report media usage in table sys_file_reference to QBank.
      *
      * @param int $fileReferenceId A sys_file_reference record UID
@@ -222,24 +277,6 @@ class QbankService implements SingletonInterface
             $url,
             'sys_file_reference',
             $fileReferenceId
-        );
-    }
-
-    /**
-     * Remove media usage in a specific record.
-     *
-     * @param int $fileId
-     * @param string $table
-     * @param int $recordUid
-     */
-    protected function removeMediaUsage(int $fileId, string $table, int $recordUid): void
-    {
-        /** @var MediaUsageRepository $usageRepository */
-        $usageRepository = GeneralUtility::makeInstance(MediaUsageRepository::class);
-
-        $usageRepository->removeOneByQbankAndLocalId(
-            $this->getQbankMediaIdentifierForFile($fileId),
-            $table . '_' . $recordUid
         );
     }
 
@@ -296,43 +333,6 @@ class QbankService implements SingletonInterface
         /** @var MediaUsageRepository $usageRepository */
         $usageRepository = GeneralUtility::makeInstance(MediaUsageRepository::class);
         $usageRepository->add($mediaUsage);
-    }
-
-    /**
-     * Returns true if the sys_file uid suppplied in $fileId is a QBank file.
-     *
-     * @param int $fileId
-     */
-    protected function isQbankFile(int $fileId): bool
-    {
-        return (bool)$this->getQbankMediaIdentifierForFile($fileId);
-    }
-
-    /**
-     * Returns the QBank media ID for the sys_file UID supplied in $fileId.
-     *
-     * @param int $fileId
-     * @return int The QBank media ID. Zero if not found or file is not QBank media.
-     */
-    protected function getQbankMediaIdentifierForFile(int $fileId): int
-    {
-        return (int)(BackendUtility::getRecord(
-            'sys_file',
-            $fileId,
-            'tx_qbank_id'
-        ) ?? [
-            'tx_qbank_id' => 0,
-        ])['tx_qbank_id'];
-    }
-
-    /**
-     * Returns a QueryBuilder object for the sys_file table.
-     *
-     * @return QueryBuilder
-     */
-    protected function getFileQueryBuilder(): QueryBuilder
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file');
     }
 
     /**
