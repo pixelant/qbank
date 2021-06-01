@@ -24,10 +24,10 @@
 			<trans-unit id="sys_file.name" resname="sys_file.name">
 				<source>Filename</source>
 			</trans-unit>
-			<trans-unit id="sys_file.description" resname="sys_file.description">
+			<trans-unit id="sys_file_metadata.description" resname="sys_file_metadata.description">
 				<source>Description</source>
 			</trans-unit>
-			<trans-unit id="sys_file.alternative" resname="sys_file.alternative">
+			<trans-unit id="sys_file_metadata.alternative" resname="sys_file_metadata.alternative">
 				<source>Alternative Text</source>
 			</trans-unit>
 			<trans-unit id="sys_file_metadata.keywords" resname="sys_file_metadata.keywords">

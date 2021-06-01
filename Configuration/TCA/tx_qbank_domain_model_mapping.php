@@ -112,12 +112,12 @@ return [
                         'sys_file.name',
                     ],
                     [
-                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.description',
-                        'sys_file.description',
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file_metadata.description',
+                        'sys_file_metadata.description',
                     ],
                     [
-                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.alternative',
-                        'sys_file.alternative',
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file_metadata.alternative',
+                        'sys_file_metadata.alternative',
                     ],
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\Typo3ProperyItemsProcFunc::class . '->itemsProcFunc',
