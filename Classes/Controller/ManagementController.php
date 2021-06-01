@@ -124,6 +124,14 @@ final class ManagementController
         $this->view->setPartialRootPaths(['EXT:qbank/Resources/Private/Partials']);
         $this->view->setLayoutRootPaths(['EXT:qbank/Resources/Private/Layouts']);
         $this->view->getRequest()->setControllerExtensionName('Qbank');
+        $this->view->assign(
+            'settings',
+            [
+                'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
+            ],
+        );
+        // Info window is included in this.
+        $this->moduleTemplate->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Filelist/FileList');
     }
 
     /**

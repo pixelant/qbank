@@ -21,6 +21,9 @@
 			<trans-unit id="target_property">
 				<source>TYPO3 property</source>
 			</trans-unit>
+			<trans-unit id="sys_file.identifier" resname="sys_file.identifier">
+				<source>Id</source>
+			</trans-unit>
 			<trans-unit id="sys_file.name" resname="sys_file.name">
 				<source>Filename</source>
 			</trans-unit>
@@ -80,6 +83,15 @@
 			</trans-unit>
 			<trans-unit id="sys_file_metadata.note" resname="sys_file_metadata.note">
 				<source>Note</source>
+			</trans-unit>
+			<trans-unit id="sys_file.tx_qbank_file_timestamp" resname="sys_file.tx_qbank_file_timestamp">
+				<source>File updated</source>
+			</trans-unit>
+			<trans-unit id="sys_file.tx_qbank_metadata_timestamp" resname="sys_file.tx_qbank_metadata_timestamp">
+				<source>Metadata updated</source>
+			</trans-unit>
+			<trans-unit id="sys_file.tx_qbank_id" resname="sys_file.tx_qbank_id">
+				<source>QBank Id</source>
 			</trans-unit>
 		</body>
 	</file>
