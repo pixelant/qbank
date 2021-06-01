@@ -12,6 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class MappingRepository
 {
+    const TABLE_NAME = 'tx_qbank_domain_model_mapping';
 
     /**
      * Find all.
@@ -35,13 +36,13 @@ class MappingRepository
     protected function getQueryBuilder(): QueryBuilder
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('tx_qbank_domain_model_mapping');
+            ->getQueryBuilderForTable(self::TABLE_NAME);
         $queryBuilder->getRestrictions()
             ->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         $queryBuilder
             ->select('*')
-            ->from('tx_qbank_domain_model_mapping')
+            ->from(self::TABLE_NAME)
             ->orderBy('source_property')
             ->addOrderBy('target_property');
 
