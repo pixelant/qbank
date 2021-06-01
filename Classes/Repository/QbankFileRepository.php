@@ -26,6 +26,8 @@ class QbankFileRepository
             'sys_file.tx_qbank_id as sys_file_tx_qbank_id',
             'sys_file.tx_qbank_file_timestamp as sys_file_tx_qbank_file_timestamp',
             'sys_file.tx_qbank_metadata_timestamp as sys_file_tx_qbank_metadata_timestamp',
+            'sys_file.tx_qbank_remote_change_timestamp as sys_file_tx_qbank_remote_change_timestamp',
+            'sys_file.tx_qbank_status_updated_timestamp as sys_file_tx_qbank_status_updated_timestamp',
             'sys_file_metadata.uid as sys_file_metadata_uid',
         ];
 

@@ -93,6 +93,12 @@
 			<trans-unit id="sys_file.tx_qbank_id" resname="sys_file.tx_qbank_id">
 				<source>QBank Id</source>
 			</trans-unit>
+			<trans-unit id="sys_file.tx_qbank_remote_change_timestamp" resname="sys_file.tx_qbank_remote_change_timestamp">
+				<source>Remote updated</source>
+			</trans-unit>
+			<trans-unit id="sys_file.tx_qbank_status_updated_timestamp" resname="sys_file.tx_qbank_status_updated_timestamp">
+				<source>Status updated</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

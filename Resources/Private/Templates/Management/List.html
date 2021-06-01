@@ -25,7 +25,8 @@
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.name"/></th>
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.tx_qbank_file_timestamp"/></th>
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.tx_qbank_metadata_timestamp"/></th>
-                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.tx_qbank_id"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.tx_qbank_remote_change_timestamp"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.tx_qbank_status_updated_timestamp"/></th>
                     <th></th>
                 </tr>
             </thead>
@@ -43,6 +44,18 @@
                         <td>
                             <f:if condition="{qbankFile.sys_file_tx_qbank_metadata_timestamp}">
                                 <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_metadata_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.sys_file_tx_qbank_remote_change_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_remote_change_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.sys_file_tx_qbank_status_updated_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_status_updated_timestamp}</f:format.date></f:then>
                                 <f:else>-</f:else>
                             </f:if>
                         </td>
