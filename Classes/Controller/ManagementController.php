@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Controller;
 
-use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
+use Pixelant\Qbank\Service\QbankService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -105,7 +105,7 @@ final class ManagementController
 
         $actionFunction = $action . 'Action';
         if (method_exists($this, $actionFunction)) {
-            $this->$actionFunction();
+            $this->{$actionFunction}();
         }
 
         $this->moduleTemplate->setContent($this->view->render());

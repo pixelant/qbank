@@ -20,13 +20,13 @@ namespace Pixelant\Qbank\FormEngine;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * Inject available QBank properties into items
+ * Inject available TYPO3 properties into items.
  * @internal
  */
-class Typo3ProperyItemsProcFunc
+final class Typo3ProperyItemsProcFunc
 {
     /**
-     * Add two items to existing ones
+     * Add more items to existing if filemetadata extension is loaded.
      *
      * @param array $params
      */

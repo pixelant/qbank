@@ -34,3 +34,8 @@ services:
       - name: event.listener
         identifier: defaultPageTitle
         event: Pixelant\Qbank\Service\Event\ResolvePageTitleEvent
+
+  Pixelant\Qbank\Command\UpdateQbankFileStatusCommand:
+    tags:
+      - name: 'console.command'
+        command: 'qbank:updateqbankfilestatuscommand'
