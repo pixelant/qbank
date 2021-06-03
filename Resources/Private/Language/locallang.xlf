@@ -59,6 +59,12 @@
 			<trans-unit id="be.list.description">
 				<source>View list of QBank files used in TYPO3.</source>
 			</trans-unit>
+			<trans-unit id="be.action.update-metadata">
+				<source>Sync metadata</source>
+			</trans-unit>
+			<trans-unit id="be.action.update-file">
+				<source>Sync file</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

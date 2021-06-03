@@ -34,3 +34,33 @@ services:
       - name: event.listener
         identifier: defaultPageTitle
         event: Pixelant\Qbank\Service\Event\ResolvePageTitleEvent
+
+  Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler\MetaDataFilePropertyChangeEventHandler:
+    tags:
+      - name: event.listener
+        identifier: metaDataPropertyChangeHandler
+        event: Pixelant\Qbank\Service\Event\FilePropertyChangeEvent
+
+  Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler\BaseMediaPropertiesCollector:
+    tags:
+      - name: event.listener
+        identifier: baseMediaPropertiesCollector
+        event: Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent
+
+  Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler\PropertyMediaPropertiesCollector:
+    tags:
+      - name: event.listener
+        identifier: propertyMediaPropertiesCollector
+        event: Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent
+
+  Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandler\BaseMediaPropertyValuesExtractor:
+    tags:
+      - name: event.listener
+        identifier: baseMediaPropertyValuesExtractor
+        event: Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent
+
+  Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandler\PropertyMediaPropertyValuesExtractor:
+    tags:
+      - name: event.listener
+        identifier: propertyMediaPropertyValuesExtractor
+        event: Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent

@@ -47,11 +47,10 @@ class QbankProperyItemsProcFunc
      */
     public function itemsProcFunc(&$params): void
     {
-        $propertyTypes = $this->qbankService->fetchPropertyTypes();
-        foreach ($propertyTypes as $propertyType) {
+        foreach ($this->qbankService->fetchMediaProperties() as $property) {
             $params['items'][] = [
-                $propertyType->getName(),
-                $propertyType->getSystemName(),
+                $property->getLabel(),
+                $property->getKey(),
             ];
         }
     }

@@ -98,7 +98,7 @@ return [
         ],
         'target_property' => [
             'exclude' => true,
-            'label' => 'LLL:EXT:qbank/Resources/Private/Language/locallang_db.xlf:sys_redirect.target_property',
+            'label' => 'LLL:EXT:qbank/Resources/Private/Language/locallang_db.xlf:tx_qbank_domain_model_mapping.target_property',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
@@ -107,18 +107,7 @@ return [
                 'size' => 1,
                 'default' => '',
                 'items' => [
-                    [
-                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file.name',
-                        'sys_file.name',
-                    ],
-                    [
-                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file_metadata.description',
-                        'sys_file_metadata.description',
-                    ],
-                    [
-                        'LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:sys_file_metadata.alternative',
-                        'sys_file_metadata.alternative',
-                    ],
+                    ['', '']
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\Typo3ProperyItemsProcFunc::class . '->itemsProcFunc',
             ],

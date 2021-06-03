@@ -12,6 +12,24 @@
 			<trans-unit id="tx_qbank_domain_model_mapping.target_property" resname="tx_qbank_domain_model_mapping.target_property">
 				<source>TYPO3 property</source>
 			</trans-unit>
+			<trans-unit id="baseProperty.label.name">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.filename">
+				<source>File name</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.created">
+				<source>Created</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.updated">
+				<source>Updated</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.uploaded">
+				<source>Uploaded</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.rating">
+				<source>Rating</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

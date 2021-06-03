@@ -20,6 +20,7 @@ namespace Pixelant\Qbank\Controller;
 use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
+use Pixelant\Qbank\Utility\PropertyUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -42,6 +43,16 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 final class ManagementController
 {
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request;
+
+    /**
+     * @var array
+     */
+    protected $arguments = [];
+
     /**
      * ModuleTemplate object.
      *
@@ -94,18 +105,25 @@ final class ManagementController
      */
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $action = $request->getQueryParams()['action'] ?? $request->getParsedBody()['action'] ?? '';
+        $this->request = $request;
+
+        $this->arguments = array_merge_recursive(
+            $request->getQueryParams(),
+            $request->getParsedBody() ?? []
+        );
+
+        $action = $this->arguments['action'] ?? 'overview';
+
         $this->generateDropdownMenu($request, $action);
         $this->generateButtons($action);
 
-        if (empty($action)) {
-            $action = 'overview';
-        }
         $this->initializeView($action);
 
         $actionFunction = $action . 'Action';
         if (method_exists($this, $actionFunction)) {
             $this->$actionFunction();
+        } else {
+            $this->overviewAction();
         }
 
         $this->moduleTemplate->setContent($this->view->render());
@@ -193,9 +211,9 @@ final class ManagementController
      */
     private function overviewAction(): void
     {
-        $propertyTypes = $this->qbankService->fetchPropertyTypes();
+        $properties = $this->qbankService->fetchMediaProperties();
         // $bySystemName = $this->qbankService->fetchPropertyTypeBySystemName('akeywordsystemname');
-        $this->view->assign('propertyTypes', $propertyTypes);
+        $this->view->assign('properties', $properties);
     }
 
     /**
@@ -223,10 +241,9 @@ final class ManagementController
         }
         */
 
-        $propertyTypes = $this->qbankService->fetchPropertyTypes();
-
         $this->view->assign('mappings', $mappings);
-        $this->view->assign('propertyTypes', $propertyTypes);
+        $this->view->assign('mediaProperties', $this->qbankService->fetchMediaProperties());
+        $this->view->assign('fileProperties', PropertyUtility::getFileProperties());
     }
 
     /**
@@ -237,6 +254,24 @@ final class ManagementController
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
         $qbankFiles = $qbankFileRepository->findAll();
         $this->view->assign('qbankFiles', $qbankFiles);
+    }
+
+    /**
+     * Update metadata for file.
+     */
+    public function synchronizeMetadataAction(): void
+    {
+        $files = $this->arguments['files'] ?? [$this->arguments['file']];
+
+        foreach ($files as $file) {
+            $file = (int)$file;
+
+            if ($file <= 0) {
+                continue;
+            }
+
+            $this->qbankService->synchronizeMetadata($file);
+        }
     }
 
     /**

@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Service;
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
+use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
+use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\MediaUsageRepository;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
+use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
+use Pixelant\Qbank\Service\Event\FilePropertyChangeEvent;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\ResolvePageTitleEvent;
+use Pixelant\Qbank\Utility\PropertyUtility;
 use QBNK\QBank\API\Model\MediaUsage;
 use QBNK\QBank\API\Model\PropertyType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -45,6 +50,11 @@ class QbankService implements SingletonInterface
      * @var EventDispatcher
      */
     protected $eventDispatcher;
+
+    /**
+     * @var array|null
+     */
+    private $mediaPropertiesCache;
 
     /**
      * SelectorController constructor.
@@ -199,6 +209,37 @@ class QbankService implements SingletonInterface
             'sys_file_reference',
             $fileReferenceId
         );
+    }
+
+    public function synchronizeMetadata(int $fileId)
+    {
+        $qbankId = $this->getQbankMediaIdentifierForFile($fileId);
+
+        if ($qbankId === 0) {
+            return;
+        }
+
+        $qbankRecord = $this->mediaRepository->findById($qbankId);
+
+        /** @var MappingRepository $mappingRepository */
+        $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
+        $metaDataMappings = $mappingRepository->findAllAsKeyValuePairs();
+
+
+
+        $file = $this->findLocalMediaCopy($qbankId);
+
+        foreach ($metaDataMappings as $sourceProperty => $targetProperty) {
+            $this->eventDispatcher->dispatch(new FilePropertyChangeEvent(
+                $file,
+                $targetProperty,
+                PropertyUtility::convertQbankToFileProperty(
+                    $qbankProperties[$sourceProperty],
+                    PropertyUtility::getQbankPropertyTypeIdForSystemName($sourceProperty),
+                    $targetProperty
+                )
+            ));
+        }
     }
 
     /**
@@ -377,14 +418,22 @@ class QbankService implements SingletonInterface
     /**
      * List all propertysets defined in QBank.
      *
-     * @return PropertyType[]
+     * @return MediaProperty[]
      */
-    public function fetchPropertyTypes(): array
+    public function fetchMediaProperties(): array
     {
-        /** @var PropertyTypeRepository $propertyTypeRepository */
-        $propertyTypeRepository = GeneralUtility::makeInstance(PropertyTypeRepository::class);
+        if (isset($this->mediaPropertiesCache)) {
+            return $this->mediaPropertiesCache;
+        }
 
-        return $propertyTypeRepository->findAll();
+        $this->mediaPropertiesCache = [];
+
+        /** @var MediaProperty $property */
+        foreach ($this->eventDispatcher->dispatch(new CollectMediaPropertiesEvent())->getProperties() as $property) {
+            $this->mediaPropertiesCache[$property->getKey()] = $property;
+        }
+
+        return $this->mediaPropertiesCache;
     }
 
     /**

@@ -17,9 +17,9 @@ class MappingRepository
     /**
      * Find all.
      *
-     * @return void
+     * @return array
      */
-    public function findAll()
+    public function findAll(): array
     {
         $resultStatement = $this->getQueryBuilder()->execute();
 
@@ -28,6 +28,23 @@ class MappingRepository
         }
 
         return $resultStatement->fetchAllAssociative();
+    }
+
+    /**
+     * Returns all mappings as an associative array of `<source_property> => <target_property>` pairs.
+     *
+     * @return array
+     */
+    public function findAllAsKeyValuePairs(): array
+    {
+        $rows = $this->findAll();
+
+        $pairs = [];
+        foreach ($rows as $row) {
+            $pairs[$row['source_property']] = $row['target_property'];
+        }
+
+        return $pairs;
     }
 
     /**

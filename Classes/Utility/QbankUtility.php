@@ -116,4 +116,38 @@ class QbankUtility
         // @noinspection PhpIncompatibleReturnTypeInspection
         return GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
     }
+
+    /**
+     * Converts a QBank RFC3339 date to Unix timestamp.
+     *
+     * @param string $date
+     * @return int
+     */
+    public static function qbankDateStringToUnixTimestamp(string $date): int
+    {
+        return self::qbankDateStringToDateTime()->getTimestamp();
+    }
+
+    /**
+     * Converts a QBank RFC3339 date to a PHP DateTime object.
+     *
+     * @param string $date
+     * @return \DateTime
+     */
+    public static function qbankDateStringToDateTime(string $date): \DateTime
+    {
+        $parsedDate = \DateTime::createFromFormat(
+            'Y-m-d\TH:i:sP',
+            $date
+        );
+
+        if ($parsedDate === false) {
+            throw new \InvalidArgumentException(
+                'The supplied date string "' . $date . '" could not be parsed as a valid QBank date.',
+                1622642058
+            );
+        }
+
+        return $parsedDate;
+    }
 }

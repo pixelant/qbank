@@ -76,6 +76,11 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected $deploymentSites;
 
     /**
+     * @var ExtensionConfiguration
+     */
+    protected $extensionConfiguration;
+
+    /**
      * ExtensionConfigurationManager constructor.
      * @param ExtensionConfiguration $extensionConfiguration
      * @throws ExtensionConfigurationExtensionNotConfiguredException
@@ -83,7 +88,8 @@ class ExtensionConfigurationManager implements SingletonInterface
      */
     public function __construct(ExtensionConfiguration $extensionConfiguration)
     {
-        $configuration = $extensionConfiguration->get('qbank');
+        $this->extensionConfiguration = $extensionConfiguration;
+        $configuration = $this->extensionConfiguration->get('qbank');
 
         $this->clientId = getenv('APP_QBANK_CLIENTID') ?: (string)$configuration['clientId'];
         $this->username = getenv('APP_QBANK_USERNAME') ?: (string)$configuration['username'];

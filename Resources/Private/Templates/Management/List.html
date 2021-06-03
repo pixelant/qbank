@@ -46,6 +46,24 @@
                                     <core:icon identifier="actions-open" />
                                 </be:link.editRecord>
                             </div>
+
+                            <f:be.link
+                                route="file_qbank"
+                                parameters="{action: 'synchronizeMetadata', file: qbankFile.sys_file_uid}"
+                                title="{f:translate(key: 'be.action.update-metadata')}"
+                                class="btn btn-success"
+                            >
+                                <core:icon identifier="actions-database-reload" /> {f:translate(key: 'be.action.update-metadata')}
+                            </f:be.link>
+
+                            <f:be.link
+                                route="file_qbank"
+                                parameters="{action: 'synchronizeFile', file: qbankFile.uid}"
+                                title="{f:translate(key: 'be.action.update-file')}"
+                                class="btn btn-warning"
+                            >
+                                <core:icon identifier="actions-database-reload" /> {f:translate(key: 'be.action.update-file')}
+                            </f:be.link>
                         </td>
                     </tr>
                 </f:for>
