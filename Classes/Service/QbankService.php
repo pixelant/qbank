@@ -11,6 +11,7 @@ use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\MediaUsageRepository;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
+use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
 use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEvent;
@@ -261,8 +262,7 @@ class QbankService implements SingletonInterface
 
         $this->updateFileRecord($file->getUid(), false, true, $qbankId);
 
-        // Should be put in its own event.
-        $file->getMetaData()->save();
+        $this->eventDispatcher->dispatch(new AfterFilePropertyChangesEvent($file));
     }
 
     /**

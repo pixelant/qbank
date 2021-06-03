@@ -64,3 +64,9 @@ services:
       - name: event.listener
         identifier: propertyMediaPropertyValuesExtractor
         event: Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent
+
+  Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandler\PersistMetaDataChanges:
+    tags:
+      - name: event.listener
+        identifier: persistMetaDataChanges
+        event: Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent
