@@ -30,7 +30,9 @@ class StringTypeConverter extends AbstractTypeConverter
         }
 
         if ($qbankDataTypeId === PropertyType::DATATYPE_DATETIME && $sourceValue instanceof \DateTime) {
-            return $sourceValue->getTimestamp();
+            return $sourceValue->format(
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm']
+            );
         }
 
         return (string)$sourceValue;

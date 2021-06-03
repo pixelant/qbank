@@ -6,11 +6,13 @@ namespace Pixelant\Qbank\Service;
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
+use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\MediaUsageRepository;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
+use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEvent;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\ResolvePageTitleEvent;
@@ -100,6 +102,8 @@ class QbankService implements SingletonInterface
 
         $file = $downloadFolder->createFile($media->getFilename());
         $file->setContents(fread($fileResource, $media->getSize()));
+
+        $this->synchronizeMetadata($file->getUid());
 
         $this->updateFileRecord($file->getUid(), true, false, $id);
 
@@ -211,6 +215,12 @@ class QbankService implements SingletonInterface
         );
     }
 
+    /**
+     * Synchronize metadata for a particular file UID.
+     *
+     * @param int $fileId The FAL file UID
+     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     */
     public function synchronizeMetadata(int $fileId)
     {
         $qbankId = $this->getQbankMediaIdentifierForFile($fileId);
@@ -221,25 +231,38 @@ class QbankService implements SingletonInterface
 
         $qbankRecord = $this->mediaRepository->findById($qbankId);
 
-        /** @var MappingRepository $mappingRepository */
-        $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
-        $metaDataMappings = $mappingRepository->findAllAsKeyValuePairs();
+        $metaDataMappings = GeneralUtility::makeInstance(MappingRepository::class)->findAllAsKeyValuePairs();
 
-
+        $qbankPropertyValues = $this
+            ->eventDispatcher
+            ->dispatch(new ExtractMediaPropertyValuesEvent($qbankRecord))
+            ->getValues();
 
         $file = $this->findLocalMediaCopy($qbankId);
 
-        foreach ($metaDataMappings as $sourceProperty => $targetProperty) {
+        /** @var MediaPropertyValue $qbankPropertyValue */
+        foreach ($qbankPropertyValues as $qbankPropertyValue) {
+            $sourceProperty = $qbankPropertyValue->getProperty()->getKey();
+            $targetProperty = $metaDataMappings[$sourceProperty];
+
+            if (!isset($targetProperty)) {
+                continue;
+            }
+
             $this->eventDispatcher->dispatch(new FilePropertyChangeEvent(
                 $file,
                 $targetProperty,
                 PropertyUtility::convertQbankToFileProperty(
-                    $qbankProperties[$sourceProperty],
-                    PropertyUtility::getQbankPropertyTypeIdForSystemName($sourceProperty),
+                    $qbankPropertyValue,
                     $targetProperty
                 )
             ));
         }
+
+        $this->updateFileRecord($file->getUid(), false, true, $qbankId);
+
+        // Should be put in its own event.
+        $file->getMetaData()->save();
     }
 
     /**

@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
@@ -272,6 +273,22 @@ final class ManagementController
 
             $this->qbankService->synchronizeMetadata($file);
         }
+
+        $this->forward('list');
+    }
+
+    /**
+     * Forward execution to $action.
+     *
+     * @param string $action
+     */
+    protected function forward(string $action)
+    {
+        $this->initializeView($action);
+
+        $methodName = $action . 'Action';
+
+        $this->$methodName();
     }
 
     /**

@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Utility;
 
 use Pixelant\Qbank\Domain\Model\PropertyValue;
+use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
 use Pixelant\Qbank\TypeConverter\Exception\InvalidTypeConverterException;
 use Pixelant\Qbank\TypeConverter\TypeConverterInterface;
@@ -70,31 +71,26 @@ class PropertyUtility
     /**
      * Returns the File object property compatible value from a QBank media property.
      *
-     * @param string|int|float|array $qbankPropertyValue A QBank property array as contained in a property set.
-     * @param int $qbankPropertyType The QBank Property type of the $qbankPropertyValue
+     * @param MediaPropertyValue $mediaPropertyValue A QBank property value.
      * @param string $filePropertyName The file property to convert for.
      * @return string|int|float
      * @throws \InvalidArgumentException
      */
-    public static function convertQbankToFileProperty($qbankPropertyValue, int $qbankPropertyType, string $filePropertyName)
+    public static function convertQbankToFileProperty(MediaPropertyValue $mediaPropertyValue, string $filePropertyName)
     {
-        if (!isset($qbankProperty['propertyType']['dataTypeId']) || !isset($qbankProperty['value'])) {
-            throw new \InvalidArgumentException(
-                'The QBank Property supplied is missing the required "propertyType.dataTypeId" or "value".',
-                1622639000
-            );
-        }
-
         $typeConverter = self::getTypeConverterForFileProperty($filePropertyName);
 
-        if (is_array($qbankPropertyValue) && !$typeConverter->acceptsArray()) {
+        if (is_array($mediaPropertyValue->getValue()) && !$typeConverter->acceptsArray()) {
             throw new \InvalidArgumentException(
                 'Array value is not accepted for the TypeConverter "' . get_class($typeConverter) . '".',
                 1622652487
             );
         }
 
-        return $typeConverter->convertFrom($qbankPropertyValue, $qbankPropertyType);
+        return $typeConverter->convertFrom(
+            $mediaPropertyValue->getValue(),
+            $mediaPropertyValue->getProperty()->getDataTypeId()
+        );
     }
 
     /**
