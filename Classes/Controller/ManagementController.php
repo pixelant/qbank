@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Controller;
 
-use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
+use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Utility\PropertyUtility;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,7 +31,6 @@ use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
@@ -122,7 +121,7 @@ final class ManagementController
 
         $actionFunction = $action . 'Action';
         if (method_exists($this, $actionFunction)) {
-            $this->$actionFunction();
+            $this->{$actionFunction}();
         } else {
             $this->overviewAction();
         }
@@ -143,6 +142,14 @@ final class ManagementController
         $this->view->setPartialRootPaths(['EXT:qbank/Resources/Private/Partials']);
         $this->view->setLayoutRootPaths(['EXT:qbank/Resources/Private/Layouts']);
         $this->view->getRequest()->setControllerExtensionName('Qbank');
+        $this->view->assign(
+            'settings',
+            [
+                'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
+            ],
+        );
+        // Info window is included in this.
+        $this->moduleTemplate->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Filelist/FileList');
     }
 
     /**

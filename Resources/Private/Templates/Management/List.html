@@ -22,23 +22,42 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th><f:translate key="LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file.uid"/></th>
-                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:target_property"/></th>
-                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang_module_qbank.xlf:target_property"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.filename"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.file_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.metadata_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.remote_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.status_updated"/></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <f:for each="{qbankFiles}" as="qbankFile">
                     <tr>
-                        <td>{qbankFile.sys_file_uid}</td>
                         <td>
-                            <be:link.editRecord returnUrl="{returnUrl}" table="sys_file" uid="{qbankFile.sys_file_uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}: {qbankFile.sys_file_name}">
+                            <be:link.editRecord returnUrl="{returnUrl}" table="sys_file" uid="{qbankFile.sys_file_uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}: {qbankFile.sys_file_name} [{qbankFile.sys_file_uid}]">
                                 {qbankFile.sys_file_name}
                             </be:link.editRecord>
                         </td>
                         <td>
-                            {qbankFile.sys_file_tx_qbank_id}
+                            <f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_file_timestamp}</f:format.date>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.sys_file_tx_qbank_metadata_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_metadata_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.sys_file_tx_qbank_remote_change_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_remote_change_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.sys_file_tx_qbank_status_updated_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_status_updated_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
                         </td>
                         <td>
                             <div class="btn-group">
@@ -46,6 +65,14 @@
                                     <core:icon identifier="actions-open" />
                                 </be:link.editRecord>
                             </div>
+
+                            <a class="btn btn-default"
+                                href="#"
+                                data-filelist-show-item-type="_FILE"
+                                data-filelist-show-item-identifier="{qbankFile.sys_file_storage}:{qbankFile.sys_file_identifier}"
+                                title="Show references">
+                                    <core:icon identifier="actions-document-info" />
+                            </a>
 
                             <f:be.link
                                 route="file_qbank"

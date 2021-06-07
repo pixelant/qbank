@@ -31,15 +31,15 @@ return [
         '1' => [
             'showitem' => '
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, --palette--;;properties,
-                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, --palette--;;visibility'
+                --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, --palette--;;visibility',
         ],
     ],
     'palettes' => [
         'visibility' => [
-            'showitem' => 'disabled, --linebreak--, starttime, endtime'
+            'showitem' => 'disabled, --linebreak--, starttime, endtime',
         ],
         'properties' => [
-            'showitem' => 'source_property, --linebreak--, target_property'
+            'showitem' => 'source_property, --linebreak--, target_property',
         ],
     ],
     'columns' => [
@@ -53,10 +53,10 @@ return [
                     [
                         0 => '',
                         1 => '',
-                        'invertStateDisplay' => true
-                    ]
+                        'invertStateDisplay' => true,
+                    ],
                 ],
-            ]
+            ],
         ],
         'starttime' => [
             'exclude' => true,
@@ -65,8 +65,8 @@ return [
                 'type' => 'input',
                 'renderType' => 'inputDateTime',
                 'eval' => 'datetime,int',
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ],
         'endtime' => [
             'exclude' => true,
@@ -77,9 +77,9 @@ return [
                 'eval' => 'datetime,int',
                 'default' => 0,
                 'range' => [
-                    'upper' => mktime(0, 0, 0, 1, 1, 2038)
-                ]
-            ]
+                    'upper' => mktime(0, 0, 0, 1, 1, 2038),
+                ],
+            ],
         ],
         'source_property' => [
             'label' => 'LLL:EXT:qbank/Resources/Private/Language/locallang_db.xlf:tx_qbank_domain_model_mapping.source_property',
@@ -107,7 +107,7 @@ return [
                 'size' => 1,
                 'default' => '',
                 'items' => [
-                    ['', '']
+                    ['', ''],
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\Typo3ProperyItemsProcFunc::class . '->itemsProcFunc',
             ],

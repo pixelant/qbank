@@ -21,13 +21,13 @@ use Pixelant\Qbank\Utility\PropertyUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * Inject available QBank properties into items
+ * Inject available TYPO3 properties into items
  * @internal
  */
-class Typo3ProperyItemsProcFunc
+final class Typo3ProperyItemsProcFunc
 {
     /**
-     * Add two items to existing ones
+     * Add enabled file properties with type converters.
      *
      * @param array $params
      */

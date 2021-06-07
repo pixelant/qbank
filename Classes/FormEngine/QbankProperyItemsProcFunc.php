@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Inject available QBank properties into items
  * @internal
  */
-class QbankProperyItemsProcFunc
+final class QbankProperyItemsProcFunc
 {
     /**
      * @var QbankService
@@ -41,7 +41,7 @@ class QbankProperyItemsProcFunc
     }
 
     /**
-     * Add two items to existing ones
+     * Add PropertyType items.
      *
      * @param array $params
      */
