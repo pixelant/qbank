@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\Qbank\TypeConverter;
@@ -6,7 +7,6 @@ namespace Pixelant\Qbank\TypeConverter;
 use QBNK\QBank\API\Model\PropertyType;
 
 /**
- *
  * Converts QBank media properties to float.
  */
 class FloatTypeConverter extends AbstractTypeConverter
@@ -21,7 +21,7 @@ class FloatTypeConverter extends AbstractTypeConverter
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function convertFrom($sourceValue, int $qbankDataTypeId)
     {
@@ -29,7 +29,7 @@ class FloatTypeConverter extends AbstractTypeConverter
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function acceptsArray(): bool
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandler;
@@ -14,7 +15,7 @@ use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandlerInterface
 class BaseMediaPropertyValuesExtractor implements ExtractMediaPropertyValuesEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(ExtractMediaPropertyValuesEvent $event): void
     {
@@ -22,7 +23,7 @@ class BaseMediaPropertyValuesExtractor implements ExtractMediaPropertyValuesEven
         foreach (BaseMediaPropertiesCollector::getProperties() as $property) {
             $getterMethodName = 'get' . ucfirst($property->getKeyWithoutPrefix());
 
-            $value = $event->getMediaResponse()->$getterMethodName();
+            $value = $event->getMediaResponse()->{$getterMethodName}();
 
             $values[] = new MediaPropertyValue($value, $property);
         }

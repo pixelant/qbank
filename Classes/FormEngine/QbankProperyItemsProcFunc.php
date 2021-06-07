@@ -21,7 +21,7 @@ use Pixelant\Qbank\Service\QbankService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Inject available QBank properties into items
+ * Inject available QBank properties into items.
  * @internal
  */
 final class QbankProperyItemsProcFunc

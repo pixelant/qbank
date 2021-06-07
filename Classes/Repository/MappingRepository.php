@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class MappingRepository
 {
-    const TABLE_NAME = 'tx_qbank_domain_model_mapping';
+    public const TABLE_NAME = 'tx_qbank_domain_model_mapping';
 
     /**
      * Find all.

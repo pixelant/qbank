@@ -133,6 +133,7 @@ class QbankUtility
      *
      * @param string $date
      * @return \DateTime
+     * @throws \InvalidArgumentException
      */
     public static function qbankDateStringToDateTime(string $date): \DateTime
     {

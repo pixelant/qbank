@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\TypeConverter\Exception;
-
 
 use TYPO3\CMS\Core\Exception;
 

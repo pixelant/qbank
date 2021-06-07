@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\TypeConverter;
 
 /**
- * Interface for type convertors (QBank data type to TYPO3 database compatible value)
+ * Interface for type convertors (QBank data type to TYPO3 database compatible value).
  */
 interface TypeConverterInterface
 {

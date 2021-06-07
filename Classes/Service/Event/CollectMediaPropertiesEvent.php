@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event;
 
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
@@ -30,7 +29,7 @@ class CollectMediaPropertiesEvent
      *
      * @param MediaProperty[] $mediaProperties
      */
-    public function addMediaProperties(array $mediaProperties)
+    public function addMediaProperties(array $mediaProperties): void
     {
         $this->properties = array_merge($this->properties, $mediaProperties);
     }
@@ -40,7 +39,7 @@ class CollectMediaPropertiesEvent
      *
      * @param MediaProperty $mediaProperty
      */
-    public function addMediaProperty(MediaProperty $mediaProperty)
+    public function addMediaProperty(MediaProperty $mediaProperty): void
     {
         $this->addMediaProperties([$mediaProperty]);
     }

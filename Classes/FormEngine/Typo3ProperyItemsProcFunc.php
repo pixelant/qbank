@@ -18,10 +18,9 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\FormEngine;
 
 use Pixelant\Qbank\Utility\PropertyUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * Inject available TYPO3 properties into items
+ * Inject available TYPO3 properties into items.
  * @internal
  */
 final class Typo3ProperyItemsProcFunc
@@ -36,7 +35,7 @@ final class Typo3ProperyItemsProcFunc
         foreach (PropertyUtility::getEnabledFilePropertiesWithTypeConverters() as $filePropertyName) {
             $params['items'][] = [
                 PropertyUtility::getLabelForFileProperty($filePropertyName),
-                $filePropertyName
+                $filePropertyName,
             ];
         }
     }

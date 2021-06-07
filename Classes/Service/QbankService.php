@@ -222,7 +222,7 @@ class QbankService implements SingletonInterface
      * @param int $fileId The FAL file UID
      * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
      */
-    public function synchronizeMetadata(int $fileId)
+    public function synchronizeMetadata(int $fileId): void
     {
         $qbankId = $this->getQbankMediaIdentifierForFile($fileId);
 

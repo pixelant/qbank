@@ -46,12 +46,12 @@ final class ManagementController
     /**
      * @var ServerRequestInterface
      */
-    protected $request;
+    private $request;
 
     /**
      * @var array
      */
-    protected $arguments = [];
+    private $arguments = [];
 
     /**
      * ModuleTemplate object.
@@ -231,24 +231,6 @@ final class ManagementController
     {
         $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
         $mappings = $mappingRepository->findAll();
-
-        /*
-        foreach ($mappings as $mapping) {
-            list($table, $column) = GeneralUtility::trimExplode('.', $mapping['target_property']);
-            // @TODO: Start of debug, remember to remove when debug is done!
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(
-                [
-                    'details' => array('@' => date('Y-m-d H:i:s'), 'class' => __CLASS__, 'function' => __FUNCTION__, 'file' => __FILE__, 'line' => __LINE__),
-                    '$table' => $table,
-                    '$column' => $column,
-                    'TCA' => $GLOBALS['TCA'][$table]['columns'][$column]['config'],
-                ],
-                date('Y-m-d H:i:s') . ' : ' . __METHOD__ . ' : ' . __LINE__
-            );
-            // @TODO: End of debug, remember to remove when debug is done!
-        }
-        */
-
         $this->view->assign('mappings', $mappings);
         $this->view->assign('mediaProperties', $this->qbankService->fetchMediaProperties());
         $this->view->assign('fileProperties', PropertyUtility::getFileProperties());
@@ -289,13 +271,13 @@ final class ManagementController
      *
      * @param string $action
      */
-    protected function forward(string $action)
+    private function forward(string $action): void
     {
         $this->initializeView($action);
 
         $methodName = $action . 'Action';
 
-        $this->$methodName();
+        $this->{$methodName}();
     }
 
     /**

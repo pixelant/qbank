@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\TypeConverter;
 
 /**
@@ -16,7 +15,7 @@ abstract class AbstractTypeConverter implements TypeConverterInterface
     protected const SOURCE_TYPES = [];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getSupportedSourceTypes(): array
     {
@@ -24,7 +23,7 @@ abstract class AbstractTypeConverter implements TypeConverterInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function canConvertFrom(int $qbankDataTypeId): bool
     {
@@ -32,7 +31,7 @@ abstract class AbstractTypeConverter implements TypeConverterInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function acceptsArray(): bool
     {

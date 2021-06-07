@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Utility;
 
-use Pixelant\Qbank\Domain\Model\PropertyValue;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
 use Pixelant\Qbank\TypeConverter\Exception\InvalidTypeConverterException;
@@ -64,7 +62,7 @@ class PropertyUtility
             );
         }
 
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        // @noinspection PhpIncompatibleReturnTypeInspection
         return GeneralUtility::makeInstance($propertyConfiguration['typeConverter']);
     }
 

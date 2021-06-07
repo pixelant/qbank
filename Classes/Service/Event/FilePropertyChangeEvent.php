@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event;
 
 use Psr\EventDispatcher\StoppableEventInterface;

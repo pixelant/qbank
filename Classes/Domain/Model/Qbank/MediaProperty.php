@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\Qbank\Domain\Model\Qbank;
@@ -44,7 +45,7 @@ class MediaProperty
     }
 
     /**
-     * Returns the property key we use as reference in the extension. E.g. "prefix_key"
+     * Returns the property key we use as reference in the extension. E.g. "prefix_key".
      *
      * @return string
      */

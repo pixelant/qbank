@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler;
-
 
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEvent;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler;
@@ -15,7 +13,7 @@ use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler;
 class FileNameFilePropertyChangeEventHandler implements FilePropertyChangeEventHandler
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(FilePropertyChangeEvent $event): void
     {

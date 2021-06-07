@@ -91,7 +91,7 @@ return [
                 'size' => 1,
                 'default' => '',
                 'items' => [
-                    ['', '']
+                    ['', ''],
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\QbankProperyItemsProcFunc::class . '->itemsProcFunc',
             ],
