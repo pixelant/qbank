@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event;
 
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
@@ -45,11 +44,11 @@ class ExtractMediaPropertyValuesEvent
     }
 
     /**
-     * Add a single value
+     * Add a single value.
      *
      * @param MediaPropertyValue $value
      */
-    public function addValue(MediaPropertyValue $value)
+    public function addValue(MediaPropertyValue $value): void
     {
         $this->values[] = $value;
     }
@@ -59,7 +58,7 @@ class ExtractMediaPropertyValuesEvent
      *
      * @param MediaPropertyValue[] $values
      */
-    public function addValues(array $values)
+    public function addValues(array $values): void
     {
         $this->values = array_merge($this->values, $values);
     }

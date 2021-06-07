@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler;
@@ -16,7 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PropertyMediaPropertiesCollector implements CollectMediaPropertiesEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(CollectMediaPropertiesEvent $event): void
     {

@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\Qbank\TypeConverter;
 
 use QBNK\QBank\API\Model\PropertyType;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Converts QBank media properties to string.
@@ -21,7 +21,7 @@ class StringTypeConverter extends AbstractTypeConverter
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function convertFrom($sourceValue, int $qbankDataTypeId)
     {

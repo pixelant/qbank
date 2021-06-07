@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandler;
 
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
-use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler\BaseMediaPropertiesCollector;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler\PropertyMediaPropertiesCollector;
 use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent;
 use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandlerInterface;
@@ -15,7 +15,7 @@ use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEventHandlerInterface
 class PropertyMediaPropertyValuesExtractor implements ExtractMediaPropertyValuesEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(ExtractMediaPropertyValuesEvent $event): void
     {
@@ -38,7 +38,7 @@ class PropertyMediaPropertyValuesExtractor implements ExtractMediaPropertyValues
                 } elseif (isset($propertyValues[$systemName])) {
                     $propertyValues[$systemName] = [
                         $propertyValues[$systemName],
-                        $property->getValue()
+                        $property->getValue(),
                     ];
                 } else {
                     $propertyValues[$systemName] = $property->getValue();

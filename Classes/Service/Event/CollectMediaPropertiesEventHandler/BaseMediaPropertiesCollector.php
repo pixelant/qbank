@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler;
-
 
 use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
@@ -17,7 +15,7 @@ use QBNK\QBank\API\Model\PropertyType;
 class BaseMediaPropertiesCollector implements \Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __invoke(CollectMediaPropertiesEvent $event): void
     {
@@ -63,7 +61,7 @@ class BaseMediaPropertiesCollector implements \Pixelant\Qbank\Service\Event\Coll
                 PropertyType::DATATYPE_INTEGER,
                 'rating',
                 $ll . 'rating'
-            )
+            ),
         ];
     }
 }

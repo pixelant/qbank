@@ -65,6 +65,27 @@
 			<trans-unit id="be.action.update-file">
 				<source>Sync file</source>
 			</trans-unit>
+			<trans-unit id="be.identifier" resname="be.identifier">
+				<source>Id</source>
+			</trans-unit>
+			<trans-unit id="be.filename" resname="be.filename">
+				<source>Filename</source>
+			</trans-unit>
+			<trans-unit id="be.file_updated" resname="be.file_updated">
+				<source>File updated</source>
+			</trans-unit>
+			<trans-unit id="be.metadata_updated" resname="be.metadata_updated">
+				<source>Metadata updated</source>
+			</trans-unit>
+			<trans-unit id="be.qbank_id" resname="be.qbank_id">
+				<source>QBank Id</source>
+			</trans-unit>
+			<trans-unit id="be.remote_updated" resname="be.remote_updated">
+				<source>Remote updated</source>
+			</trans-unit>
+			<trans-unit id="be.status_updated" resname="be.status_updated">
+				<source>Status updated</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

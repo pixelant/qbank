@@ -70,3 +70,8 @@ services:
       - name: event.listener
         identifier: persistMetaDataChanges
         event: Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent
+
+  Pixelant\Qbank\Command\UpdateQbankFileStatusCommand:
+    tags:
+      - name: 'console.command'
+        command: 'qbank:updateqbankfilestatuscommand'

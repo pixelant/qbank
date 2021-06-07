@@ -222,7 +222,7 @@ class QbankService implements SingletonInterface
      * @param int $fileId The FAL file UID
      * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
      */
-    public function synchronizeMetadata(int $fileId)
+    public function synchronizeMetadata(int $fileId): void
     {
         $qbankId = $this->getQbankMediaIdentifierForFile($fileId);
 
@@ -263,6 +263,32 @@ class QbankService implements SingletonInterface
         $this->updateFileRecord($file->getUid(), false, true, $qbankId);
 
         $this->eventDispatcher->dispatch(new AfterFilePropertyChangesEvent($file));
+    }
+
+    /**
+     * Update a sys_file record with QBank remote update timestamp and update status timestamp.
+     *
+     * @param int $fileUid The local file UID
+     * @param int $remoteChangeTimeStamp Timestamp of last update of media in QBank.
+     */
+    public function updateFileRemoteChange(int $fileUid, int $remoteChangeTimeStamp): void
+    {
+        $queryBuilder = $this->getFileQueryBuilder();
+        $queryBuilder->update('sys_file');
+
+        $queryBuilder->set(
+            'tx_qbank_status_updated_timestamp',
+            time()
+        );
+
+        $queryBuilder->set(
+            'tx_qbank_remote_change_timestamp',
+            $remoteChangeTimeStamp
+        );
+
+        $queryBuilder
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($fileUid, \PDO::PARAM_INT)))
+            ->execute();
     }
 
     /**

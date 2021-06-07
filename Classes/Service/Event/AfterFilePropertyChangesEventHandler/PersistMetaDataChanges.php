@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-
 namespace Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandler;
-
 
 use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler\MetaDataFilePropertyChangeEventHandler;
@@ -14,7 +12,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PersistMetaDataChanges implements \Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandlerInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     * @throws \Exception
      */
     public function __invoke(AfterFilePropertyChangesEvent $event): void
     {
@@ -23,7 +22,7 @@ class PersistMetaDataChanges implements \Pixelant\Qbank\Service\Event\AfterFileP
 
         $data = [
             'sys_file_metadata' => [
-                (string)$event->getFile()->getMetaData()->offsetGet('uid') => $updatedProperties
+                (string)$event->getFile()->getMetaData()->offsetGet('uid') => $updatedProperties,
             ],
         ];
 
