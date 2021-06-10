@@ -298,7 +298,7 @@ class ExtensionConfigurationManager implements SingletonInterface
      *
      * @return void
      */
-    public function setAutoUpdate(int $autoUpdate)
+    public function setAutoUpdate(int $autoUpdate): void
     {
         $this->autoUpdate = $autoUpdate;
     }

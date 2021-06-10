@@ -105,7 +105,7 @@ class QbankFileRepository
     /**
      * Fetch list of files where metadata or file needs to be updated.
      *
-     * @param integer $limit
+     * @param int $limit
      * @return array
      */
     public function fetchFilesToUpdate(int $limit): array

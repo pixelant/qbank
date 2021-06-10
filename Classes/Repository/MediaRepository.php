@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Repository;
 
 use QBNK\QBank\API\Model\MediaResponse;
-use TYPO3\CMS\Core\Resource\Folder;
 
 class MediaRepository extends AbstractRepository
 {

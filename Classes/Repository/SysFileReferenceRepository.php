@@ -25,20 +25,20 @@ class SysFileReferenceRepository
         $queryBuilder = $this->getQueryBuilder();
 
         $fileReferenceData = $queryBuilder->select('*')
-                ->from('sys_file_reference')
-                ->where(
-                    $queryBuilder->expr()->eq(
-                        'uid_local',
-                        $queryBuilder->createNamedParameter($fileId, \PDO::PARAM_INT)
-                    )
+            ->from('sys_file_reference')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'uid_local',
+                    $queryBuilder->createNamedParameter($fileId, \PDO::PARAM_INT)
                 )
-                ->andWhere(
-                    $queryBuilder->expr()->eq(
-                        'table_local',
-                        $queryBuilder->createNamedParameter('sys_file', \PDO::PARAM_STR)
-                    )
+            )
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'table_local',
+                    $queryBuilder->createNamedParameter('sys_file', \PDO::PARAM_STR)
                 )
-                ->execute();
+            )
+            ->execute();
 
         if (!method_exists($fileReferenceData, 'fetchAllAssociative')) {
             return $fileReferenceData->fetchAll(FetchMode::ASSOCIATIVE);

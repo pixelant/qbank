@@ -19,7 +19,6 @@ use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Utility\QbankUtility;
-use QBNK\QBank\API\Model\MediaResponse;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -109,6 +108,7 @@ class UpdateQbankFileDataCommand extends Command
                     if (!$isTestOnly) {
                         $qbankService->synchronizeMetadata($file['uid']);
                     }
+
                     break;
                 case 2:
                     $prefix = 'Update';
@@ -119,6 +119,7 @@ class UpdateQbankFileDataCommand extends Command
                             $qbankService->replaceLocalMedia($file['uid']);
                         }
                     }
+
                     break;
                 case 3:
                     $prefix = 'Update';
@@ -130,10 +131,12 @@ class UpdateQbankFileDataCommand extends Command
                             $qbankService->replaceLocalMedia($file['uid']);
                         }
                     }
+
                     break;
                 default:
                     $prefix = 'Auto update is disabled: Would update';
                     $action = 'nothing';
+
                     break;
             }
             $io->writeln(sprintf($message, $prefix, $action, $file['uid']));

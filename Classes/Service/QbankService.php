@@ -621,10 +621,10 @@ class QbankService implements SingletonInterface
         $queryBuilder = $this->getFileQueryBuilder();
         $queryBuilder->update('sys_file');
 
-            $queryBuilder->set(
-                'tx_qbank_remote_is_replaced',
-                1
-            );
+        $queryBuilder->set(
+            'tx_qbank_remote_is_replaced',
+            1
+        );
 
         $queryBuilder
             ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($fileUid, \PDO::PARAM_INT)))

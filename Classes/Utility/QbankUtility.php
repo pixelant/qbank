@@ -161,6 +161,7 @@ class QbankUtility
     {
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
         $extensionConfigurationManager = self::getConfigurationManager();
+
         return $extensionConfigurationManager->getAutoUpdate();
     }
 }
