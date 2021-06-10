@@ -20,7 +20,7 @@ Configuration options can also be set using environment variables. These will ov
 * **Qbank User Password**<br>Environment variable: APP_QBANK_PASSWORD
 * **Qbank host domain** e.g. "mycompany.qbank.se"<br>Environment variable: APP_QBANK_HOST
 * **Target folder for downloaded files** Default: "1:user_upload/qbank"<br>Environment variable: APP_QBANK_DOWNLOADFOLDER
-* **Allow update of metadata and file from command (scheduler/cli)** Default: "No autoupdate"
+* **Allow update of metadata and file from command (scheduler/cli)** Default: "No autoupdate"<br>Environment variable: APP_QBANK_AUTOUPDATE (0: No autoupdate, 1: Metadata, 2: File, 3: Metadata and file)
 
 ![Basic configuration options.](https://github.com/pixelant/qbank/raw/master/Documentation/Configuration/Images/configuration-basic.png)
 
