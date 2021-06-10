@@ -26,6 +26,7 @@
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.file_updated"/></th>
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.metadata_updated"/></th>
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.remote_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.remote_replaced_by"/></th>
                     <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.status_updated"/></th>
                     <th></th>
                 </tr>
@@ -34,7 +35,7 @@
                 <f:for each="{qbankFiles}" as="qbankFile">
                     <tr>
                         <td>
-                            <be:link.editRecord returnUrl="{returnUrl}" table="sys_file" uid="{qbankFile.sys_file_uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}: {qbankFile.sys_file_name} [{qbankFile.sys_file_uid}]">
+                            <be:link.editRecord returnUrl="{returnUrl}" table="sys_file" uid="{qbankFile.sys_file_uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}: {qbankFile.sys_file_name} [{qbankFile.sys_file_uid}, {qbankFile.sys_file_tx_qbank_id}]">
                                 {qbankFile.sys_file_name}
                             </be:link.editRecord>
                         </td>
@@ -50,6 +51,17 @@
                         <td>
                             <f:if condition="{qbankFile.sys_file_tx_qbank_remote_change_timestamp}">
                                 <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.sys_file_tx_qbank_remote_change_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.sys_file_tx_qbank_remote_replaced_by}">
+                                <f:then>
+                                    <f:if condition="{qbankFile.sys_file_tx_qbank_remote_is_replaced}">
+                                        <f:then>{f:translate(key: 'be.local_media_replaced')} ({qbankFile.sys_file_tx_qbank_remote_replaced_by})</f:then>
+                                        <f:else>{qbankFile.sys_file_tx_qbank_remote_replaced_by}</f:else>
+                                    </f:if>
+                                </f:then>
                                 <f:else>-</f:else>
                             </f:if>
                         </td>
@@ -85,9 +97,9 @@
 
                             <f:be.link
                                 route="file_qbank"
-                                parameters="{action: 'synchronizeFile', file: qbankFile.uid}"
+                                parameters="{action: 'replaceLocalMedia', file: qbankFile.sys_file_uid}"
                                 title="{f:translate(key: 'be.action.update-file')}"
-                                class="btn btn-warning"
+                                class="btn btn-warning {f:if(condition: '{qbankFile.sys_file_tx_qbank_remote_replaced_by}', then: '', else: 'disabled')} {f:if(condition: '{qbankFile.sys_file_tx_qbank_remote_is_replaced}', then: 'disabled')}"
                             >
                                 <core:icon identifier="actions-database-reload" /> {f:translate(key: 'be.action.update-file')}
                             </f:be.link>

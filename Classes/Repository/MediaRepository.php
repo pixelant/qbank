@@ -37,7 +37,7 @@ class MediaRepository extends AbstractRepository
      * @param int $id
      * @return resource
      */
-    public function downloadById(int $id, Folder $targetFolder)
+    public function downloadById(int $id)
     {
         return $this->api->media()->download($id);
     }

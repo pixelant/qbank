@@ -25,11 +25,21 @@ class MediaUsageRepository extends AbstractRepository
             return;
         }
 
+        $remoteAddress = GeneralUtility::getIndpEnv('REMOTE_ADDR');
+        if (empty($remoteAddress)) {
+            $remoteAddress = '127.0.0.1';
+        }
+
+        $userAgent = GeneralUtility::getIndpEnv('HTTP_USER_AGENT');
+        if (empty($userAgent)) {
+            $userAgent = 'cli';
+        }
+
         $sessionId = $this->api->events()->session(
             $sessionSourceId,
             'typo3_qbank_' . StringUtility::getUniqueId(),
-            GeneralUtility::getIndpEnv('REMOTE_ADDR'),
-            GeneralUtility::getIndpEnv('HTTP_USER_AGENT')
+            $remoteAddress,
+            $userAgent
         );
 
         $this->api->events()->addUsage(

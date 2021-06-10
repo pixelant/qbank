@@ -29,6 +29,8 @@ class QbankFileRepository
             'sys_file.tx_qbank_metadata_timestamp as sys_file_tx_qbank_metadata_timestamp',
             'sys_file.tx_qbank_remote_change_timestamp as sys_file_tx_qbank_remote_change_timestamp',
             'sys_file.tx_qbank_status_updated_timestamp as sys_file_tx_qbank_status_updated_timestamp',
+            'sys_file.tx_qbank_remote_replaced_by as sys_file_tx_qbank_remote_replaced_by',
+            'sys_file.tx_qbank_remote_is_replaced as sys_file_tx_qbank_remote_is_replaced',
             'sys_file_metadata.uid as sys_file_metadata_uid',
         ];
 
@@ -88,6 +90,54 @@ class QbankFileRepository
                     'sys_file.tx_qbank_status_updated_timestamp',
                     $queryBuilder->createNamedParameter(time() - $interval, \PDO::PARAM_INT)
                 ),
+            )
+            ->setMaxResults($limit)
+            ->orderBy('sys_file.tx_qbank_status_updated_timestamp')
+            ->execute();
+
+        if (!method_exists($resultStatement, 'fetchAllAssociative')) {
+            return $resultStatement->fetchAll(FetchMode::ASSOCIATIVE);
+        }
+
+        return $resultStatement->fetchAllAssociative();
+    }
+
+    /**
+     * Fetch list of files where metadata or file needs to be updated.
+     *
+     * @param integer $limit
+     * @return array
+     */
+    public function fetchFilesToUpdate(int $limit): array
+    {
+        $queryBuilder = $this->getQueryBuilder();
+
+        $resultStatement = $queryBuilder
+            ->select('*')
+            ->from('sys_file')
+            ->where(
+                $queryBuilder->expr()->gt(
+                    'sys_file.tx_qbank_id',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                )
+            )
+            ->andWhere(
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->gt(
+                        'tx_qbank_remote_change_timestamp',
+                        'tx_qbank_metadata_timestamp'
+                    ),
+                    $queryBuilder->expr()->andX(
+                        $queryBuilder->expr()->gt(
+                            'tx_qbank_remote_replaced_by',
+                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                        ),
+                        $queryBuilder->expr()->eq(
+                            'tx_qbank_remote_is_replaced',
+                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                        )
+                    )
+                )
             )
             ->setMaxResults($limit)
             ->orderBy('sys_file.tx_qbank_status_updated_timestamp')

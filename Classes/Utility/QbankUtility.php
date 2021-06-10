@@ -151,4 +151,16 @@ class QbankUtility
 
         return $parsedDate;
     }
+
+    /**
+     * Returns auto update setting from extension configuration.
+     *
+     * @return int
+     */
+    public static function getAutoUpdateOption(): int
+    {
+        /** @var ExtensionConfigurationManager $extensionConfigurationManager */
+        $extensionConfigurationManager = self::getConfigurationManager();
+        return $extensionConfigurationManager->getAutoUpdate();
+    }
 }

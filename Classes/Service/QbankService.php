@@ -11,6 +11,7 @@ use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\MediaUsageRepository;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
+use Pixelant\Qbank\Repository\SysFileReferenceRepository;
 use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
 use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent;
@@ -23,6 +24,7 @@ use QBNK\QBank\API\Model\PropertyType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Resource\File;
@@ -31,6 +33,7 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 class QbankService implements SingletonInterface
 {
@@ -99,7 +102,7 @@ class QbankService implements SingletonInterface
 
         $media = $this->mediaRepository->findById($id);
 
-        $fileResource = $this->mediaRepository->downloadById($id, $downloadFolder);
+        $fileResource = $this->mediaRepository->downloadById($id);
 
         $file = $downloadFolder->createFile($media->getFilename());
         $file->setContents(fread($fileResource, $media->getSize()));
@@ -266,12 +269,99 @@ class QbankService implements SingletonInterface
     }
 
     /**
+     * Synchronize file content for a particular file UID.
+     *
+     * @param int $fileId The FAL file UID
+     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     */
+    public function replaceLocalMedia(int $fileId): void
+    {
+        // fetch current file
+        $file = $this->resourceFactory->getFileObject($fileId);
+        if ($file === null) {
+            throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
+                'No file found for given UID: ' . $fileId,
+                1623070299
+            );
+        }
+
+        // get qbank id
+        $mediaIdentifier = $this->getQbankMediaIdentifierForFile($fileId);
+
+        // get replacement qbank id
+        $replacedByMediaIdentifier = $this->getQbankReplacedByMediaIdentifierForFile($fileId);
+
+        // get replacement file
+        $replacedByFile = $this->createLocalMediaCopy($replacedByMediaIdentifier);
+        if ($replacedByFile === null) {
+            throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
+                'No file found for given QBank id: ' . $replacedByMediaIdentifier,
+                1623306399
+            );
+        }
+
+        // fetch all sys_file_references
+        $sysFileReferences = GeneralUtility::makeInstance(SysFileReferenceRepository::class)
+            ->fetchRawSysFileReferencesByFileId($fileId);
+
+        $data = [];
+        $cmd = [];
+        $pids = [];
+
+        // go through references to build data for sys_file_reference updates
+        if (is_array($sysFileReferences)) {
+            foreach ($sysFileReferences as $sysFileReference) {
+                // remove media usage for current file
+                $this->removeMediaUsageInFileReference($sysFileReference['uid']);
+
+                // create new unique id
+                $newId = StringUtility::getUniqueId('NEW');
+                // "copy" current reference to new
+                $data['sys_file_reference'][$newId] = $sysFileReference;
+                // unset uid on new
+                unset($data['sys_file_reference'][$newId]['uid']);
+                // change file id on new
+                $data['sys_file_reference'][$newId]['uid_local'] = $replacedByFile->getProperty('uid');
+
+                // remember pages
+                $pids[] = $sysFileReference['pid'];
+
+                // set current relation to deleted
+                $cmd['sys_file_reference'][$sysFileReference['uid']]['delete'] = 1;
+            }
+
+            if (count($data) > 0) {
+                /** @var DataHandler $dataHandler */
+                $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
+                $dataHandler->start($data, $cmd);
+                $dataHandler->process_datamap();
+                $dataHandler->process_cmdmap();
+
+                // report media usage for new references
+                $newRelations = $dataHandler->substNEWwithIDs;
+                foreach ($newRelations as $newSysFileReferenceId) {
+                    $this->reportMediaUsageInFileReference($newSysFileReferenceId);
+                }
+
+                // clear cache on affected pages
+                $pids = array_unique($pids);
+                foreach ($pids as $pid) {
+                    $dataHandler->clear_cacheCmd((int)$pid);
+                }
+
+                // update replaced
+                $this->setFileRecordToIsReplaced($fileId);
+            }
+        }
+    }
+
+    /**
      * Update a sys_file record with QBank remote update timestamp and update status timestamp.
      *
      * @param int $fileUid The local file UID
      * @param int $remoteChangeTimeStamp Timestamp of last update of media in QBank.
      */
-    public function updateFileRemoteChange(int $fileUid, int $remoteChangeTimeStamp): void
+    public function updateFileRemoteChange(int $fileUid, int $remoteChangeTimeStamp, int $remoteReplacedBy): void
     {
         $queryBuilder = $this->getFileQueryBuilder();
         $queryBuilder->update('sys_file');
@@ -284,6 +374,11 @@ class QbankService implements SingletonInterface
         $queryBuilder->set(
             'tx_qbank_remote_change_timestamp',
             $remoteChangeTimeStamp
+        );
+
+        $queryBuilder->set(
+            'tx_qbank_remote_replaced_by',
+            $remoteReplacedBy
         );
 
         $queryBuilder
@@ -316,6 +411,23 @@ class QbankService implements SingletonInterface
         ) ?? [
             'tx_qbank_id' => 0,
         ])['tx_qbank_id'];
+    }
+
+    /**
+     * Returns the QBank replaced by media ID for the sys_file UID supplied in $fileId.
+     *
+     * @param int $fileId
+     * @return int The QBank media ID. Zero if not found or file is not QBank media.
+     */
+    protected function getQbankReplacedByMediaIdentifierForFile(int $fileId): int
+    {
+        return (int)(BackendUtility::getRecord(
+            'sys_file',
+            $fileId,
+            'tx_qbank_remote_replaced_by'
+        ) ?? [
+            'tx_qbank_remote_replaced_by' => 0,
+        ])['tx_qbank_remote_replaced_by'];
     }
 
     /**
@@ -497,5 +609,25 @@ class QbankService implements SingletonInterface
         $propertyTypeRepository = GeneralUtility::makeInstance(PropertyTypeRepository::class);
 
         return $propertyTypeRepository->findBySystemName($systemName);
+    }
+
+    /**
+     * Update a sys_file record and set it as QBank file is replaced.
+     *
+     * @param int $fileUid The local file UID
+     */
+    protected function setFileRecordToIsReplaced(int $fileUid): void
+    {
+        $queryBuilder = $this->getFileQueryBuilder();
+        $queryBuilder->update('sys_file');
+
+            $queryBuilder->set(
+                'tx_qbank_remote_is_replaced',
+                1
+            );
+
+        $queryBuilder
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($fileUid, \PDO::PARAM_INT)))
+            ->execute();
     }
 }

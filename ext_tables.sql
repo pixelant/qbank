@@ -8,6 +8,8 @@ CREATE TABLE sys_file (
 	tx_qbank_remote_change tinyint(3) unsigned DEFAULT 0 NOT NULL,
 	tx_qbank_status_updated_timestamp int(11) unsigned DEFAULT 0 NOT NULL,
 	tx_qbank_remote_change_timestamp int(11) unsigned DEFAULT 0 NOT NULL,
+	tx_qbank_remote_replaced_by int(11) unsigned DEFAULT 0 NOT NULL,
+	tx_qbank_remote_is_replaced tinyint(3) unsigned DEFAULT 0 NOT NULL,
 
 	KEY qbank (tx_qbank_id),
 );

@@ -76,6 +76,11 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected $deploymentSites;
 
     /**
+     * @var int
+     */
+    protected $autoUpdate;
+
+    /**
      * @var ExtensionConfiguration
      */
     protected $extensionConfiguration;
@@ -96,6 +101,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         $this->password = getenv('APP_QBANK_PASSWORD') ?: (string)$configuration['password'];
         $this->host = getenv('APP_QBANK_HOST') ?: (string)$configuration['host'];
         $this->downloadFolder = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
+        $this->autoUpdate = (int)$configuration['autoUpdate'] ?? 0;
         $this->sessionSource = (int)(getenv('APP_QBANK_SESSIONSOURCE') ?: $configuration['sessionSource']);
         $this->deploymentSites = GeneralUtility::intExplode(
             ',',
@@ -273,5 +279,27 @@ class ExtensionConfigurationManager implements SingletonInterface
     public function setDeploymentSites(array $deploymentSites): void
     {
         $this->deploymentSites = $deploymentSites;
+    }
+
+    /**
+     * Get the value of autoUpdate.
+     *
+     * @return int
+     */
+    public function getAutoUpdate()
+    {
+        return $this->autoUpdate;
+    }
+
+    /**
+     * Set the value of autoUpdate.
+     *
+     * @param int $autoUpdate
+     *
+     * @return void
+     */
+    public function setAutoUpdate(int $autoUpdate)
+    {
+        $this->autoUpdate = $autoUpdate;
     }
 }

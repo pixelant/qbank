@@ -62,8 +62,14 @@
 			<trans-unit id="be.action.update-metadata">
 				<source>Sync metadata</source>
 			</trans-unit>
+			<trans-unit id="be.action.updated-metadata">
+				<source>Metadata was synced</source>
+			</trans-unit>
 			<trans-unit id="be.action.update-file">
-				<source>Sync file</source>
+				<source>Replace file</source>
+			</trans-unit>
+			<trans-unit id="be.action.updated-file">
+				<source>Local media was replaced</source>
 			</trans-unit>
 			<trans-unit id="be.identifier" resname="be.identifier">
 				<source>Id</source>
@@ -85,6 +91,12 @@
 			</trans-unit>
 			<trans-unit id="be.status_updated" resname="be.status_updated">
 				<source>Status updated</source>
+			</trans-unit>
+			<trans-unit id="be.remote_replaced_by" resname="be.remote_replaced_by">
+				<source>Remote replaced by</source>
+			</trans-unit>
+			<trans-unit id="be.local_media_replaced" resname="be.local_media_replaced">
+				<source>Local media is replaced</source>
 			</trans-unit>
 		</body>
 	</file>

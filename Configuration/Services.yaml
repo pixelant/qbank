@@ -75,3 +75,8 @@ services:
     tags:
       - name: 'console.command'
         command: 'qbank:updateqbankfilestatuscommand'
+
+  Pixelant\Qbank\Command\UpdateQbankFileDataCommand:
+    tags:
+      - name: 'console.command'
+        command: 'qbank:updateqbankfiledatacommand'

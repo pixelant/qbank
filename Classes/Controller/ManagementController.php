@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
@@ -261,6 +262,38 @@ final class ManagementController
             }
 
             $this->qbankService->synchronizeMetadata($file);
+        }
+
+        $this->moduleTemplate->addFlashMessage(
+            $this->getLanguageService()->getLL('be.action.updated-metadata'),
+            '',
+            FlashMessage::OK
+        );
+
+        $this->forward('list');
+    }
+
+    /**
+     * "replace" image for file.
+     */
+    public function replaceLocalMediaAction(): void
+    {
+        $files = $this->arguments['files'] ?? [$this->arguments['file']];
+
+        foreach ($files as $file) {
+            $file = (int)$file;
+
+            if ($file <= 0) {
+                continue;
+            }
+
+            $this->qbankService->replaceLocalMedia($file);
+
+            $this->moduleTemplate->addFlashMessage(
+                $this->getLanguageService()->getLL('be.action.updated-file'),
+                '',
+                FlashMessage::OK
+            );
         }
 
         $this->forward('list');

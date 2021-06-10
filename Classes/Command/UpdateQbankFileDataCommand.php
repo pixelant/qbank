@@ -18,6 +18,7 @@ namespace Pixelant\Qbank\Command;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
+use Pixelant\Qbank\Utility\QbankUtility;
 use QBNK\QBank\API\Model\MediaResponse;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +35,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Next Command can then fetch qbank files where tx_qbank_remote_change_timestamp is
  * newer than the tx_qbank_file_timestamp or tx_qbank_metadata_timestamp.
  */
-class UpdateQbankFileStatusCommand extends Command
+class UpdateQbankFileDataCommand extends Command
 {
     /**
      * Configure the command by defining the name, options and arguments.
@@ -43,20 +44,13 @@ class UpdateQbankFileStatusCommand extends Command
      */
     public function configure(): void
     {
-        $this->setDescription('Update status of downloaded QBank files.')
+        $this->setDescription('Update metadata and file on downloaded QBank files.')
             ->addOption(
                 'limit',
                 'l',
                 InputOption::VALUE_OPTIONAL,
                 'Limit number of files to check per run. (default 10)',
                 10
-            )
-            ->addOption(
-                'interval',
-                'i',
-                InputOption::VALUE_OPTIONAL,
-                'Interval (in seconds) until files checked again (default 86400).',
-                86400
             )
             ->addOption(
                 'check',
@@ -80,16 +74,15 @@ class UpdateQbankFileStatusCommand extends Command
 
         $isTestOnly = $input->getOption('check');
         $limit = (int)$input->getOption('limit');
-        $interval = (int)$input->getOption('interval');
 
         /** @var QbankFileRepository $qbankFileRepository */
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
-        $updateQueueu = $qbankFileRepository->fetchStatusUpdateQueue($limit, $interval);
+        $updateQueueu = $qbankFileRepository->fetchFilesToUpdate($limit);
 
         $io->title('Update QBank status on files.');
 
         if (count($updateQueueu) === 0) {
-            $io->success('Status is already updated for all QBank files.');
+            $io->success('Data is already updated for all QBank files.');
 
             return 0;
         }
@@ -99,22 +92,51 @@ class UpdateQbankFileStatusCommand extends Command
         /** @var QbankService $qbankService */
         $qbankService = GeneralUtility::makeInstance(QbankService::class);
 
+        $autoUpdate = QbankUtility::getAutoUpdateOption();
+
         /** @var MediaRepository $mediaRepository */
         $mediaRepository = GeneralUtility::makeInstance(MediaRepository::class);
 
         foreach ($updateQueueu as $file) {
-            /** @var MediaResponse $media */
-            $media = $mediaRepository->findById($file['tx_qbank_id']);
-            $remoteUpdate = (int)$media->getUpdated()->getTimestamp();
-            $remoteReplacedBy = (int)$media->getReplacedBy();
-            $message = '%s sys_file, set remote change to "%s", replaced: "%s" on sys_file with uid "%s".';
-            if ($isTestOnly) {
-                $prefix = 'TESTONLY: Would update';
-            } else {
-                $prefix = 'Update';
-                $qbankService->updateFileRemoteChange($file['uid'], $remoteUpdate, $remoteReplacedBy);
+            $action = '';
+            $message = '%s %s on sys_file with uid "%s".';
+
+            // Metadata=1,File=2,Metadata and file=3
+            switch ($autoUpdate) {
+                case 1:
+                    $prefix = 'Update';
+                    $action = 'metadata';
+                    if (!$isTestOnly) {
+                        $qbankService->synchronizeMetadata($file['uid']);
+                    }
+                    break;
+                case 2:
+                    $prefix = 'Update';
+                    $action = 'file is not replaced';
+                    if (!$isTestOnly) {
+                        if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
+                            $action = 'file';
+                            $qbankService->replaceLocalMedia($file['uid']);
+                        }
+                    }
+                    break;
+                case 3:
+                    $prefix = 'Update';
+                    $action = 'metadata';
+                    if (!$isTestOnly) {
+                        $qbankService->synchronizeMetadata($file['uid']);
+                        if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
+                            $action = 'metadata and file';
+                            $qbankService->replaceLocalMedia($file['uid']);
+                        }
+                    }
+                    break;
+                default:
+                    $prefix = 'Auto update is disabled: Would update';
+                    $action = 'nothing';
+                    break;
             }
-            $io->writeln(sprintf($message, $prefix, $remoteUpdate, $remoteReplacedBy, $file['uid']));
+            $io->writeln(sprintf($message, $prefix, $action, $file['uid']));
         }
 
         $io->success('Status has been updated for ' . count($updateQueueu) . ' QBank files.');

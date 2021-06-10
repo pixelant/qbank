@@ -20,6 +20,7 @@ Configuration options can also be set using environment variables. These will ov
 * **Qbank User Password**<br>Environment variable: APP_QBANK_PASSWORD
 * **Qbank host domain** e.g. "mycompany.qbank.se"<br>Environment variable: APP_QBANK_HOST
 * **Target folder for downloaded files** Default: "1:user_upload/qbank"<br>Environment variable: APP_QBANK_DOWNLOADFOLDER
+* **Allow update of metadata and file from command (scheduler/cli)** Default: "No autoupdate"
 
 ![Basic configuration options.](https://github.com/pixelant/qbank/raw/master/Documentation/Configuration/Images/configuration-basic.png)
 
@@ -45,6 +46,21 @@ In the TYPO3 Backend, navigate to _Site Management > Sites >_ {Your site} _> Qba
 In the TYPO3 Backend, navigate to _Site Management > Sites >_ {Your site} _> Languages_ tab. Select the language you would like to edit and find the "QBank deployment sites" option. You can set the field to a comma-separated list of deployment sites. If empty, the value is inherited from the site's "Deployment sites" field, global extension configuration, or environment variables.
 
 ![Per-site-language configuration of deployment site.](https://github.com/pixelant/qbank/raw/master/Documentation/Configuration/Images/language-configuration.png)
+
+## BE Module
+
+#### Overview
+
+Not completed. Will contain some overview of files and statuses.
+#### Mappings
+
+This view displays all mappings mappings between QBank and TYPO3 metadata. It is also possible to add or remove mappings from this view.
+#### List
+
+This view displays a list of the QBank files downloaded to TYPO3. It is possible to manually update metadata or replace files from it.
+## Console Commands
+
+There are two console commands. One that can be used to update status of downloaded files, and one that can be used to update metadata or replace files. These commands can be added to scheduler tasks to be executed by a certain interval.
 
 ## Support
 
