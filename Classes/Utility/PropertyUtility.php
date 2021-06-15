@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Utility;
 
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
+use Pixelant\Qbank\Exception\MissingFilePropertyException;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
 use Pixelant\Qbank\TypeConverter\Exception\InvalidTypeConverterException;
 use Pixelant\Qbank\TypeConverter\TypeConverterInterface;
@@ -132,9 +133,19 @@ class PropertyUtility
      *
      * @param string $filePropertyName The file property.
      * @return string
+     * @throws MissingFilePropertyException
      */
     public static function getLabelForFileProperty(string $filePropertyName): string
     {
-        return self::getFileProperties()[$filePropertyName]['label'];
+        $label = self::getFileProperties()[$filePropertyName]['label'];
+
+        if ($label === null) {
+            throw new MissingFilePropertyException(
+                'No FileProperty defined with property name "' . $filePropertyName . '".',
+                1623754652
+            );
+        }
+
+        return $label;
     }
 }
