@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pixelant\Qbank\Unit\TypeConverter;
+namespace Pixelant\Qbank\Unit\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
