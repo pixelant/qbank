@@ -125,7 +125,7 @@ class QbankUtility
      */
     public static function qbankDateStringToUnixTimestamp(string $date): int
     {
-        return self::qbankDateStringToDateTime()->getTimestamp();
+        return self::qbankDateStringToDateTime($date)->getTimestamp();
     }
 
     /**
