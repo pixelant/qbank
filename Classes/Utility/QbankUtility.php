@@ -137,8 +137,9 @@ class QbankUtility
      */
     public static function qbankDateStringToDateTime(string $date): \DateTime
     {
+
         $parsedDate = \DateTime::createFromFormat(
-            'Y-m-d\TH:i:sP',
+            \DateTimeInterface::RFC3339,
             $date
         );
 
