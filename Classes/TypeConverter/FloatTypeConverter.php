@@ -25,7 +25,7 @@ class FloatTypeConverter extends AbstractTypeConverter
      */
     public function convertFrom($sourceValue, int $qbankDataTypeId)
     {
-        return (int)$sourceValue;
+        return (float)$sourceValue;
     }
 
     /**
