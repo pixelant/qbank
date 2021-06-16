@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandler;
 
+use Pixelant\Qbank\Exception\PersistMetaDataChangesException;
 use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler\MetaDataFilePropertyChangeEventHandler;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
@@ -13,7 +14,7 @@ class PersistMetaDataChanges implements \Pixelant\Qbank\Service\Event\AfterFileP
 {
     /**
      * {@inheritdoc}
-     * @throws \Exception
+     * @throws PersistMetaDataChangesException
      */
     public function __invoke(AfterFilePropertyChangesEvent $event): void
     {
@@ -33,8 +34,7 @@ class PersistMetaDataChanges implements \Pixelant\Qbank\Service\Event\AfterFileP
         $dataHandler->process_datamap();
 
         if (count($dataHandler->errorLog) > 0) {
-            // TODO: Use custom exception class.
-            throw new \Exception(
+            throw new PersistMetaDataChangesException(
                 'Errors found in DataHandler error log: ' . implode(',', $dataHandler->errorLog),
                 1622744599
             );
