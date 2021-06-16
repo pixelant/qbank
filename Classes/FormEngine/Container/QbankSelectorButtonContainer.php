@@ -200,25 +200,25 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      */
     protected function inlineStyleAttribute(): string
     {
-        $inlineStyle = [];
+        $inlineStyles = [];
         $parameterArray = $this->data['parameterArray'];
 
         $config = $parameterArray['fieldConf']['config'];
         $isReadOnly = isset($config['readOnly']) && $config['readOnly'];
 
-        $numberOfFullLocalizedChildren = 0;
+        $numberOfFullyLocalizedChildren = 0;
         foreach ($parameterArray['fieldConf']['children'] as $child) {
             if (!$child['isInlineDefaultLanguageRecordInLocalizedParentContext']) {
-                $numberOfFullLocalizedChildren++;
+                $numberOfFullyLocalizedChildren++;
             }
         }
 
-        if ($isReadOnly || $numberOfFullLocalizedChildren >= $config['maxitems']) {
-            $inlineStyle[] = 'display: none';
+        if ($isReadOnly || $numberOfFullyLocalizedChildren >= $config['maxitems']) {
+            $inlineStyles[] = 'display: none';
         }
 
-        if (count($inlineStyle) > 0) {
-            return 'style="' . implode(';', $inlineStyle) . '"';
+        if (count($inlineStyles) > 0) {
+            return 'style="' . implode(';', $inlineStyles) . '"';
         }
 
         return '';
