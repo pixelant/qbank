@@ -55,7 +55,7 @@ class UpdateQbankFileStatusCommand extends Command
                 'interval',
                 'i',
                 InputOption::VALUE_OPTIONAL,
-                'Interval (in seconds) until files checked again (default 86400).',
+                'Interval (in seconds) until files are checked again (default 86400).',
                 86400
             )
             ->addOption(
@@ -86,10 +86,10 @@ class UpdateQbankFileStatusCommand extends Command
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
         $updateQueueu = $qbankFileRepository->fetchStatusUpdateQueue($limit, $interval);
 
-        $io->title('Update QBank status on files.');
+        $io->title('Update QBank file status.');
 
         if (count($updateQueueu) === 0) {
-            $io->success('Status is already updated for all QBank files.');
+            $io->success('Status has already been updated for all QBank files.');
 
             return 0;
         }
