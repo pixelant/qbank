@@ -276,7 +276,6 @@ class QbankService implements SingletonInterface
      */
     public function replaceLocalMedia(int $fileId): void
     {
-        // fetch current file
         $file = $this->resourceFactory->getFileObject($fileId);
         if ($file === null) {
             throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
@@ -285,13 +284,8 @@ class QbankService implements SingletonInterface
             );
         }
 
-        // get qbank id
-        $mediaIdentifier = $this->getQbankMediaIdentifierForFile($fileId);
-
-        // get replacement qbank id
         $replacedByMediaIdentifier = $this->getQbankReplacedByMediaIdentifierForFile($fileId);
 
-        // get replacement file
         $replacedByFile = $this->createLocalMediaCopy($replacedByMediaIdentifier);
         if ($replacedByFile === null) {
             throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
@@ -300,7 +294,6 @@ class QbankService implements SingletonInterface
             );
         }
 
-        // fetch all sys_file_references
         $sysFileReferences = GeneralUtility::makeInstance(SysFileReferenceRepository::class)
             ->fetchRawSysFileReferencesByFileId($fileId);
 
@@ -308,25 +301,21 @@ class QbankService implements SingletonInterface
         $cmd = [];
         $pids = [];
 
-        // go through references to build data for sys_file_reference updates
+        // Go through references to build data for sys_file_reference updates.
         if (is_array($sysFileReferences)) {
             foreach ($sysFileReferences as $sysFileReference) {
-                // remove media usage for current file
                 $this->removeMediaUsageInFileReference($sysFileReference['uid']);
 
-                // create new unique id
                 $newId = StringUtility::getUniqueId('NEW');
-                // "copy" current reference to new
+
                 $data['sys_file_reference'][$newId] = $sysFileReference;
-                // unset uid on new
+
                 unset($data['sys_file_reference'][$newId]['uid']);
-                // change file id on new
+
                 $data['sys_file_reference'][$newId]['uid_local'] = $replacedByFile->getProperty('uid');
 
-                // remember pages
                 $pids[] = $sysFileReference['pid'];
 
-                // set current relation to deleted
                 $cmd['sys_file_reference'][$sysFileReference['uid']]['delete'] = 1;
             }
 
@@ -337,19 +326,16 @@ class QbankService implements SingletonInterface
                 $dataHandler->process_datamap();
                 $dataHandler->process_cmdmap();
 
-                // report media usage for new references
                 $newRelations = $dataHandler->substNEWwithIDs;
                 foreach ($newRelations as $newSysFileReferenceId) {
                     $this->reportMediaUsageInFileReference($newSysFileReferenceId);
                 }
 
-                // clear cache on affected pages
                 $pids = array_unique($pids);
                 foreach ($pids as $pid) {
                     $dataHandler->clear_cacheCmd((int)$pid);
                 }
 
-                // update replaced
                 $this->setFileRecordToIsReplaced($fileId);
             }
         }
