@@ -88,62 +88,69 @@ class UpdateQbankFileDataCommand extends Command
 
         $io->section('Checking ' . count($updateQueueu) . ' files.');
 
-        /** @var QbankService $qbankService */
-        $qbankService = GeneralUtility::makeInstance(QbankService::class);
-
         $autoUpdate = QbankUtility::getAutoUpdateOption();
 
         /** @var MediaRepository $mediaRepository */
         $mediaRepository = GeneralUtility::makeInstance(MediaRepository::class);
 
         foreach ($updateQueueu as $file) {
-            $action = '';
-            $message = '%s %s on sys_file with uid "%s".';
-
-            // Metadata=1,File=2,Metadata and file=3
-            switch ($autoUpdate) {
-                case 1:
-                    $prefix = 'Update';
-                    $action = 'metadata';
-                    if (!$isTestOnly) {
-                        $qbankService->synchronizeMetadata($file['uid']);
-                    }
-
-                    break;
-                case 2:
-                    $prefix = 'Update';
-                    $action = 'file is not replaced';
-                    if (!$isTestOnly) {
-                        if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
-                            $action = 'file';
-                            $qbankService->replaceLocalMedia($file['uid']);
-                        }
-                    }
-
-                    break;
-                case 3:
-                    $prefix = 'Update';
-                    $action = 'metadata';
-                    if (!$isTestOnly) {
-                        $qbankService->synchronizeMetadata($file['uid']);
-                        if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
-                            $action = 'metadata and file';
-                            $qbankService->replaceLocalMedia($file['uid']);
-                        }
-                    }
-
-                    break;
-                default:
-                    $prefix = 'Auto update is disabled: Would update';
-                    $action = 'nothing';
-
-                    break;
-            }
-            $io->writeln(sprintf($message, $prefix, $action, $file['uid']));
+            $message = $this->processFile($file, $autoUpdate, $isTestOnly);
+            $io->writeln($message);
         }
 
         $io->success('Status has been updated for ' . count($updateQueueu) . ' QBank files.');
 
         return 0;
+    }
+
+    protected function processFile(array $file, bool $autoUpdate, bool $isTestOnly)
+    {
+        /** @var QbankService $qbankService */
+        $qbankService = GeneralUtility::makeInstance(QbankService::class);
+
+        $action = '';
+        $message = '%s %s on sys_file with uid "%s".';
+
+        // Metadata=1,File=2,Metadata and file=3
+        switch ($autoUpdate) {
+            case 1:
+                $prefix = 'Update';
+                $action = 'metadata';
+                if (!$isTestOnly) {
+                    $qbankService->synchronizeMetadata($file['uid']);
+                }
+
+                break;
+            case 2:
+                $prefix = 'Update';
+                $action = 'file is not replaced';
+                if (!$isTestOnly) {
+                    if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
+                        $action = 'file';
+                        $qbankService->replaceLocalMedia($file['uid']);
+                    }
+                }
+
+                break;
+            case 3:
+                $prefix = 'Update';
+                $action = 'metadata';
+                if (!$isTestOnly) {
+                    $qbankService->synchronizeMetadata($file['uid']);
+                    if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
+                        $action = 'metadata and file';
+                        $qbankService->replaceLocalMedia($file['uid']);
+                    }
+                }
+
+                break;
+            default:
+                $prefix = 'Auto update is disabled: Would update';
+                $action = 'nothing';
+
+                break;
+        }
+
+        return sprintf($message, $prefix, $action, $file['uid']);
     }
 }
