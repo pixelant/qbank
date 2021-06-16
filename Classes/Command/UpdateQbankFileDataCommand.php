@@ -15,7 +15,6 @@
 
 namespace Pixelant\Qbank\Command;
 
-use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Utility\QbankUtility;
@@ -81,7 +80,7 @@ class UpdateQbankFileDataCommand extends Command
         $io->title('Update QBank file status.');
 
         if (count($updateQueue) === 0) {
-            $io->success('Data is already updated for all QBank files.');
+            $io->success('All QBank files are up to date.');
 
             return 0;
         }
@@ -89,9 +88,6 @@ class UpdateQbankFileDataCommand extends Command
         $io->section('Checking ' . count($updateQueue) . ' files.');
 
         $autoUpdate = QbankUtility::getAutoUpdateOption();
-
-        /** @var MediaRepository $mediaRepository */
-        $mediaRepository = GeneralUtility::makeInstance(MediaRepository::class);
 
         foreach ($updateQueue as $file) {
             $message = $this->processFile($file, $autoUpdate, $isTestOnly);
@@ -109,47 +105,41 @@ class UpdateQbankFileDataCommand extends Command
         $qbankService = GeneralUtility::makeInstance(QbankService::class);
 
         $action = '';
-        $message = '%s %s on sys_file with uid "%s".';
+        $prefix = 'Auto update is disabled';
 
         // Metadata=1,File=2,Metadata and file=3
-        switch ($autoUpdate) {
-            case 1:
-                $prefix = 'Update';
-                $action = 'metadata';
-                if (!$isTestOnly) {
-                    $qbankService->synchronizeMetadata($file['uid']);
-                }
-
-                break;
-            case 2:
-                $prefix = 'Update';
-                $action = 'file is not replaced';
-                if (!$isTestOnly) {
-                    if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
-                        $action = 'file';
-                        $qbankService->replaceLocalMedia($file['uid']);
-                    }
-                }
-
-                break;
-            case 3:
-                $prefix = 'Update';
-                $action = 'metadata';
-                if (!$isTestOnly) {
-                    $qbankService->synchronizeMetadata($file['uid']);
-                    if ((int)$file['tx_qbank_remote_replaced_by'] > 0) {
-                        $action = 'metadata and file';
-                        $qbankService->replaceLocalMedia($file['uid']);
-                    }
-                }
-
-                break;
-            default:
-                $prefix = 'Auto update is disabled: Would update';
-                $action = 'nothing';
-
-                break;
+        if ($autoUpdate & 1) {
+            $prefix = 'Update';
+            $action = 'metadata';
+            if (!$isTestOnly) {
+                $qbankService->synchronizeMetadata($file['uid']);
+            }
         }
+
+        if ($autoUpdate & 2) {
+            $prefix = 'Update';
+            $action = 'file is not replaced';
+            if (!$isTestOnly) {
+                if ($file['tx_qbank_remote_replaced_by'] > 0) {
+                    $action = 'file';
+                    $qbankService->replaceLocalMedia($file['uid']);
+                }
+            }
+        }
+
+        if ($autoUpdate & 3) {
+            $prefix = 'Update';
+            $action = 'metadata';
+            if (!$isTestOnly) {
+                $qbankService->synchronizeMetadata($file['uid']);
+                if ($file['tx_qbank_remote_replaced_by'] > 0) {
+                    $action = 'metadata and file';
+                    $qbankService->replaceLocalMedia($file['uid']);
+                }
+            }
+        }
+
+        $message = '%s %s on sys_file with uid "%s".';
 
         return sprintf($message, $prefix, $action, $file['uid']);
     }
