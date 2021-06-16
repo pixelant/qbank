@@ -78,7 +78,7 @@ class UpdateQbankFileDataCommand extends Command
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
         $updateQueue = $qbankFileRepository->fetchFilesToUpdate($limit);
 
-        $io->title('Update QBank status on files.');
+        $io->title('Update QBank file status.');
 
         if (count($updateQueue) === 0) {
             $io->success('Data is already updated for all QBank files.');
