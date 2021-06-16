@@ -20,18 +20,18 @@ class QbankFileRepository
     public function findAll(): array
     {
         $selectFields = [
-            'sys_file.uid as sys_file_uid',
-            'sys_file.name as sys_file_name',
-            'sys_file.storage as sys_file_storage',
-            'sys_file.identifier as sys_file_identifier',
-            'sys_file.tx_qbank_id as sys_file_tx_qbank_id',
-            'sys_file.tx_qbank_file_timestamp as sys_file_tx_qbank_file_timestamp',
-            'sys_file.tx_qbank_metadata_timestamp as sys_file_tx_qbank_metadata_timestamp',
-            'sys_file.tx_qbank_remote_change_timestamp as sys_file_tx_qbank_remote_change_timestamp',
-            'sys_file.tx_qbank_status_updated_timestamp as sys_file_tx_qbank_status_updated_timestamp',
-            'sys_file.tx_qbank_remote_replaced_by as sys_file_tx_qbank_remote_replaced_by',
-            'sys_file.tx_qbank_remote_is_replaced as sys_file_tx_qbank_remote_is_replaced',
-            'sys_file_metadata.uid as sys_file_metadata_uid',
+            'sys_file.uid',
+            'sys_file.name',
+            'sys_file.storage',
+            'sys_file.identifier',
+            'sys_file.tx_qbank_id',
+            'sys_file.tx_qbank_file_timestamp',
+            'sys_file.tx_qbank_metadata_timestamp',
+            'sys_file.tx_qbank_remote_change_timestamp',
+            'sys_file.tx_qbank_status_updated_timestamp',
+            'sys_file.tx_qbank_remote_replaced_by',
+            'sys_file.tx_qbank_remote_is_replaced',
+            'sys_file_metadata.uid AS metadata_uid',
         ];
 
         $queryBuilder = $this->getQueryBuilder();
