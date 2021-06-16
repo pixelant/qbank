@@ -65,13 +65,20 @@ class UpdateQbankFileDataCommand extends Command
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Bootstrap::initializeBackendAuthentication();
         $io = new SymfonyStyle($input, $output);
 
         $isTestOnly = $input->getOption('check');
         $limit = (int)$input->getOption('limit');
+        $autoUpdate = QbankUtility::getAutoUpdateOption();
+
+        if ($autoUpdate === 0) {
+            $io->info('Automatic updates are disabled.');
+
+            return 0;
+        }
 
         /** @var QbankFileRepository $qbankFileRepository */
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
@@ -87,8 +94,6 @@ class UpdateQbankFileDataCommand extends Command
 
         $io->section('Checking ' . count($updateQueue) . ' files.');
 
-        $autoUpdate = QbankUtility::getAutoUpdateOption();
-
         foreach ($updateQueue as $file) {
             $message = $this->processFile($file, $autoUpdate, $isTestOnly);
             $io->writeln($message);
@@ -99,13 +104,20 @@ class UpdateQbankFileDataCommand extends Command
         return 0;
     }
 
-    protected function processFile(array $file, bool $autoUpdate, bool $isTestOnly)
+    /**
+     * Process File.
+     *
+     * @param array $file
+     * @param bool $autoUpdate
+     * @param bool $isTestOnly
+     * @return string
+     */
+    protected function processFile(array $file, bool $autoUpdate, bool $isTestOnly): string
     {
         /** @var QbankService $qbankService */
         $qbankService = GeneralUtility::makeInstance(QbankService::class);
 
         $action = '';
-        $prefix = 'Auto update is disabled';
 
         // Metadata=1,File=2,Metadata and file=3
         if ($autoUpdate & 1) {
