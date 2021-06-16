@@ -204,7 +204,9 @@ final class ManagementController
                     ]
                 ))
                 ->setTitle($this->getLanguageService()->getLL('be.button.add_mapping'))
-                ->setIcon($this->iconFactory->getIcon('actions-add', Icon::SIZE_SMALL));
+                ->setIcon($this->iconFactory->getIcon('actions-add', Icon::SIZE_SMALL))
+                ->setShowLabelText(true);
+
             $buttonBar->addButton($newRecordButton, ButtonBar::BUTTON_POSITION_LEFT, 1);
         }
 
@@ -221,7 +223,6 @@ final class ManagementController
     private function overviewAction(): void
     {
         $properties = $this->qbankService->fetchMediaProperties();
-        // $bySystemName = $this->qbankService->fetchPropertyTypeBySystemName('akeywordsystemname');
         $this->view->assign('properties', $properties);
     }
 
@@ -274,7 +275,7 @@ final class ManagementController
     }
 
     /**
-     * "replace" image for file.
+     * Replace image for file.
      */
     public function replaceLocalMediaAction(): void
     {
