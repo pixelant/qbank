@@ -84,7 +84,7 @@
 				<source>Metadata updated</source>
 			</trans-unit>
 			<trans-unit id="be.qbank_id" resname="be.qbank_id">
-				<source>QBank Id</source>
+				<source>QBank ID</source>
 			</trans-unit>
 			<trans-unit id="be.remote_updated" resname="be.remote_updated">
 				<source>Remote updated</source>
