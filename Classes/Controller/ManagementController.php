@@ -176,6 +176,7 @@ final class ManagementController
                     $uriBuilder->buildUriFromRoute('file_qbank', ['action' => $menuAction])
                 )
                 ->setTitle($lang->getLL('be.menu_item.' . $menuAction));
+
             $menu->addMenuItem($menuItem);
         }
 
