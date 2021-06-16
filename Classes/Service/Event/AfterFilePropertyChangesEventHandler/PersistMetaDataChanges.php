@@ -10,7 +10,7 @@ use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler\MetaDataFileProp
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/*
+/**
  * Persist the changes that have previously been made in the MetaDatafilePropertyChangeEventHandler.
  */
 class PersistMetaDataChanges implements \Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandlerInterface
