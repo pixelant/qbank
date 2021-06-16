@@ -47,7 +47,7 @@ In the TYPO3 Backend, navigate to _Site Management > Sites >_ {Your site} _> Lan
 
 ![Per-site-language configuration of deployment site.](https://github.com/pixelant/qbank/raw/master/Documentation/Configuration/Images/language-configuration.png)
 
-## BE Module
+## Backend Module
 
 #### Overview
 

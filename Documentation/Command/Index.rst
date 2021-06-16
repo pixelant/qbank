@@ -28,14 +28,14 @@ to decide if files needs to be update.
 
    vendor/bin/typo3 qbank:updateqbankfilestatuscommand
 
-The command have three options:
+The command has three options:
 
 - `--limit n`
    Limit number of files to check per run. (default 10)
 - `--interval n`
    Interval (in seconds) until files checked again (default 86400).
 - `--check`
-   Only display information, don\'t update records.
+   Only display information, don't update records.
 
 
 UpdateQbankFileDataCommand
@@ -51,7 +51,7 @@ update metadata and replace file.
    vendor/bin/typo3 qbank:updateqbankfiledatacommand
 
 
-The command have three options:
+The command has two options:
 
 - `--limit n`
    Limit number of files to check per run. (default 10)
