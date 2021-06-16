@@ -137,7 +137,6 @@ class QbankUtility
      */
     public static function qbankDateStringToDateTime(string $date): \DateTime
     {
-
         $parsedDate = \DateTime::createFromFormat(
             \DateTimeInterface::RFC3339,
             $date

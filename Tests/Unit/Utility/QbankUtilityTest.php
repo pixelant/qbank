@@ -19,7 +19,7 @@ class QbankUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function qbankDateStringToDateTimeReturnsCorrectDateTime()
+    public function qbankDateStringToDateTimeReturnsCorrectDateTime(): void
     {
         $stringDate = '2000-06-10T11:13:47+02:00';
         self::assertSame(
@@ -37,18 +37,18 @@ class QbankUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function qbankDateStringToDateTimeThrowsExceptionOnInvalidDateString()
+    public function qbankDateStringToDateTimeThrowsExceptionOnInvalidDateString(): void
     {
         self::expectException(\InvalidArgumentException::class);
 
         $stringDate = '2000-06-10 11:13:47';
         QbankUtility::qbankDateStringToDateTime($stringDate);
-
     }
+
     /**
      * @test
      */
-    public function qbankDateStringToUnixTimestampReturnsCorrectTimeStamp()
+    public function qbankDateStringToUnixTimestampReturnsCorrectTimeStamp(): void
     {
         $testDateTime = new \DateTime();
         $stringDate = $testDateTime->format(\DateTimeInterface::RFC3339);

@@ -89,7 +89,7 @@ class QbankFileRepository
                 $queryBuilder->expr()->lt(
                     'sys_file.tx_qbank_status_updated_timestamp',
                     $queryBuilder->createNamedParameter(time() - $interval, \PDO::PARAM_INT)
-                ),
+                )
             )
             ->setMaxResults($limit)
             ->orderBy('sys_file.tx_qbank_status_updated_timestamp')

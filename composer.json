@@ -23,9 +23,6 @@
 		"qbnk/qbank3api-phpwrapper": "^3.4",
 		"typo3/cms-core": "^10.4"
 	},
-	"suggest": {
-		"typo3/cms-filemetadata": "For additional meta data fields."
-	},
 	"replace": {
 		"typo3-ter/qbank": "self.version"
 	},
@@ -36,6 +33,9 @@
 		"phpunit/phpunit": "^7.5.20",
 		"seld/jsonlint": "^1.8",
 		"typo3/cms-fluid-styled-content": "^9.5 || ^10.4"
+	},
+	"suggest": {
+		"typo3/cms-filemetadata": "For additional meta data fields."
 	},
 	"config": {
 		"preferred-install": {
