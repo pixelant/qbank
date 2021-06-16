@@ -76,29 +76,29 @@ class UpdateQbankFileDataCommand extends Command
 
         /** @var QbankFileRepository $qbankFileRepository */
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
-        $updateQueueu = $qbankFileRepository->fetchFilesToUpdate($limit);
+        $updateQueue = $qbankFileRepository->fetchFilesToUpdate($limit);
 
         $io->title('Update QBank status on files.');
 
-        if (count($updateQueueu) === 0) {
+        if (count($updateQueue) === 0) {
             $io->success('Data is already updated for all QBank files.');
 
             return 0;
         }
 
-        $io->section('Checking ' . count($updateQueueu) . ' files.');
+        $io->section('Checking ' . count($updateQueue) . ' files.');
 
         $autoUpdate = QbankUtility::getAutoUpdateOption();
 
         /** @var MediaRepository $mediaRepository */
         $mediaRepository = GeneralUtility::makeInstance(MediaRepository::class);
 
-        foreach ($updateQueueu as $file) {
+        foreach ($updateQueue as $file) {
             $message = $this->processFile($file, $autoUpdate, $isTestOnly);
             $io->writeln($message);
         }
 
-        $io->success('Status has been updated for ' . count($updateQueueu) . ' QBank files.');
+        $io->success('Status has been updated for ' . count($updateQueue) . ' QBank files.');
 
         return 0;
     }
