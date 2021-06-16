@@ -147,7 +147,7 @@ final class ManagementController
             'settings',
             [
                 'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
-            ],
+            ]
         );
         // Info window is included in this.
         $this->moduleTemplate->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Filelist/FileList');
