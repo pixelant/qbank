@@ -90,7 +90,6 @@ class QbankSelectorButtonContainer extends InlineControlContainer
                 data-file-allowed="' . htmlspecialchars($allowed) . '"
                 data-qbank-token="' . $accessToken . '"
                 ' . $this->inlineStyleAttribute() . '
-                disabled
                 >
                 ' . $this->iconFactory->getIcon('tx-qbank-logo', Icon::SIZE_SMALL)->render() . '
                 ' . $buttonLabel .
