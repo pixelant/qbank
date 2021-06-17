@@ -107,9 +107,9 @@ class QbankService implements SingletonInterface
         $file = $downloadFolder->createFile($media->getFilename());
         $file->setContents(fread($fileResource, $media->getSize()));
 
-        $this->synchronizeMetadata($file->getUid());
-
         $this->updateFileRecord($file->getUid(), true, false, $id);
+
+        $this->synchronizeMetadata($file->getUid());
 
         return $file;
     }
