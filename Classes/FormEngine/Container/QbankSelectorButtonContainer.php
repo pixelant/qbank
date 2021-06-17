@@ -184,7 +184,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
         }
 
         $extensionConfigurationManager->configureForPage(
-            $pageId,
+            (int)$pageId,
             $languageId
         );
 
