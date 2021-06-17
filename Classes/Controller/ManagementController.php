@@ -146,7 +146,9 @@ final class ManagementController
         $this->view->assign(
             'settings',
             [
-                'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
+                'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']
+                    . ' '
+                    . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
             ]
         );
         // Info window is included in this.
