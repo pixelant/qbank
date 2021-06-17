@@ -7,6 +7,7 @@ namespace Pixelant\Qbank\Service;
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
+use Pixelant\Qbank\Exception\ReplaceLocalMediaException;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\MediaUsageRepository;
@@ -325,6 +326,13 @@ class QbankService implements SingletonInterface
                 $dataHandler->start($data, $cmd);
                 $dataHandler->process_datamap();
                 $dataHandler->process_cmdmap();
+
+                if (count($dataHandler->errorLog) > 0) {
+                    throw new ReplaceLocalMediaException(
+                        'Errors found in DataHandler error log: ' . implode(',', $dataHandler->errorLog),
+                        1623916286
+                    );
+                }
 
                 $newRelations = $dataHandler->substNEWwithIDs;
                 foreach ($newRelations as $newSysFileReferenceId) {
