@@ -26,6 +26,78 @@
 			<trans-unit id="js.modal.illegal-extension">
 				<source>The file extension "{0}" is not allowed here.</source>
 			</trans-unit>
+
+			<!-- QBank Management -->
+
+			<trans-unit id="be.menu_item.overview">
+				<source>Overview</source>
+			</trans-unit>
+			<trans-unit id="be.menu_item.mappings">
+				<source>Mappings</source>
+			</trans-unit>
+			<trans-unit id="be.menu_item.list">
+				<source>List</source>
+			</trans-unit>
+			<trans-unit id="be.button.add_mapping">
+				<source>Add new mapping</source>
+			</trans-unit>
+			<trans-unit id="be.overview.title">
+				<source>Overview</source>
+			</trans-unit>
+			<trans-unit id="be.overview.description">
+				<source>Overview of QBank integration.</source>
+			</trans-unit>
+			<trans-unit id="be.mappings.title">
+				<source>Mappings</source>
+			</trans-unit>
+			<trans-unit id="be.mappings.description">
+				<source>Manage mappings between QBank and TYPO3 properties.</source>
+			</trans-unit>
+			<trans-unit id="be.list.title">
+				<source>List</source>
+			</trans-unit>
+			<trans-unit id="be.list.description">
+				<source>View list of QBank files used in TYPO3.</source>
+			</trans-unit>
+			<trans-unit id="be.action.update-metadata">
+				<source>Sync metadata</source>
+			</trans-unit>
+			<trans-unit id="be.action.updated-metadata">
+				<source>Metadata was synced</source>
+			</trans-unit>
+			<trans-unit id="be.action.update-file">
+				<source>Replace file</source>
+			</trans-unit>
+			<trans-unit id="be.action.updated-file">
+				<source>Local media was replaced</source>
+			</trans-unit>
+			<trans-unit id="be.identifier" resname="be.identifier">
+				<source>Id</source>
+			</trans-unit>
+			<trans-unit id="be.filename" resname="be.filename">
+				<source>Filename</source>
+			</trans-unit>
+			<trans-unit id="be.file_updated" resname="be.file_updated">
+				<source>File updated</source>
+			</trans-unit>
+			<trans-unit id="be.metadata_updated" resname="be.metadata_updated">
+				<source>Metadata updated</source>
+			</trans-unit>
+			<trans-unit id="be.qbank_id" resname="be.qbank_id">
+				<source>QBank ID</source>
+			</trans-unit>
+			<trans-unit id="be.remote_updated" resname="be.remote_updated">
+				<source>Remote updated</source>
+			</trans-unit>
+			<trans-unit id="be.status_updated" resname="be.status_updated">
+				<source>Status updated</source>
+			</trans-unit>
+			<trans-unit id="be.remote_replaced_by" resname="be.remote_replaced_by">
+				<source>Remote replaced by</source>
+			</trans-unit>
+			<trans-unit id="be.local_media_replaced" resname="be.local_media_replaced">
+				<source>Local media is replaced</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

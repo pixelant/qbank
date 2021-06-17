@@ -6,8 +6,9 @@ namespace Pixelant\Qbank\Repository;
 
 use Pixelant\Qbank\Utility\QbankUtility;
 use QBNK\QBank\API\QBankApi;
+use TYPO3\CMS\Core\SingletonInterface;
 
-class AbstractRepository
+class AbstractRepository implements SingletonInterface
 {
     /**
      * @var QBankApi

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\Repository;
 
 use QBNK\QBank\API\Model\MediaResponse;
-use TYPO3\CMS\Core\Resource\Folder;
 
 class MediaRepository extends AbstractRepository
 {
@@ -37,7 +36,7 @@ class MediaRepository extends AbstractRepository
      * @param int $id
      * @return resource
      */
-    public function downloadById(int $id, Folder $targetFolder)
+    public function downloadById(int $id)
     {
         return $this->api->media()->download($id);
     }

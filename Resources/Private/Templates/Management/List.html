@@ -1,0 +1,112 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+            xmlns:qb="http://typo3.org/ns/TYPO3/CMS/Qbank/ViewHelpers"
+            xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+            data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+<f:section name="content">
+    <h1><f:translate key="be.list.title" /></h1>
+    <p><f:translate key="be.list.description" /></p>
+
+    <f:if condition="{qbankFiles -> f:count()}">
+        <f:render section="table" arguments="{_all}" />
+    </f:if>
+
+</f:section>
+
+
+<f:section name="table">
+    <f:variable name="returnUrl" value="{f:be.uri(route:'file_qbank', parameters: '{action: \'list\'}')}" />
+    <div class="table-fit">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.filename"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.file_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.metadata_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.remote_updated"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.remote_replaced_by"/></th>
+                    <th><f:translate key="LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.status_updated"/></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <f:for each="{qbankFiles}" as="qbankFile">
+                    <tr>
+                        <td>
+                            <be:link.editRecord returnUrl="{returnUrl}" table="sys_file" uid="{qbankFile.uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}: {qbankFile.name} [{qbankFile.uid}, {qbankFile.tx_qbank_id}]">
+                                {qbankFile.name}
+                            </be:link.editRecord>
+                        </td>
+                        <td>
+                            <f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_file_timestamp}</f:format.date>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.tx_qbank_metadata_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_metadata_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.tx_qbank_remote_change_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_remote_change_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.tx_qbank_remote_replaced_by}">
+                                <f:then>
+                                    <f:if condition="{qbankFile.tx_qbank_remote_is_replaced}">
+                                        <f:then>{f:translate(key: 'be.local_media_replaced')} ({qbankFile.tx_qbank_remote_replaced_by})</f:then>
+                                        <f:else>{qbankFile.tx_qbank_remote_replaced_by}</f:else>
+                                    </f:if>
+                                </f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <f:if condition="{qbankFile.tx_qbank_status_updated_timestamp}">
+                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_status_updated_timestamp}</f:format.date></f:then>
+                                <f:else>-</f:else>
+                            </f:if>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <be:link.editRecord returnUrl="{returnUrl}" class="btn btn-default" table="sys_file_metadata" uid="{qbankFile.metadata_uid}" title="{f:translate(key: 'LLL:EXT:core/Resources/Private/Language/locallang_mod_web_list.xlf:edit')}">
+                                    <core:icon identifier="actions-open" />
+                                </be:link.editRecord>
+                            </div>
+
+                            <a class="btn btn-default"
+                                href="#"
+                                data-filelist-show-item-type="_FILE"
+                                data-filelist-show-item-identifier="{qbankFile.storage}:{qbankFile.identifier}"
+                                title="Show references">
+                                    <core:icon identifier="actions-document-info" />
+                            </a>
+
+                            <f:be.link
+                                route="file_qbank"
+                                parameters="{action: 'synchronizeMetadata', file: qbankFile.uid}"
+                                title="{f:translate(key: 'be.action.update-metadata')}"
+                                class="btn btn-success"
+                            >
+                                <core:icon identifier="actions-database-reload" /> {f:translate(key: 'be.action.update-metadata')}
+                            </f:be.link>
+
+                            <f:be.link
+                                route="file_qbank"
+                                parameters="{action: 'replaceLocalMedia', file: qbankFile.uid}"
+                                title="{f:translate(key: 'be.action.update-file')}"
+                                class="btn btn-warning {f:if(condition: '{qbankFile.tx_qbank_remote_replaced_by}', then: '', else: 'disabled')} {f:if(condition: '{qbankFile.tx_qbank_remote_is_replaced}', then: 'disabled')}"
+                            >
+                                <core:icon identifier="actions-database-reload" /> {f:translate(key: 'be.action.update-file')}
+                            </f:be.link>
+                        </td>
+                    </tr>
+                </f:for>
+            </tbody>
+        </table>
+    </div>
+</f:section>

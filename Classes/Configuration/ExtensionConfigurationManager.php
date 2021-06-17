@@ -76,6 +76,16 @@ class ExtensionConfigurationManager implements SingletonInterface
     protected $deploymentSites;
 
     /**
+     * @var int
+     */
+    protected $autoUpdate;
+
+    /**
+     * @var ExtensionConfiguration
+     */
+    protected $extensionConfiguration;
+
+    /**
      * ExtensionConfigurationManager constructor.
      * @param ExtensionConfiguration $extensionConfiguration
      * @throws ExtensionConfigurationExtensionNotConfiguredException
@@ -83,13 +93,15 @@ class ExtensionConfigurationManager implements SingletonInterface
      */
     public function __construct(ExtensionConfiguration $extensionConfiguration)
     {
-        $configuration = $extensionConfiguration->get('qbank');
+        $this->extensionConfiguration = $extensionConfiguration;
+        $configuration = $this->extensionConfiguration->get('qbank');
 
         $this->clientId = getenv('APP_QBANK_CLIENTID') ?: (string)$configuration['clientId'];
         $this->username = getenv('APP_QBANK_USERNAME') ?: (string)$configuration['username'];
         $this->password = getenv('APP_QBANK_PASSWORD') ?: (string)$configuration['password'];
         $this->host = getenv('APP_QBANK_HOST') ?: (string)$configuration['host'];
         $this->downloadFolder = getenv('APP_QBANK_DOWNLOADFOLDER') ?: (string)$configuration['downloadFolder'];
+        $this->autoUpdate = (int)(getenv('APP_QBANK_AUTOUPDATE') ?: $configuration['autoUpdate']);
         $this->sessionSource = (int)(getenv('APP_QBANK_SESSIONSOURCE') ?: $configuration['sessionSource']);
         $this->deploymentSites = GeneralUtility::intExplode(
             ',',
@@ -267,5 +279,27 @@ class ExtensionConfigurationManager implements SingletonInterface
     public function setDeploymentSites(array $deploymentSites): void
     {
         $this->deploymentSites = $deploymentSites;
+    }
+
+    /**
+     * Get the value of autoUpdate.
+     *
+     * @return int
+     */
+    public function getAutoUpdate()
+    {
+        return $this->autoUpdate;
+    }
+
+    /**
+     * Set the value of autoUpdate.
+     *
+     * @param int $autoUpdate
+     *
+     * @return void
+     */
+    public function setAutoUpdate(int $autoUpdate): void
+    {
+        $this->autoUpdate = $autoUpdate;
     }
 }

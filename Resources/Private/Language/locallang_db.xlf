@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+	<file source-language="en" datatype="plaintext" original="messages">
+		<header/>
+		<body>
+			<trans-unit id="tx_qbank_domain_model_mapping" resname="tx_qbank_domain_model_mapping">
+				<source>QBank mapping</source>
+			</trans-unit>
+			<trans-unit id="tx_qbank_domain_model_mapping.source_property" resname="tx_qbank_domain_model_mapping.source_property">
+				<source>QBank property</source>
+			</trans-unit>
+			<trans-unit id="tx_qbank_domain_model_mapping.target_property" resname="tx_qbank_domain_model_mapping.target_property">
+				<source>TYPO3 property</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.name">
+				<source>Name</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.filename">
+				<source>File name</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.created">
+				<source>Created</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.updated">
+				<source>Updated</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.uploaded">
+				<source>Uploaded</source>
+			</trans-unit>
+			<trans-unit id="baseProperty.label.rating">
+				<source>Rating</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
