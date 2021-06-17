@@ -84,17 +84,17 @@ class UpdateQbankFileStatusCommand extends Command
 
         /** @var QbankFileRepository $qbankFileRepository */
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
-        $updateQueueu = $qbankFileRepository->fetchStatusUpdateQueue($limit, $interval);
+        $updateQueue = $qbankFileRepository->fetchStatusUpdateQueue($limit, $interval);
 
         $io->title('Update QBank file status.');
 
-        if (count($updateQueueu) === 0) {
+        if (count($updateQueue) === 0) {
             $io->success('Status has already been updated for all QBank files.');
 
             return 0;
         }
 
-        $io->section('Checking ' . count($updateQueueu) . ' files.');
+        $io->section('Checking ' . count($updateQueue) . ' files.');
 
         /** @var QbankService $qbankService */
         $qbankService = GeneralUtility::makeInstance(QbankService::class);
@@ -102,7 +102,7 @@ class UpdateQbankFileStatusCommand extends Command
         /** @var MediaRepository $mediaRepository */
         $mediaRepository = GeneralUtility::makeInstance(MediaRepository::class);
 
-        foreach ($updateQueueu as $file) {
+        foreach ($updateQueue as $file) {
             /** @var MediaResponse $media */
             $media = $mediaRepository->findById($file['tx_qbank_id']);
             $remoteUpdate = (int)$media->getUpdated()->getTimestamp();
@@ -117,7 +117,7 @@ class UpdateQbankFileStatusCommand extends Command
             $io->writeln(sprintf($message, $prefix, $remoteUpdate, $remoteReplacedBy, $file['uid']));
         }
 
-        $io->success('Status has been updated for ' . count($updateQueueu) . ' QBank files.');
+        $io->success('Status has been updated for ' . count($updateQueue) . ' QBank files.');
 
         return 0;
     }
