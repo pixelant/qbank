@@ -13,7 +13,7 @@ EXT:qbank
    en
 
 :Description:
-   QBank DAM for TYPO3.
+   Integration of QBank DAM for TYPO3.
 
 :Keywords:
    qbank, dam
