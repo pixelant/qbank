@@ -274,6 +274,7 @@ class QbankService implements SingletonInterface
      *
      * @param int $fileId The FAL file UID
      * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     * @throws ReplaceLocalMediaException
      */
     public function replaceLocalMedia(int $fileId): void
     {
