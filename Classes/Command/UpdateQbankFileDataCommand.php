@@ -75,7 +75,7 @@ class UpdateQbankFileDataCommand extends Command
         $autoUpdate = QbankUtility::getAutoUpdateOption();
 
         if ($autoUpdate === 0) {
-            $io->info('Automatic updates are disabled.');
+            $io->text('Automatic updates are disabled.');
 
             return 0;
         }
