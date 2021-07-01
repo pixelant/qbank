@@ -18,6 +18,8 @@ namespace Pixelant\Qbank\Command;
 use Pixelant\Qbank\Repository\MediaRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
+use Pixelant\Qbank\Utility\QbankUtility;
+use QBNK\QBank\API\Exception\RequestException;
 use QBNK\QBank\API\Model\MediaResponse;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -103,8 +105,20 @@ class UpdateQbankFileStatusCommand extends Command
         $mediaRepository = GeneralUtility::makeInstance(MediaRepository::class);
 
         foreach ($updateQueue as $file) {
-            /** @var MediaResponse $media */
-            $media = $mediaRepository->findById($file['tx_qbank_id']);
+            try {
+                /** @var MediaResponse $media */
+                $media = $mediaRepository->findById($file['tx_qbank_id']);
+            } catch (RequestException $re) {
+                $io->writeln('QBank file was not found: ' . $file['tx_qbank_id']);
+
+                if (QbankUtility::qbankRequestExceptionStatesMediaIsDeleted($re)) {
+                    $io->writeln('Update sys_file, set tx_qbank_remote_is_deleted to 1: ' . $file['uid']);
+                    $qbankService->updateFileRemoteIsDeleted($file['uid']);
+
+                    continue;
+                }
+            }
+
             $remoteUpdate = (int)$media->getUpdated()->getTimestamp();
             $remoteReplacedBy = (int)$media->getReplacedBy();
             $message = '%s sys_file, set remote change to "%s", replaced: "%s" on sys_file with uid "%s".';

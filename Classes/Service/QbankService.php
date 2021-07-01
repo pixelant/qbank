@@ -20,6 +20,8 @@ use Pixelant\Qbank\Service\Event\FilePropertyChangeEvent;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\ResolvePageTitleEvent;
 use Pixelant\Qbank\Utility\PropertyUtility;
+use Pixelant\Qbank\Utility\QbankUtility;
+use QBNK\QBank\API\Exception\RequestException;
 use QBNK\QBank\API\Model\MediaUsage;
 use QBNK\QBank\API\Model\PropertyType;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -234,7 +236,19 @@ class QbankService implements SingletonInterface
             return;
         }
 
-        $qbankRecord = $this->mediaRepository->findById($qbankId);
+        try {
+            /** @var MediaResponse $qbankRecord */
+            $qbankRecord = $this->mediaRepository->findById($qbankId);
+        } catch (RequestException $re) {
+            if (QbankUtility::qbankRequestExceptionStatesMediaIsDeleted($re)) {
+                $this->updateFileRemoteIsDeleted($fileId);
+
+                throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
+                    'QBank Media is permanently deleted',
+                    1625149218
+                );
+            }
+        }
 
         $metaDataMappings = GeneralUtility::makeInstance(MappingRepository::class)->findAllAsKeyValuePairs();
 
@@ -374,6 +388,27 @@ class QbankService implements SingletonInterface
         $queryBuilder->set(
             'tx_qbank_remote_replaced_by',
             $remoteReplacedBy
+        );
+
+        $queryBuilder
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($fileUid, \PDO::PARAM_INT)))
+            ->execute();
+    }
+
+    /**
+     * Update a sys_file record if QBank remote file is reported as permanently deleted.
+     *
+     * @param int $fileUid The local file UID
+     * @param bool $deleted Optional to set as not deleted.
+     */
+    public function updateFileRemoteIsDeleted(int $fileUid, bool $deleted = true): void
+    {
+        $queryBuilder = $this->getFileQueryBuilder();
+        $queryBuilder->update('sys_file');
+
+        $queryBuilder->set(
+            'tx_qbank_remote_is_deleted',
+            $deleted ? 1 : 0
         );
 
         $queryBuilder

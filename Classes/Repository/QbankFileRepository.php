@@ -31,6 +31,7 @@ class QbankFileRepository
             'sys_file.tx_qbank_status_updated_timestamp',
             'sys_file.tx_qbank_remote_replaced_by',
             'sys_file.tx_qbank_remote_is_replaced',
+            'sys_file.tx_qbank_remote_is_deleted',
             'sys_file_metadata.uid AS metadata_uid',
         ];
 
@@ -91,6 +92,12 @@ class QbankFileRepository
                     $queryBuilder->createNamedParameter(time() - $interval, \PDO::PARAM_INT)
                 )
             )
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'sys_file.tx_qbank_remote_is_deleted',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                )
+            )
             ->setMaxResults($limit)
             ->orderBy('sys_file.tx_qbank_status_updated_timestamp')
             ->execute();
@@ -118,6 +125,12 @@ class QbankFileRepository
             ->where(
                 $queryBuilder->expr()->gt(
                     'sys_file.tx_qbank_id',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                )
+            )
+            ->andWhere(
+                $queryBuilder->expr()->eq(
+                    'sys_file.tx_qbank_remote_is_deleted',
                     $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
             )

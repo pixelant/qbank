@@ -6,6 +6,7 @@ namespace Pixelant\Qbank\Utility;
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use QBNK\QBank\API\Credentials;
+use QBNK\QBank\API\Exception\RequestException;
 use QBNK\QBank\API\QBankApi;
 use TYPO3\CMS\Core\Resource\Exception\FolderDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
@@ -163,5 +164,20 @@ class QbankUtility
         $extensionConfigurationManager = self::getConfigurationManager();
 
         return $extensionConfigurationManager->getAutoUpdate();
+    }
+
+    /**
+     * Returns true if request exception seems to be due to that the media is permanently deleted in QBank.
+     *
+     * @param RequestException $re
+     * @return bool
+     */
+    public static function qbankRequestExceptionStatesMediaIsDeleted(RequestException $re): bool
+    {
+        if (strpos(strtolower($re->getMessage()), 'media is permanently deleted') > 0) {
+            return true;
+        }
+
+        return false;
     }
 }
