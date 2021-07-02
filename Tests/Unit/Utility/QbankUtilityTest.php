@@ -74,7 +74,7 @@ class QbankUtilityTest extends UnitTestCase
     /**
      * @test
      */
-    public function qbankRequestExceptionStatesMediaIsDeletedReturnsFalseWhenMessageDoesntContainsCertainText(): void
+    public function qbankRequestExceptionStatesMediaIsDeletedReturnsFalseWhenMessageDoesntContainCertainText(): void
     {
         $re = new RequestException('Bad Request: Media could not be found.', 400, new \Exception());
 
