@@ -226,7 +226,7 @@ class QbankService implements SingletonInterface
      * Synchronize metadata for a particular file UID.
      *
      * @param int $fileId The FAL file UID
-     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     * @throws \Pixelant\Qbank\Exception\MediaPermanentlyDeletedException
      */
     public function synchronizeMetadata(int $fileId): void
     {
@@ -243,7 +243,7 @@ class QbankService implements SingletonInterface
             if (QbankUtility::qbankRequestExceptionStatesMediaIsDeleted($re)) {
                 $this->updateFileRemoteIsDeleted($fileId);
 
-                throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
+                throw new \Pixelant\Qbank\Exception\MediaPermanentlyDeletedException(
                     'QBank Media is permanently deleted',
                     1625149218
                 );

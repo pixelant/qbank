@@ -221,12 +221,13 @@ final class ManagementController
         $buttonBar->addButton($shortcutButton);
 
         $reloadButton = $buttonBar->makeLinkButton()
-            ->setHref(GeneralUtility::getIndpEnv('REQUEST_URI'))
+            ->setHref($this->request->getAttribute('normalizedParams')->getRequestUri())
             ->setTitle(
                 $this->getLanguageService()
                     ->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.reload')
             )
             ->setIcon($this->iconFactory->getIcon('actions-refresh', Icon::SIZE_SMALL));
+
         $buttonBar->addButton($reloadButton, ButtonBar::BUTTON_POSITION_RIGHT);
     }
 
@@ -277,7 +278,7 @@ final class ManagementController
 
             try {
                 $this->qbankService->synchronizeMetadata($file);
-            } catch (\TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException $th) {
+            } catch (\Pixelant\Qbank\Exception\MediaPermanentlyDeletedException $th) {
                 $this->moduleTemplate->addFlashMessage(
                     $th->getMessage(),
                     '',
