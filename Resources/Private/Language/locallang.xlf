@@ -98,6 +98,9 @@
 			<trans-unit id="be.local_media_replaced" resname="be.local_media_replaced">
 				<source>Local media is replaced</source>
 			</trans-unit>
+			<trans-unit id="be.remote_deleted" resname="be.remote_deleted">
+				<source>Remote media is deleted</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

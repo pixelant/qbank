@@ -6,6 +6,7 @@ namespace Pixelant\Qbank\Unit\Utility;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\Qbank\Utility\QbankUtility;
+use QBNK\QBank\API\Exception\RequestException;
 
 /**
  * Test case.
@@ -55,6 +56,30 @@ class QbankUtilityTest extends UnitTestCase
         self::assertSame(
             QbankUtility::qbankDateStringToUnixTimestamp($stringDate),
             $testDateTime->getTimestamp()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function qbankRequestExceptionStatesMediaIsDeletedReturnsTrueWhenMessageContainsCertainText(): void
+    {
+        $re = new RequestException('Bad Request: Media is permanently deleted.', 400, new \Exception());
+
+        self::assertTrue(
+            QbankUtility::qbankRequestExceptionStatesMediaIsDeleted($re)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function qbankRequestExceptionStatesMediaIsDeletedReturnsFalseWhenMessageDoesntContainCertainText(): void
+    {
+        $re = new RequestException('Bad Request: Media could not be found.', 400, new \Exception());
+
+        self::assertFalse(
+            QbankUtility::qbankRequestExceptionStatesMediaIsDeleted($re)
         );
     }
 }

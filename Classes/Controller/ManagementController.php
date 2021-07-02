@@ -217,7 +217,18 @@ final class ManagementController
             ->setModuleName('file_qbank')
             ->setGetVariables(['action', 'extension'])
             ->setDisplayName($this->shortcutName);
+
         $buttonBar->addButton($shortcutButton);
+
+        $reloadButton = $buttonBar->makeLinkButton()
+            ->setHref($this->request->getAttribute('normalizedParams')->getRequestUri())
+            ->setTitle(
+                $this->getLanguageService()
+                    ->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.reload')
+            )
+            ->setIcon($this->iconFactory->getIcon('actions-refresh', Icon::SIZE_SMALL));
+
+        $buttonBar->addButton($reloadButton, ButtonBar::BUTTON_POSITION_RIGHT);
     }
 
     /**
@@ -265,7 +276,15 @@ final class ManagementController
                 continue;
             }
 
-            $this->qbankService->synchronizeMetadata($file);
+            try {
+                $this->qbankService->synchronizeMetadata($file);
+            } catch (\Pixelant\Qbank\Exception\MediaPermanentlyDeletedException $th) {
+                $this->moduleTemplate->addFlashMessage(
+                    $th->getMessage(),
+                    '',
+                    FlashMessage::ERROR
+                );
+            }
         }
 
         $this->moduleTemplate->addFlashMessage(
