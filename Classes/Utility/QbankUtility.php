@@ -104,7 +104,7 @@ class QbankUtility
      */
     public static function getAccessToken(): string
     {
-        return self::getApi()->getTokens()['accessToken']->getToken();
+        return self::getApi()->getTokens()['accessToken'];
     }
 
     /**

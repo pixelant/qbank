@@ -149,7 +149,7 @@ class ExtensionConfigurationManager implements SingletonInterface
         if ($language !== null) {
             $languageConfiguration = $language->toArray();
 
-            if ($languageConfiguration['qbank_deploymentSites']) {
+            if ($languageConfiguration['qbank_deploymentSites'] ?? false) {
                 $this->deploymentSites = GeneralUtility::intExplode(
                     ',',
                     $languageConfiguration['qbank_deploymentSites'],
@@ -160,7 +160,7 @@ class ExtensionConfigurationManager implements SingletonInterface
             }
         }
 
-        if ($site->getConfiguration()['qbank_deploymentSites']) {
+        if ($site->getConfiguration()['qbank_deploymentSites'] ?? false) {
             $this->deploymentSites = GeneralUtility::intExplode(
                 ',',
                 $site->getConfiguration()['qbank_deploymentSites'],
