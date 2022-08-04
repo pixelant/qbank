@@ -262,11 +262,12 @@ class QbankService implements SingletonInterface
         /** @var MediaPropertyValue $qbankPropertyValue */
         foreach ($qbankPropertyValues as $qbankPropertyValue) {
             $sourceProperty = $qbankPropertyValue->getProperty()->getKey();
-            $targetProperty = $metaDataMappings[$sourceProperty];
 
-            if (!isset($targetProperty)) {
+            if (!isset($metaDataMappings[$sourceProperty])) {
                 continue;
             }
+
+            $targetProperty = $metaDataMappings[$sourceProperty];
 
             $this->eventDispatcher->dispatch(new FilePropertyChangeEvent(
                 $file,
