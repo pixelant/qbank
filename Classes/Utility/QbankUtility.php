@@ -104,6 +104,11 @@ class QbankUtility
      */
     public static function getAccessToken(): string
     {
+        // qbnk/qbank3api-phpwrapper ^4.9 returns an object. In later versions the value is a string.
+        if (is_object(self::getApi()->getTokens()['accessToken'])) {
+            return self::getApi()->getTokens()['accessToken']->getToken();
+        }
+
         return self::getApi()->getTokens()['accessToken'];
     }
 
