@@ -59,7 +59,7 @@ class MediaUsageRepository extends AbstractRepository
      */
     public function removeOneByQbankAndLocalId(int $qbankId, string $localId): void
     {
-        $usage = $this->findByQbankAndLocalId($qbankId, $localId)[0];
+        $usage = $this->findByQbankAndLocalId($qbankId, $localId)[0] ?? false;
 
         if (!$usage) {
             return;
