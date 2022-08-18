@@ -19,9 +19,9 @@
 		}
 	],
 	"require": {
-		"php": "^7.2",
-		"qbnk/qbank3api-phpwrapper": "^3.4",
-		"typo3/cms-core": "^10.4"
+		"php": "~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0",
+		"qbnk/qbank3api-phpwrapper": "^4.9 || ^5.1",
+		"typo3/cms-core": "^10.4 || ^11.5.2"
 	},
 	"replace": {
 		"typo3-ter/qbank": "self.version"
@@ -30,9 +30,9 @@
 		"codeception/codeception": "^4.1.5",
 		"helhum/typo3-composer-setup": "^0.5.7",
 		"nimut/testing-framework": "^5.0.3",
-		"phpunit/phpunit": "^7.5.20",
-		"seld/jsonlint": "^1.8",
-		"typo3/cms-fluid-styled-content": "^9.5 || ^10.4"
+		"phpunit/phpunit": "^8.5.28",
+		"seld/jsonlint": "^1.9",
+		"typo3/cms-fluid-styled-content": "^10.4 || ^11.5.2"
 	},
 	"suggest": {
 		"typo3/cms-filemetadata": "For additional meta data fields."

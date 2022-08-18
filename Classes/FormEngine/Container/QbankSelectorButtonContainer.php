@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pixelant\Qbank\FormEngine\Container;
 
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
+use Pixelant\Qbank\Utility\CompatibilityUtility;
 use Pixelant\Qbank\Utility\QbankUtility;
 use TYPO3\CMS\Backend\Form\Container\InlineControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
@@ -167,12 +168,16 @@ class QbankSelectorButtonContainer extends InlineControlContainer
 
         $languageId = -1;
         if ($languageField) {
-            $languageId = (int)$this->data['databaseRow'][$languageField][0];
+            if (CompatibilityUtility::typo3VersionIsLessThan('11')) {
+                $languageId = (int)$this->data['databaseRow'][$languageField][0];
+            } else {
+                $languageId = (int)$this->data['databaseRow'][$languageField];
+            }
         }
 
-        $pageId = $this->data['defaultLanguageRow']['pid'];
+        $pageId = $this->data['defaultLanguageRow']['pid'] ?? null;
         if ($this->data['tableName'] === 'pages') {
-            $pageId = $this->data['defaultLanguageRow']['uid'];
+            $pageId = $this->data['defaultLanguageRow']['uid'] ?? null;
         }
 
         if ($pageId === null) {
