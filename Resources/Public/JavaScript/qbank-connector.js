@@ -135,7 +135,7 @@
             };
             this.getMedia = function(mediaId, includeChildren) {
                 return this.call("media/" + mediaId, includeChildren ? {
-                    includeChildren: 1
+                    includeChildren: 0
                 } : null);
             };
             this.getAcl = function(mediaId) {
