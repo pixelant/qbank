@@ -1,6 +1,5 @@
 <?php
-
-defined('TYPO3_MODE') || die;
+defined('TYPO3') or die();
 
 (function () {
     // Add the QBank selector
