@@ -24,6 +24,7 @@ class QbankSelectorButtonContainer extends InlineControlContainer
      */
     protected function renderPossibleRecordsSelectorTypeGroupDB(array $inlineConfiguration): string
     {
+        var_dump('ssss');die;
         $selector = parent::renderPossibleRecordsSelectorTypeGroupDB($inlineConfiguration);
 
         $button = $this->renderQbankButton($inlineConfiguration);
