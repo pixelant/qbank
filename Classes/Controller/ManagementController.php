@@ -17,6 +17,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Controller;
 
+use Pixelant\Qbank\Exception\MediaPermanentlyDeletedException;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
@@ -280,7 +283,7 @@ class ManagementController extends ActionController
     /**
      * Update metadata for file.
      */
-    public function synchronizeMetadataAction(): void
+    public function synchronizeMetadataAction()
     {
         $files = $this->arguments['files'] ?? [$this->arguments['file']];
 
@@ -293,11 +296,11 @@ class ManagementController extends ActionController
 
             try {
                 $this->qbankService->synchronizeMetadata($file);
-            } catch (\Pixelant\Qbank\Exception\MediaPermanentlyDeletedException $th) {
+            } catch (MediaPermanentlyDeletedException $th) {
                 $this->moduleTemplateFactory->addFlashMessage(
                     $th->getMessage(),
                     '',
-                    FlashMessage::ERROR
+                    AbstractMessage::ERROR
                 );
             }
         }
@@ -305,16 +308,16 @@ class ManagementController extends ActionController
         $this->moduleTemplateFactory->addFlashMessage(
             $this->getLanguageService()->getLL('be.action.updated-metadata'),
             '',
-            FlashMessage::OK
+            AbstractMessage::OK
         );
 
-        $this->forward('list');
+        return new ForwardResponse('list');
     }
 
     /**
      * Replace image for file.
      */
-    public function replaceLocalMediaAction(): void
+    public function replaceLocalMediaAction()
     {
         $files = $this->arguments['files'] ?? [$this->arguments['file']];
 
@@ -330,11 +333,11 @@ class ManagementController extends ActionController
             $this->moduleTemplateFactory->addFlashMessage(
                 $this->getLanguageService()->getLL('be.action.updated-file'),
                 '',
-                FlashMessage::OK
+                AbstractMessage::OK
             );
         }
 
-        $this->forward('list');
+        return new ForwardResponse('list');
     }
 
     /**

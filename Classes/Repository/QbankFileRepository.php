@@ -55,9 +55,7 @@ class QbankFileRepository
                     $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
             )
-            ->orderBy('sys_file.tx_qbank_file_timestamp')
-            ->addOrderBy('sys_file.modification_date')
-            ->execute();
+            ->orderBy('sys_file.tx_qbank_file_timestamp')->addOrderBy('sys_file.modification_date')->executeQuery();
 
         if (!method_exists($resultStatement, 'fetchAllAssociative')) {
             return $resultStatement->fetchAll(FetchMode::ASSOCIATIVE);
@@ -98,9 +96,7 @@ class QbankFileRepository
                     $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
             )
-            ->setMaxResults($limit)
-            ->orderBy('sys_file.tx_qbank_status_updated_timestamp')
-            ->execute();
+            ->setMaxResults($limit)->orderBy('sys_file.tx_qbank_status_updated_timestamp')->executeQuery();
 
         if (!method_exists($resultStatement, 'fetchAllAssociative')) {
             return $resultStatement->fetchAll(FetchMode::ASSOCIATIVE);
@@ -135,26 +131,18 @@ class QbankFileRepository
                 )
             )
             ->andWhere(
-                $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->gt(
-                        'tx_qbank_remote_change_timestamp',
-                        'tx_qbank_metadata_timestamp'
-                    ),
-                    $queryBuilder->expr()->andX(
-                        $queryBuilder->expr()->gt(
-                            'tx_qbank_remote_replaced_by',
-                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                        ),
-                        $queryBuilder->expr()->eq(
-                            'tx_qbank_remote_is_replaced',
-                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                        )
-                    )
-                )
+                $queryBuilder->expr()->or($queryBuilder->expr()->gt(
+                    'tx_qbank_remote_change_timestamp',
+                    'tx_qbank_metadata_timestamp'
+                ), $queryBuilder->expr()->and($queryBuilder->expr()->gt(
+                    'tx_qbank_remote_replaced_by',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                ), $queryBuilder->expr()->eq(
+                    'tx_qbank_remote_is_replaced',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                )))
             )
-            ->setMaxResults($limit)
-            ->orderBy('sys_file.tx_qbank_status_updated_timestamp')
-            ->execute();
+            ->setMaxResults($limit)->orderBy('sys_file.tx_qbank_status_updated_timestamp')->executeQuery();
 
         if (!method_exists($resultStatement, 'fetchAllAssociative')) {
             return $resultStatement->fetchAll(FetchMode::ASSOCIATIVE);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler;
 
+use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandlerInterface;
 use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
@@ -12,7 +13,7 @@ use QBNK\QBank\API\Model\PropertyType;
 /**
  * Adds base properties of a Qbank media object, such as "uploaded" or "name".
  */
-class BaseMediaPropertiesCollector implements \Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandlerInterface
+class BaseMediaPropertiesCollector implements CollectMediaPropertiesEventHandlerInterface
 {
     /**
      * {@inheritdoc}

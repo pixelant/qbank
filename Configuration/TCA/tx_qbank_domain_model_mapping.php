@@ -7,7 +7,6 @@ return [
         'label_alt' => 'target_property',
         'label_alt_force' => true,
         'crdate' => 'createdon',
-        'cruser_id' => 'createdby',
         'tstamp' => 'updatedon',
         'versioningWS' => false,
         'default_sortby' => 'source_property, target_property',
@@ -51,7 +50,7 @@ return [
                 'renderType' => 'checkboxToggle',
                 'items' => [
                     [
-                        0 => '',
+                        'label' => '',
                         1 => '',
                         'invertStateDisplay' => true,
                     ],
@@ -91,7 +90,7 @@ return [
                 'size' => 1,
                 'default' => '',
                 'items' => [
-                    ['', ''],
+                    ['label' => '', 'value' => ''],
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\QbankProperyItemsProcFunc::class . '->itemsProcFunc',
             ],
@@ -107,7 +106,7 @@ return [
                 'size' => 1,
                 'default' => '',
                 'items' => [
-                    ['', ''],
+                    ['label' => '', 'value' => ''],
                 ],
                 'itemsProcFunc' => Pixelant\Qbank\FormEngine\Typo3ProperyItemsProcFunc::class . '->itemsProcFunc',
             ],

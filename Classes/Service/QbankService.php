@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service;
 
+use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
+use Pixelant\Qbank\Exception\MediaPermanentlyDeletedException;
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
@@ -89,7 +91,7 @@ class QbankService implements SingletonInterface
      *
      * @param int $id
      * @return File The local file representation
-     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     * @throws FileDoesNotExistException
      */
     public function createLocalMediaCopy(int $id): ?File
     {
@@ -122,7 +124,7 @@ class QbankService implements SingletonInterface
      *
      * @param int $id
      * @return File|null
-     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     * @throws FileDoesNotExistException
      */
     protected function findLocalMediaCopy(int $id): ?File
     {
@@ -130,12 +132,10 @@ class QbankService implements SingletonInterface
 
         $fileUid = $queryBuilder
             ->select('uid')
-            ->from('sys_file')
-            ->where($queryBuilder->expr()->eq(
-                'tx_qbank_id',
-                $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
-            ))
-            ->execute()
+            ->from('sys_file')->where($queryBuilder->expr()->eq(
+            'tx_qbank_id',
+            $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
+        ))->executeQuery()
             ->fetchColumn(0);
 
         if ($fileUid === false) {
@@ -226,7 +226,7 @@ class QbankService implements SingletonInterface
      * Synchronize metadata for a particular file UID.
      *
      * @param int $fileId The FAL file UID
-     * @throws \Pixelant\Qbank\Exception\MediaPermanentlyDeletedException
+     * @throws MediaPermanentlyDeletedException
      */
     public function synchronizeMetadata(int $fileId): void
     {
@@ -243,7 +243,7 @@ class QbankService implements SingletonInterface
             if (QbankUtility::qbankRequestExceptionStatesMediaIsDeleted($re)) {
                 $this->updateFileRemoteIsDeleted($fileId);
 
-                throw new \Pixelant\Qbank\Exception\MediaPermanentlyDeletedException(
+                throw new MediaPermanentlyDeletedException(
                     'QBank Media is permanently deleted',
                     1625149218
                 );
@@ -288,14 +288,14 @@ class QbankService implements SingletonInterface
      * Synchronize file content for a particular file UID.
      *
      * @param int $fileId The FAL file UID
-     * @throws \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException
+     * @throws FileDoesNotExistException
      * @throws ReplaceLocalMediaException
      */
     public function replaceLocalMedia(int $fileId): void
     {
         $file = $this->resourceFactory->getFileObject($fileId);
         if ($file === null) {
-            throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
+            throw new FileDoesNotExistException(
                 'No file found for given UID: ' . $fileId,
                 1623070299
             );
@@ -305,7 +305,7 @@ class QbankService implements SingletonInterface
 
         $replacedByFile = $this->createLocalMediaCopy($replacedByMediaIdentifier);
         if ($replacedByFile === null) {
-            throw new \TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException(
+            throw new FileDoesNotExistException(
                 'No file found for given QBank id: ' . $replacedByMediaIdentifier,
                 1623306399
             );

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Unit\Utility;
 
+use Pixelant\Qbank\TypeConverter\StringTypeConverter;
+use Pixelant\Qbank\TypeConverter\FloatTypeConverter;
+use Pixelant\Qbank\TypeConverter\IntegerTypeConverter;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
@@ -33,37 +36,37 @@ class PropertyUtilityTest extends UnitTestCase
         parent::setUp();
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['qbank']['fileProperties'] = [
             'name' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'Name',
                 'disabled' => false,
             ],
             'title' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'Title',
                 'disabled' => false,
             ],
             'keywords' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'JKeywords',
                 'disabled' => false,
             ],
             'latitude' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\FloatTypeConverter',
+                'typeConverter' => FloatTypeConverter::class,
                 'label' => 'Latitude',
                 'disabled' => false,
             ],
             'content_creation_date' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\IntegerTypeConverter',
+                'typeConverter' => IntegerTypeConverter::class,
                 'label' => 'Content Creation Date',
                 'disabled' => false,
             ],
             'hidden' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\IntegerTypeConverter',
+                'typeConverter' => IntegerTypeConverter::class,
                 'label' => 'Hidden',
                 'disabled' => false,
             ],
             'note' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'Note',
                 'disabled' => true,
             ],
