@@ -1,6 +1,33 @@
 <?php
+declare(strict_types=1);
+
+use Pixelant\Qbank\Xclass\Form\Container\FilesControlContainer as FilesControlContainerXclass;
+use TYPO3\CMS\Backend\Form\Container\FilesControlContainer;
+
 defined('TYPO3') or die();
 
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][FilesControlContainer::class] = [
+    'className' => FilesControlContainerXclass::class,
+];
+
+$iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+    \TYPO3\CMS\Core\Imaging\IconRegistry::class
+);
+
+$iconRegistry->registerIcon(
+    'tx-qbank-logo',
+    \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+    ['source' => 'EXT:qbank/Resources/Public/Icons/qbank-logo.svg']
+);
+
+$iconRegistry->registerIcon(
+    'mimetypes-x-qbank-mapping',
+    \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+    ['source' => 'EXT:qbank/Resources/Public/Icons/mimetypes-x-qbank-mapping.svg']
+);
+
+
+/*
 use Pixelant\Qbank\FormEngine\Container\QbankSelectorButtonContainer;
 
 call_user_func(static function () {
@@ -93,3 +120,4 @@ call_user_func(static function () {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['qbank']['fileProperties'] ?? []
     );
 });
+*/

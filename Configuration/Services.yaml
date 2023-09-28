@@ -80,3 +80,7 @@ services:
     tags:
       - name: 'console.command'
         command: 'qbank:updateqbankfiledatacommand'
+
+  Pixelant\Qbank\ElementBrowser\QbankBrowser:
+    tags:
+      - name: recordlist.elementbrowser
