@@ -17,11 +17,13 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Xclass\Form\Container;
 
+use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
+use Pixelant\Qbank\Utility\QbankUtility;
 use TYPO3\CMS\Backend\Form\Container\FilesControlContainer as CoreFilesControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Resource\Filter\FileExtensionFilter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
  * Files entry container.
  *
@@ -29,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FilesControlContainer extends CoreFilesControlContainer
 {
+    private const FILE_REFERENCE_TABLE = 'sys_file_reference';
     /**
      * Override function to add additional controls to 'file' TCA.
      * See file "vendor/typo3/cms-backend/Classes/Form/Container/FilesControlContainer.php" to
@@ -36,28 +39,86 @@ class FilesControlContainer extends CoreFilesControlContainer
      */
     protected function getFileSelectors(array $inlineConfiguration, FileExtensionFilter $fileExtensionFilter): array
     {
-        $languageService = $this->getLanguageService();
-
+        // Get file selectors from parent first.
         $controls = parent::getFileSelectors($inlineConfiguration, $fileExtensionFilter);
-        $objectPrefix = 'qbank-prefix';
+
+        if (QbankUtility::getDownloadFolder() === null) {
+            return $controls;
+        }
+
+        try {
+            $accessToken = QbankUtility::getAccessToken();
+        } catch (\Throwable $th) {
+            return $controls;
+        }
+
+        $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix($this->data['inlineFirstPid']);
+        $objectPrefix = $currentStructureDomObjectIdPrefix . '-' . self::FILE_REFERENCE_TABLE;
+
+        $languageService = $this->getLanguageService();
+        $extensionManager = $this->getExtensionConfigurationManager();
+
         $buttonText = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:selector-button-control.label';
+        $titleText = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:selector-button-control.title';
         $buttonText = $languageService->sL($buttonText);
+        $titleText =  $languageService->sL($titleText);
+
         $attributes = [
             'type' => 'button',
-            'class' => 'btn btn-default t3js-element-browser',
+            'class' => 'btn btn-default t3js-qbank-media-add-btn',
             'style' => !($inlineConfiguration['inline']['showCreateNewRelationButton'] ?? true) ? 'display: none;' : '',
-            'title' => $buttonText,
-            'data-mode' => 'qbank',
-            'data-params' => '|||allowed=' . implode(',', $fileExtensionFilter->getAllowedFileExtensions() ?? []) . ';disallowed=' . implode(',', $fileExtensionFilter->getDisallowedFileExtensions() ?? []) . '|' . $objectPrefix,
+            'title' => $titleText,
+            'data-file-irre-object' => htmlspecialchars($objectPrefix),
+            'data-file-allowed' => htmlspecialchars(implode(',', $fileExtensionFilter->getAllowedFileExtensions() ?? [])),
+            'data-qbank-host' => $extensionManager->getHost(),
+            'data-qbank-deploymentsites' => implode(',', $extensionManager->getDeploymentSites() ?? []),
+            'data-qbank-token' => $accessToken
         ];
         $controls[] = '
             <button ' . GeneralUtility::implodeAttributes($attributes, true) . '>
-                ' . $this->iconFactory->getIcon('actions-insert-record', Icon::SIZE_SMALL)->render() . '
+                ' . $this->iconFactory->getIcon('tx-qbank-logo', Icon::SIZE_SMALL)->render() . '
                 ' . htmlspecialchars($buttonText) . '
             </button>';
 
-        // $this->javaScriptModules[] = JavaScriptModuleInstruction::create('@typo3/backend/online-media.js');
+        $this->javaScriptModules[] = JavaScriptModuleInstruction::create('@pixelant/qbank/qbank-media.js');
 
         return $controls;
+    }
+
+    /**
+     * Get an instance of this extension's configuration manager.
+     *
+     * @return ExtensionConfigurationManager
+     */
+    protected function getExtensionConfigurationManager(): ExtensionConfigurationManager
+    {
+        /** @var ExtensionConfigurationManager $extensionConfigurationManager */
+        $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
+
+        $languageField = $GLOBALS['TCA'][$this->data['tableName']]['ctrl']['languageField'];
+
+        $languageId = -1;
+        if ($languageField) {
+            $languageId = (int)$this->data['databaseRow'][$languageField];
+        }
+
+        $pageId = $this->data['defaultLanguageRow']['pid'] ?? null;
+        if ($this->data['tableName'] === 'pages') {
+            $pageId = $this->data['defaultLanguageRow']['uid'] ?? null;
+        }
+
+        if ($pageId === null) {
+            $pageId = $this->data['databaseRow']['pid'];
+            if ($this->data['tableName'] === 'pages') {
+                $pageId = $this->data['databaseRow']['uid'];
+            }
+        }
+
+        $extensionConfigurationManager->configureForPage(
+            (int)$pageId,
+            $languageId
+        );
+
+        return $extensionConfigurationManager;
     }
 }
