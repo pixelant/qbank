@@ -132,11 +132,15 @@ class QbankService implements SingletonInterface
 
         $fileUid = $queryBuilder
             ->select('uid')
-            ->from('sys_file')->where($queryBuilder->expr()->eq(
-            'tx_qbank_id',
-            $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
-        ))->executeQuery()
-            ->fetchColumn(0);
+            ->from('sys_file')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'tx_qbank_id',
+                    $queryBuilder->createNamedParameter($id, \PDO::PARAM_INT)
+                )
+            )
+            ->executeQuery()
+            ->fetchOne();
 
         if ($fileUid === false) {
             return null;

@@ -22,8 +22,10 @@ use Pixelant\Qbank\Utility\QbankUtility;
 use TYPO3\CMS\Backend\Form\Container\FilesControlContainer as CoreFilesControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\Filter\FileExtensionFilter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Files entry container.
  *
@@ -60,8 +62,17 @@ class FilesControlContainer extends CoreFilesControlContainer
 
         $buttonText = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:selector-button-control.label';
         $titleText = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:selector-button-control.title';
+        $modalErrorTitle = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.error-title';
+        $modalRequestFailed = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.request-failed';
+        $modalRequestFailedError = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.request-failed-error';
+        $modalIllegalExtension = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.illegal-extension';
+
         $buttonText = $languageService->sL($buttonText);
         $titleText =  $languageService->sL($titleText);
+        $modalErrorTitle = $languageService->sL($modalErrorTitle);
+        $modalRequestFailed = $languageService->sL($modalRequestFailed);
+        $modalRequestFailedError = $languageService->sL($modalRequestFailedError);
+        $modalIllegalExtension = $languageService->sL($modalIllegalExtension);
 
         $attributes = [
             'type' => 'button',
@@ -72,7 +83,11 @@ class FilesControlContainer extends CoreFilesControlContainer
             'data-file-allowed' => htmlspecialchars(implode(',', $fileExtensionFilter->getAllowedFileExtensions() ?? [])),
             'data-qbank-host' => $extensionManager->getHost(),
             'data-qbank-deploymentsites' => implode(',', $extensionManager->getDeploymentSites() ?? []),
-            'data-qbank-token' => $accessToken
+            'data-qbank-token' => $accessToken,
+            'data-modal-error-title' => htmlspecialchars($modalErrorTitle),
+            'data-modal-request-failed' => htmlspecialchars($modalRequestFailed),
+            'data-modal-request-failed-error' => htmlspecialchars($modalRequestFailedError),
+            'data-modal-illegal-extension' => $modalIllegalExtension,
         ];
         $controls[] = '
             <button ' . GeneralUtility::implodeAttributes($attributes, true) . '>
