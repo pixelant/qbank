@@ -9,6 +9,7 @@ use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
 use QBNK\QBank\API\Model\PropertyType;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Adds base properties of a Qbank media object, such as "uploaded" or "name".
@@ -36,32 +37,32 @@ class BaseMediaPropertiesCollector implements CollectMediaPropertiesEventHandler
             new BaseMediaProperty(
                 PropertyType::DATATYPE_STRING,
                 'name',
-                $ll . 'name'
+                LocalizationUtility::translate($ll . 'name', 'qbank')
             ),
             new BaseMediaProperty(
                 PropertyType::DATATYPE_STRING,
                 'filename',
-                $ll . 'filename'
+                LocalizationUtility::translate($ll . 'filename', 'qbank')
             ),
             new BaseMediaProperty(
                 PropertyType::DATATYPE_DATETIME,
                 'created',
-                $ll . 'created'
+                LocalizationUtility::translate($ll . 'created', 'qbank')
             ),
             new BaseMediaProperty(
                 PropertyType::DATATYPE_DATETIME,
                 'updated',
-                $ll . 'updated'
+                LocalizationUtility::translate($ll . 'updated', 'qbank')
             ),
             new BaseMediaProperty(
                 PropertyType::DATATYPE_DATETIME,
                 'uploaded',
-                $ll . 'uploaded'
+                LocalizationUtility::translate($ll . 'uploaded', 'qbank')
             ),
             new BaseMediaProperty(
                 PropertyType::DATATYPE_INTEGER,
                 'rating',
-                $ll . 'rating'
+                LocalizationUtility::translate($ll . 'rating', 'qbank')
             ),
         ];
     }
