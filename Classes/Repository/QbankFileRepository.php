@@ -131,16 +131,22 @@ class QbankFileRepository
                 )
             )
             ->andWhere(
-                $queryBuilder->expr()->or($queryBuilder->expr()->gt(
-                    'tx_qbank_remote_change_timestamp',
-                    'tx_qbank_metadata_timestamp'
-                ), $queryBuilder->expr()->and($queryBuilder->expr()->gt(
-                    'tx_qbank_remote_replaced_by',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                ), $queryBuilder->expr()->eq(
-                    'tx_qbank_remote_is_replaced',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                )))
+                $queryBuilder->expr()->or(
+                    $queryBuilder->expr()->gt(
+                        'tx_qbank_remote_change_timestamp',
+                        'tx_qbank_metadata_timestamp'
+                    ),
+                    $queryBuilder->expr()->and(
+                        $queryBuilder->expr()->gt(
+                            'tx_qbank_remote_replaced_by',
+                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                        ),
+                        $queryBuilder->expr()->eq(
+                            'tx_qbank_remote_is_replaced',
+                            $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                        )
+                    )
+                )
             )
             ->setMaxResults($limit)->orderBy('sys_file.tx_qbank_status_updated_timestamp')->executeQuery();
 

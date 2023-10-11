@@ -30,6 +30,7 @@ use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -38,9 +39,7 @@ use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-
 
 #[Controller]
 class ManagementController extends ActionController
@@ -227,11 +226,11 @@ class ManagementController extends ActionController
             $files = [$this->request->getArgument('file')];
         } else {
             $this->moduleTemplate->addFlashMessage(
-                'No files could be syncronizes',
+                'No files could be syncronized',
                 'Syncronize',
                 \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::ERROR
             );
-            return new ForwardResponse('list');
+            return $this->rediectResponse('list');
         }
 
         foreach ($files as $file) {
@@ -258,7 +257,7 @@ class ManagementController extends ActionController
             \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::OK
         );
 
-        return new ForwardResponse('list');
+        return $this->rediectResponse('list');
     }
 
     /**
@@ -266,7 +265,18 @@ class ManagementController extends ActionController
      */
     public function replaceLocalMediaAction()
     {
-        $files = $this->arguments['files'] ?? [$this->arguments['file']];
+        if ($this->request->hasArgument('files')) {
+            $files = $this->request->getArgument('files');
+        } elseif ($this->request->hasArgument('file')) {
+            $files = [$this->request->getArgument('file')];
+        } else {
+            $this->moduleTemplate->addFlashMessage(
+                'No files could be syncronized',
+                'Syncronize',
+                \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::ERROR
+            );
+            return $this->rediectResponse('list');
+        }
 
         foreach ($files as $file) {
             $file = (int)$file;
@@ -277,26 +287,24 @@ class ManagementController extends ActionController
 
             $this->qbankService->replaceLocalMedia($file);
 
-            $this->moduleTemplateFactory->addFlashMessage(
-                $this->getLanguageService()->getLL('be.action.updated-file'),
+            $this->moduleTemplate->addFlashMessage(
+                LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-file', 'qbank'),
                 '',
-                AbstractMessage::OK
+                \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::OK
             );
         }
 
-        return new ForwardResponse('list');
+        return $this->rediectResponse('list');
     }
 
     /**
-     * Forward execution to $action.
+     * Redirect to $action to avoid parameters in URL.
      *
      * @param string $action
      */
-    private function forward(string $action): void
+    private function rediectResponse(string $action): ResponseInterface
     {
-        $this->initializeView($action);
-        $methodName = $action . 'Action';
-        $this->{$methodName}();
+        return new RedirectResponse($this->backendUriBuilder->buildUriFromRoute('file_qbank', ['action' => $action]));
     }
 
     /**

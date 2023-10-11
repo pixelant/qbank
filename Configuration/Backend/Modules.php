@@ -20,6 +20,7 @@ return [
                 'mappings',
                 'overview',
                 'synchronizeMetadata',
+                'replaceLocalMedia',
             ],
         ],
     ]

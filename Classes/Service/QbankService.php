@@ -254,7 +254,7 @@ class QbankService implements SingletonInterface
             }
         }
 
-        $metaDataMappings = GeneralUtility::makeInstance(MappingRepository::class)->findAllAsKeyValuePairs();
+        $metaDataMappings = GeneralUtility::makeInstance(MappingRepository::class)->findAllAsKeyValuePairs(false);
 
         $qbankPropertyValues = $this
             ->eventDispatcher
