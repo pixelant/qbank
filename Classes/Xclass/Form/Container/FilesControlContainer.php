@@ -61,7 +61,7 @@ class FilesControlContainer extends CoreFilesControlContainer
         $languageService = $this->getLanguageService();
         $extensionManager = $this->getExtensionConfigurationManager();
 
-        $lllExtPath = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:';
+        $lllExtPath = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf';
         $buttonText = $lllExtPath . ':selector-button-control.label';
         $titleText = $lllExtPath . ':selector-button-control.title';
         $modalErrorTitle = $lllExtPath . ':js.modal.error-title';
