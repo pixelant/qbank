@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandler;
 
-use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandlerInterface;
 use Pixelant\Qbank\Exception\PersistMetaDataChangesException;
 use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent;
+use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandlerInterface;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler\MetaDataFilePropertyChangeEventHandler;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

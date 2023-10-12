@@ -1,0 +1,111 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Only booleans are allowed in an if condition, int\\<0, 1\\> given\\.$#"
+			count: 1
+			path: Classes/Command/UpdateQbankFileDataCommand.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int\\<0, 2\\> given\\.$#"
+			count: 1
+			path: Classes/Command/UpdateQbankFileDataCommand.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int\\<0, 3\\> given\\.$#"
+			count: 1
+			path: Classes/Command/UpdateQbankFileDataCommand.php
+
+		-
+			message: "#^Variable \\$prefix might not be defined\\.$#"
+			count: 1
+			path: Classes/Command/UpdateQbankFileDataCommand.php
+
+		-
+			message: "#^Casting to int something that's already int\\.$#"
+			count: 2
+			path: Classes/Command/UpdateQbankFileStatusCommand.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, mixed given\\.$#"
+			count: 1
+			path: Classes/Command/UpdateQbankFileStatusCommand.php
+
+		-
+			message: "#^Variable \\$media might not be defined\\.$#"
+			count: 2
+			path: Classes/Command/UpdateQbankFileStatusCommand.php
+
+		-
+			message: "#^Short ternary operator is not allowed\\. Use null coalesce operator if applicable or consider using long ternary\\.$#"
+			count: 8
+			path: Classes/Configuration/ExtensionConfigurationManager.php
+
+		-
+			message: "#^Method Pixelant\\\\Qbank\\\\Controller\\\\SelectorController\\:\\:downloadFileAction\\(\\) has invalid return type Pixelant\\\\Qbank\\\\Controller\\\\ResponseInterface\\.$#"
+			count: 1
+			path: Classes/Controller/SelectorController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$message$#"
+			count: 1
+			path: Classes/Controller/SelectorController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$response$#"
+			count: 1
+			path: Classes/Controller/SelectorController.php
+
+		-
+			message: "#^PHPDoc tag @return with type Pixelant\\\\Qbank\\\\Controller\\\\ResponseInterface is not subtype of native type TYPO3\\\\CMS\\\\Core\\\\Http\\\\JsonResponse\\.$#"
+			count: 1
+			path: Classes/Controller/SelectorController.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$dataTypeId$#"
+			count: 1
+			path: Classes/Domain/Model/Qbank/MediaPropertyValue.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$propertyName$#"
+			count: 1
+			path: Classes/Domain/Model/Qbank/MediaPropertyValue.php
+
+		-
+			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
+			count: 2
+			path: Classes/Repository/MediaUsageRepository.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, int given\\.$#"
+			count: 2
+			path: Classes/Repository/MediaUsageRepository.php
+
+		-
+			message: "#^Variable method call on QBNK\\\\QBank\\\\API\\\\Model\\\\MediaResponse\\.$#"
+			count: 1
+			path: Classes/Service/Event/ExtractMediaPropertyValuesEventHandler/BaseMediaPropertyValuesExtractor.php
+
+		-
+			message: "#^Only booleans are allowed in &&, array\\|null given on the left side\\.$#"
+			count: 1
+			path: Classes/Service/Event/ResolvePageTitleEventHandler/FileReferenceResolvePageTitleEventHandler.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, TYPO3\\\\CMS\\\\Core\\\\Site\\\\Entity\\\\SiteLanguage given\\.$#"
+			count: 1
+			path: Classes/Service/QbankService.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$qbankRecord contains unknown class Pixelant\\\\Qbank\\\\Service\\\\MediaResponse\\.$#"
+			count: 1
+			path: Classes/Service/QbankService.php
+
+		-
+			message: "#^Variable \\$qbankRecord might not be defined\\.$#"
+			count: 1
+			path: Classes/Service/QbankService.php
+
+		-
+			message: "#^Variable \\$downloadFolderPath might not be defined\\.$#"
+			count: 2
+			path: Classes/Utility/QbankUtility.php

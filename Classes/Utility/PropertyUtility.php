@@ -54,7 +54,7 @@ class PropertyUtility
             return self::$filePropertyTypeConverterCache[$filePropertyName];
         }
 
-        $propertyConfiguration = self::getFileProperties()[$filePropertyName];
+        $propertyConfiguration = self::getFileProperties()[$filePropertyName] ?? null;
 
         if (!isset($propertyConfiguration['typeConverter'])) {
             throw new InvalidTypeConverterException(
@@ -137,7 +137,7 @@ class PropertyUtility
      */
     public static function getLabelForFileProperty(string $filePropertyName): string
     {
-        $label = self::getFileProperties()[$filePropertyName]['label'];
+        $label = self::getFileProperties()[$filePropertyName]['label'] ?? null;
 
         if ($label === null) {
             throw new MissingFilePropertyException(

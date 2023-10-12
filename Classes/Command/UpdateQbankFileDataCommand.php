@@ -37,8 +37,6 @@ class UpdateQbankFileDataCommand extends Command
 {
     /**
      * Configure the command by defining the name, options and arguments.
-     *
-     * @return void
      */
     public function configure(): void
     {

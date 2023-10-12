@@ -16,7 +16,7 @@ class ResolvePageTitleEvent implements StoppableEventInterface
     /**
      * @var string|null
      */
-    protected $title = null;
+    protected $title;
 
     /**
      * @var string

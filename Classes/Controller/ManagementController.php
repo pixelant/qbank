@@ -22,7 +22,6 @@ use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Utility\PropertyUtility;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
@@ -41,7 +40,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
-#[Controller]
 class ManagementController extends ActionController
 {
     protected ?ModuleData $moduleData = null;
@@ -58,23 +56,15 @@ class ManagementController extends ActionController
     /**
      * ManagementController constructor.
      */
+    // phpcs:disable
     public function __construct(
         protected readonly ModuleTemplateFactory $moduleTemplateFactory,
         protected readonly IconFactory $iconFactory,
         protected readonly PageRenderer $pageRenderer,
         protected readonly QbankService $qbankService,
         protected readonly BackendUriBuilder $backendUriBuilder
-    )
-    {
-    }
-
-    /**
-     * Override the default action if found in user uc
-     */
-    public function processRequest(RequestInterface $request): ResponseInterface
-    {
-        return parent::processRequest($request);
-    }
+    ) {}
+    // phpcs:enable
 
     /**
      * Init module state.
@@ -86,7 +76,12 @@ class ManagementController extends ActionController
     {
         $this->moduleData = $this->request->getAttribute('moduleData');
         $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
-        $this->moduleTemplate->setTitle(LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.module.title', 'qbank'));
+        $this->moduleTemplate->setTitle(
+            LocalizationUtility::translate(
+                'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.module.title',
+                'qbank'
+            )
+        );
         $this->moduleTemplate->setFlashMessageQueue($this->getFlashMessageQueue());
     }
 
@@ -98,7 +93,8 @@ class ManagementController extends ActionController
         $this->moduleTemplate->assignMultiple([
             'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
             'timeFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
-            'dateTimeFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
+            'dateTimeFormat' =>
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
         ]);
         // Load JavaScript modules
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
@@ -111,8 +107,6 @@ class ManagementController extends ActionController
 
     /**
      * Generates the dropdown menu.
-     *
-     * @return void
      */
     private function generateDropdownMenu(string $currentAction): void
     {
@@ -121,21 +115,36 @@ class ManagementController extends ActionController
         $menu->setIdentifier('WebFuncJumpMenu');
         $menu->addMenuItem(
             $menu->makeMenuItem()
-            ->setTitle(LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.overview', 'qbank'))
-            ->setHref($this->uriBuilder->uriFor('overview'))
-            ->setActive($currentAction === 'overview')
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.overview',
+                        'qbank'
+                    )
+                )
+                ->setHref($this->uriBuilder->uriFor('overview'))
+                ->setActive($currentAction === 'overview')
         );
         $menu->addMenuItem(
             $menu->makeMenuItem()
-            ->setTitle(LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.list', 'qbank'))
-            ->setHref($this->uriBuilder->uriFor('list'))
-            ->setActive($currentAction === 'list')
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.list',
+                        'qbank'
+                    )
+                )
+                ->setHref($this->uriBuilder->uriFor('list'))
+                ->setActive($currentAction === 'list')
         );
         $menu->addMenuItem(
             $menu->makeMenuItem()
-            ->setTitle(LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.mappings', 'qbank'))
-            ->setHref($this->uriBuilder->uriFor('mappings'))
-            ->setActive($currentAction === 'mappings')
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.mappings',
+                        'qbank'
+                    )
+                )
+                ->setHref($this->uriBuilder->uriFor('mappings'))
+                ->setActive($currentAction === 'mappings')
         );
         $this->moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
     }
@@ -151,7 +160,12 @@ class ManagementController extends ActionController
         if ($currentAction === 'mappings') {
             $addUserButton = $buttonBar->makeLinkButton()
                 ->setIcon($this->iconFactory->getIcon('actions-plus', Icon::SIZE_SMALL))
-                ->setTitle(LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.button.add_mapping', 'qbank'))
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.button.add_mapping',
+                        'qbank'
+                    )
+                )
                 ->setShowLabelText(true)
                 ->setHref((string)$this->backendUriBuilder->buildUriFromRoute('record_edit', [
                     'edit' => ['tx_qbank_domain_model_mapping' => [0 => 'new']],
@@ -159,8 +173,6 @@ class ManagementController extends ActionController
                 ]));
             $buttonBar->addButton($addUserButton);
         }
-
-        // $buttonBar->makeShortcutButton()->setArguments(['action', 'extension'])->setDisplayName($this->shortcutName);// ->addButton($shortcutButton);
 
         $reloadButton = $buttonBar->makeLinkButton()
             ->setHref($this->request->getAttribute('normalizedParams')->getRequestUri())
@@ -252,7 +264,10 @@ class ManagementController extends ActionController
         }
 
         $this->moduleTemplate->addFlashMessage(
-            LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-metadata', 'qbank'),
+            LocalizationUtility::translate(
+                'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-metadata',
+                'qbank'
+            ),
             '',
             \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::OK
         );
@@ -288,7 +303,10 @@ class ManagementController extends ActionController
             $this->qbankService->replaceLocalMedia($file);
 
             $this->moduleTemplate->addFlashMessage(
-                LocalizationUtility::translate('LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-file', 'qbank'),
+                LocalizationUtility::translate(
+                    'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-file',
+                    'qbank'
+                ),
                 '',
                 \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::OK
             );

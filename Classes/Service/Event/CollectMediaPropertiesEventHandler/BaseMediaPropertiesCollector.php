@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandler;
 
-use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandlerInterface;
 use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
 use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEvent;
+use Pixelant\Qbank\Service\Event\CollectMediaPropertiesEventHandlerInterface;
 use QBNK\QBank\API\Model\PropertyType;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 

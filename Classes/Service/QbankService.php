@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Service;
 
-use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
-use Pixelant\Qbank\Exception\MediaPermanentlyDeletedException;
 use Pixelant\Qbank\Configuration\ExtensionConfigurationManager;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
+use Pixelant\Qbank\Exception\MediaPermanentlyDeletedException;
 use Pixelant\Qbank\Exception\ReplaceLocalMediaException;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\MediaRepository;
@@ -32,6 +31,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Exception\SiteNotFoundException;
+use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\ResourceFactory;

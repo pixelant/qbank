@@ -11,12 +11,10 @@ class PropertyTypeRepository extends AbstractRepository
     /**
      * @var array<PropertyType>
      */
-    protected static $propertyTypeCache = null;
+    protected static $propertyTypeCache;
 
     /**
      * Initialize PropertyTypeCache and store them with SystemName as key.
-     *
-     * @return void
      */
     protected function initializePropertyTypeCache(): void
     {

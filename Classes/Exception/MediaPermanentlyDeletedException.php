@@ -7,6 +7,6 @@ namespace Pixelant\Qbank\Exception;
 /**
  * Exception thrown if a QBank media is permanently deleted.
  */
-class MediaPermanentlyDeletedException extends \RuntimeException
-{
-}
+// phpcs:disable
+class MediaPermanentlyDeletedException extends \RuntimeException {}
+// phpcs:enable

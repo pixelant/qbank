@@ -22,7 +22,6 @@ use Pixelant\Qbank\Utility\QbankUtility;
 use TYPO3\CMS\Backend\Form\Container\FilesControlContainer as CoreFilesControlContainer;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
-use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\Filter\FileExtensionFilter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -54,21 +53,24 @@ class FilesControlContainer extends CoreFilesControlContainer
             return $controls;
         }
 
-        $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix($this->data['inlineFirstPid']);
+        $currentStructureDomObjectIdPrefix = $this->inlineStackProcessor->getCurrentStructureDomObjectIdPrefix(
+            $this->data['inlineFirstPid']
+        );
         $objectPrefix = $currentStructureDomObjectIdPrefix . '-' . self::FILE_REFERENCE_TABLE;
 
         $languageService = $this->getLanguageService();
         $extensionManager = $this->getExtensionConfigurationManager();
 
-        $buttonText = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:selector-button-control.label';
-        $titleText = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:selector-button-control.title';
-        $modalErrorTitle = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.error-title';
-        $modalRequestFailed = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.request-failed';
-        $modalRequestFailedError = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.request-failed-error';
-        $modalIllegalExtension = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:js.modal.illegal-extension';
+        $lllExtPath = 'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:';
+        $buttonText = $lllExtPath . ':selector-button-control.label';
+        $titleText = $lllExtPath . ':selector-button-control.title';
+        $modalErrorTitle = $lllExtPath . ':js.modal.error-title';
+        $modalRequestFailed = $lllExtPath . ':js.modal.request-failed';
+        $modalRequestFailedError = $lllExtPath . ':js.modal.request-failed-error';
+        $modalIllegalExtension = $lllExtPath . ':js.modal.illegal-extension';
 
         $buttonText = $languageService->sL($buttonText);
-        $titleText =  $languageService->sL($titleText);
+        $titleText = $languageService->sL($titleText);
         $modalErrorTitle = $languageService->sL($modalErrorTitle);
         $modalRequestFailed = $languageService->sL($modalRequestFailed);
         $modalRequestFailedError = $languageService->sL($modalRequestFailedError);
@@ -80,7 +82,9 @@ class FilesControlContainer extends CoreFilesControlContainer
             'style' => !($inlineConfiguration['inline']['showCreateNewRelationButton'] ?? true) ? 'display: none;' : '',
             'title' => $titleText,
             'data-file-irre-object' => htmlspecialchars($objectPrefix),
-            'data-file-allowed' => htmlspecialchars(implode(',', $fileExtensionFilter->getAllowedFileExtensions() ?? [])),
+            'data-file-allowed' => htmlspecialchars(
+                implode(',', $fileExtensionFilter->getAllowedFileExtensions() ?? [])
+            ),
             'data-qbank-host' => $extensionManager->getHost(),
             'data-qbank-deploymentsites' => implode(',', $extensionManager->getDeploymentSites() ?? []),
             'data-qbank-token' => $accessToken,

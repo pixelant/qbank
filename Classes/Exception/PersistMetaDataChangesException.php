@@ -7,6 +7,6 @@ namespace Pixelant\Qbank\Exception;
 /**
  * Exception thrown if errors were found in DataHandler when MetaData was updated.
  */
-class PersistMetaDataChangesException extends \RuntimeException
-{
-}
+// phpcs:disable
+class PersistMetaDataChangesException extends \RuntimeException {}
+// phpcs:enable

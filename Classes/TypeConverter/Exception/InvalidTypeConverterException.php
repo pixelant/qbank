@@ -9,6 +9,6 @@ use TYPO3\CMS\Core\Exception;
 /**
  * Exception thrown if a TypeConverter is invalid.
  */
-class InvalidTypeConverterException extends Exception
-{
-}
+// phpcs:disable
+class InvalidTypeConverterException extends Exception {}
+// phpcs:enable

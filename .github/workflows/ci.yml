@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - typo3-v12
   pull_request:
   schedule:
     - cron: '15 3 * * 1'
