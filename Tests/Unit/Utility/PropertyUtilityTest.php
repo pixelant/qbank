@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Unit\Utility;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\Qbank\Domain\Model\Qbank\BaseMediaProperty;
 use Pixelant\Qbank\Domain\Model\Qbank\MediaPropertyValue;
 use Pixelant\Qbank\Domain\Model\Qbank\PropertyMediaProperty;
 use Pixelant\Qbank\Exception\MissingFilePropertyException;
 use Pixelant\Qbank\Repository\PropertyTypeRepository;
 use Pixelant\Qbank\TypeConverter\Exception\InvalidTypeConverterException;
+use Pixelant\Qbank\TypeConverter\FloatTypeConverter;
+use Pixelant\Qbank\TypeConverter\IntegerTypeConverter;
+use Pixelant\Qbank\TypeConverter\StringTypeConverter;
 use Pixelant\Qbank\TypeConverter\TypeConverterInterface;
 use Pixelant\Qbank\Utility\PropertyUtility;
 use QBNK\QBank\API\Model\PropertyType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Test case.
@@ -23,7 +26,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PropertyUtilityTest extends UnitTestCase
 {
-    protected $resetSingletonInstances = true;
+    protected bool $resetSingletonInstances = true;
 
     /**
      * Set up.
@@ -33,37 +36,37 @@ class PropertyUtilityTest extends UnitTestCase
         parent::setUp();
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['qbank']['fileProperties'] = [
             'name' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'Name',
                 'disabled' => false,
             ],
             'title' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'Title',
                 'disabled' => false,
             ],
             'keywords' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'JKeywords',
                 'disabled' => false,
             ],
             'latitude' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\FloatTypeConverter',
+                'typeConverter' => FloatTypeConverter::class,
                 'label' => 'Latitude',
                 'disabled' => false,
             ],
             'content_creation_date' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\IntegerTypeConverter',
+                'typeConverter' => IntegerTypeConverter::class,
                 'label' => 'Content Creation Date',
                 'disabled' => false,
             ],
             'hidden' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\IntegerTypeConverter',
+                'typeConverter' => IntegerTypeConverter::class,
                 'label' => 'Hidden',
                 'disabled' => false,
             ],
             'note' => [
-                'typeConverter' => 'Pixelant\Qbank\TypeConverter\StringTypeConverter',
+                'typeConverter' => StringTypeConverter::class,
                 'label' => 'Note',
                 'disabled' => true,
             ],
@@ -295,9 +298,13 @@ class PropertyUtilityTest extends UnitTestCase
             'dataTypeId' => 6,
         ]);
 
-        $repositoryProphecy = $this->prophesize(PropertyTypeRepository::class);
-        $repositoryProphecy->findBySystemName($systemName)->shouldBeCalled()->willReturn($propertyType);
-        GeneralUtility::setSingletonInstance(PropertyTypeRepository::class, $repositoryProphecy->reveal());
+        $repositoryMock = $this->createMock(PropertyTypeRepository::class);
+        $repositoryMock
+            ->expects(self::exactly(1))
+            ->method('findBySystemName')
+            ->with($systemName)
+            ->willReturn($propertyType);
+        GeneralUtility::setSingletonInstance(PropertyTypeRepository::class, $repositoryMock);
 
         self::assertSame(
             PropertyUtility::getQbankPropertyTypeIdForSystemName($systemName),
@@ -310,8 +317,8 @@ class PropertyUtilityTest extends UnitTestCase
      */
     public function getQbankPropertyTypeIdForUnknownSystemNameReturnsPropertyTypeIdZero(): void
     {
-        $repositoryProphecy = $this->prophesize(PropertyTypeRepository::class);
-        GeneralUtility::setSingletonInstance(PropertyTypeRepository::class, $repositoryProphecy->reveal());
+        $repositoryMock = $this->createMock(PropertyTypeRepository::class);
+        GeneralUtility::setSingletonInstance(PropertyTypeRepository::class, $repositoryMock);
 
         self::assertSame(
             PropertyUtility::getQbankPropertyTypeIdForSystemName('unknownsystemname'),

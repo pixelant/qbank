@@ -28,7 +28,9 @@
 			</trans-unit>
 
 			<!-- QBank Management -->
-
+			<trans-unit id="be.module.title">
+				<source>QBank</source>
+			</trans-unit>
 			<trans-unit id="be.menu_item.overview">
 				<source>Overview</source>
 			</trans-unit>

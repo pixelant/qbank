@@ -17,54 +17,34 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Controller;
 
+use Pixelant\Qbank\Exception\MediaPermanentlyDeletedException;
 use Pixelant\Qbank\Repository\MappingRepository;
 use Pixelant\Qbank\Repository\QbankFileRepository;
 use Pixelant\Qbank\Service\QbankService;
 use Pixelant\Qbank\Utility\PropertyUtility;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Module\ModuleData;
+use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Http\HtmlResponse;
+use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3Fluid\Fluid\View\ViewInterface;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
-/**
- * QBank Management Controller.
- *
- * Scope: backend
- * @internal
- */
-final class ManagementController
+class ManagementController extends ActionController
 {
-    /**
-     * @var ServerRequestInterface
-     */
-    private $request;
+    protected ?ModuleData $moduleData = null;
 
-    /**
-     * @var array
-     */
-    private $arguments = [];
-
-    /**
-     * ModuleTemplate object.
-     *
-     * @var ModuleTemplate
-     */
-    private $moduleTemplate;
-
-    /**
-     * @var ViewInterface
-     */
-    private $view;
+    protected ModuleTemplate $moduleTemplate;
 
     /**
      * Module name for the shortcut.
@@ -74,151 +54,125 @@ final class ManagementController
     private $shortcutName;
 
     /**
-     * @var QbankService
-     */
-    private $qbankService;
-
-    /**
-     * @var IconFactory
-     */
-    private $iconFactory;
-
-    /**
-     * Actions to create menu for.
-     */
-    private $actions = ['overview', 'mappings', 'list'];
-
-    /**
      * ManagementController constructor.
      */
-    public function __construct()
+    // phpcs:disable
+    public function __construct(
+        protected readonly ModuleTemplateFactory $moduleTemplateFactory,
+        protected readonly IconFactory $iconFactory,
+        protected readonly PageRenderer $pageRenderer,
+        protected readonly QbankService $qbankService,
+        protected readonly BackendUriBuilder $backendUriBuilder
+    ) {}
+    // phpcs:enable
+
+    /**
+     * Init module state.
+     * This isn't done within __construct() since the controller
+     * object is only created once in extbase when multiple actions are called in
+     * one call. When those change module state, the second action would see old state.
+     */
+    public function initializeAction(): void
     {
-        $this->qbankService = GeneralUtility::makeInstance(QbankService::class);
-        $this->moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
-        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
+        $this->moduleData = $this->request->getAttribute('moduleData');
+        $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        $this->moduleTemplate->setTitle(
+            LocalizationUtility::translate(
+                'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.module.title',
+                'qbank'
+            )
+        );
+        $this->moduleTemplate->setFlashMessageQueue($this->getFlashMessageQueue());
     }
 
     /**
-     * Injects the request object for the current request, and renders correct action.
-     *
-     * @param ServerRequestInterface $request the current request
-     * @return ResponseInterface the response with the content
+     * Assign default variables to ModuleTemplate view
      */
-    public function handleRequest(ServerRequestInterface $request): ResponseInterface
+    protected function initializeView(): void
     {
-        $this->request = $request;
-
-        $this->arguments = array_merge_recursive(
-            $request->getQueryParams(),
-            $request->getParsedBody() ?? []
+        $this->moduleTemplate->assignMultiple([
+            'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
+            'timeFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
+            'dateTimeFormat' =>
+                $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
+        ]);
+        // Load JavaScript modules
+        $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
+        $javaScriptRenderer->addJavaScriptModuleInstruction(
+            JavaScriptModuleInstruction::create('@typo3/filelist/file-list.js')->instance()
         );
-
-        $action = $this->arguments['action'] ?? 'overview';
-
-        $this->generateDropdownMenu($request, $action);
-        $this->generateButtons($action);
-
-        $this->initializeView($action);
-
-        $actionFunction = $action . 'Action';
-        if (method_exists($this, $actionFunction)) {
-            $this->{$actionFunction}();
-        } else {
-            $this->overviewAction();
-        }
-
-        $this->moduleTemplate->setContent($this->view->render());
-
-        return new HtmlResponse($this->moduleTemplate->renderContent());
-    }
-
-    /**
-     * @param string $templateName
-     */
-    private function initializeView(string $templateName): void
-    {
-        $this->view = GeneralUtility::makeInstance(StandaloneView::class);
-        $this->view->setTemplate($templateName);
-        $this->view->setTemplateRootPaths(['EXT:qbank/Resources/Private/Templates/Management']);
-        $this->view->setPartialRootPaths(['EXT:qbank/Resources/Private/Partials']);
-        $this->view->setLayoutRootPaths(['EXT:qbank/Resources/Private/Layouts']);
-        $this->view->getRequest()->setControllerExtensionName('Qbank');
-        $this->view->assign(
-            'settings',
-            [
-                'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy']
-                    . ' '
-                    . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
-            ]
-        );
-        // Info window is included in this.
-        $this->moduleTemplate->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Filelist/FileList');
+        $this->pageRenderer->loadJavaScriptModule('@typo3/backend/context-menu.js');
+        $this->pageRenderer->loadJavaScriptModule('@typo3/backend/modal.js');
     }
 
     /**
      * Generates the dropdown menu.
-     *
-     * @param ServerRequestInterface $request
-     * @param string $action
-     * @return void
      */
-    private function generateDropdownMenu(ServerRequestInterface $request, string $action): void
+    private function generateDropdownMenu(string $currentAction): void
     {
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $lang = $this->getLanguageService();
-        $lang->includeLLFile('EXT:qbank/Resources/Private/Language/locallang.xlf');
+        $this->uriBuilder->setRequest($this->request);
         $menu = $this->moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->makeMenu();
         $menu->setIdentifier('WebFuncJumpMenu');
-
-        foreach ($this->actions as $menuAction) {
-            $menuItem = $menu
-                ->makeMenuItem()
-                ->setActive($action === $menuAction)
-                ->setHref(
-                    $uriBuilder->buildUriFromRoute('file_qbank', ['action' => $menuAction])
+        $menu->addMenuItem(
+            $menu->makeMenuItem()
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.overview',
+                        'qbank'
+                    )
                 )
-                ->setTitle($lang->getLL('be.menu_item.' . $menuAction));
-
-            $menu->addMenuItem($menuItem);
-        }
-
-        $this->shortcutName = $lang->getLL('be.menu_item.qbank_overview');
+                ->setHref($this->uriBuilder->uriFor('overview'))
+                ->setActive($currentAction === 'overview')
+        );
+        $menu->addMenuItem(
+            $menu->makeMenuItem()
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.list',
+                        'qbank'
+                    )
+                )
+                ->setHref($this->uriBuilder->uriFor('list'))
+                ->setActive($currentAction === 'list')
+        );
+        $menu->addMenuItem(
+            $menu->makeMenuItem()
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.menu_item.mappings',
+                        'qbank'
+                    )
+                )
+                ->setHref($this->uriBuilder->uriFor('mappings'))
+                ->setActive($currentAction === 'mappings')
+        );
         $this->moduleTemplate->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
     }
 
     /**
      * Gets all buttons for the docHeader.
-     * @param mixed $action
+     * @param string $currentAction
      */
-    private function generateButtons($action): void
+    private function generateButtons($currentAction): void
     {
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $this->uriBuilder->setRequest($this->request);
         $buttonBar = $this->moduleTemplate->getDocHeaderComponent()->getButtonBar();
-
-        if ($action === 'mappings') {
-            $newRecordButton = $buttonBar->makeLinkButton()
-                ->setHref((string)$uriBuilder->buildUriFromRoute(
-                    'record_edit',
-                    [
-                        'edit' => [
-                            'tx_qbank_domain_model_mapping' => ['new'],
-                        ],
-                        'returnUrl' => (string)$uriBuilder->buildUriFromRoute('file_qbank', ['action' => 'mappings']),
-                    ]
-                ))
-                ->setTitle($this->getLanguageService()->getLL('be.button.add_mapping'))
-                ->setIcon($this->iconFactory->getIcon('actions-add', Icon::SIZE_SMALL))
-                ->setShowLabelText(true);
-
-            $buttonBar->addButton($newRecordButton, ButtonBar::BUTTON_POSITION_LEFT, 1);
+        if ($currentAction === 'mappings') {
+            $addUserButton = $buttonBar->makeLinkButton()
+                ->setIcon($this->iconFactory->getIcon('actions-plus', Icon::SIZE_SMALL))
+                ->setTitle(
+                    LocalizationUtility::translate(
+                        'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.button.add_mapping',
+                        'qbank'
+                    )
+                )
+                ->setShowLabelText(true)
+                ->setHref((string)$this->backendUriBuilder->buildUriFromRoute('record_edit', [
+                    'edit' => ['tx_qbank_domain_model_mapping' => [0 => 'new']],
+                    'returnUrl' => $this->request->getAttribute('normalizedParams')->getRequestUri(),
+                ]));
+            $buttonBar->addButton($addUserButton);
         }
-
-        $shortcutButton = $buttonBar->makeShortcutButton()
-            ->setModuleName('file_qbank')
-            ->setGetVariables(['action', 'extension'])
-            ->setDisplayName($this->shortcutName);
-
-        $buttonBar->addButton($shortcutButton);
 
         $reloadButton = $buttonBar->makeLinkButton()
             ->setHref($this->request->getAttribute('normalizedParams')->getRequestUri())
@@ -234,40 +188,62 @@ final class ManagementController
     /**
      * Overview.
      */
-    private function overviewAction(): void
+    protected function overviewAction(): ResponseInterface
     {
+        $this->generateDropdownMenu('overview');
+        $this->generateButtons('overview');
         $properties = $this->qbankService->fetchMediaProperties();
-        $this->view->assign('properties', $properties);
+        $this->moduleTemplate->assign('properties', $properties);
+        return $this->moduleTemplate->renderResponse('Management/Overview');
     }
 
     /**
      * Mapping.
      */
-    private function mappingsAction(): void
+    protected function mappingsAction(): ResponseInterface
     {
+        $this->generateDropdownMenu('mappings');
+        $this->generateButtons('mappings');
         $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
         $mappings = $mappingRepository->findAll();
-        $this->view->assign('mappings', $mappings);
-        $this->view->assign('mediaProperties', $this->qbankService->fetchMediaProperties());
-        $this->view->assign('fileProperties', PropertyUtility::getFileProperties());
+        $this->moduleTemplate->assignMultiple([
+            'mappings' => $mappings,
+            'mediaProperties' => $this->qbankService->fetchMediaProperties(),
+            'fileProperties' => PropertyUtility::getFileProperties(),
+        ]);
+        return $this->moduleTemplate->renderResponse('Management/Mappings');
     }
 
     /**
      * List.
      */
-    private function listAction(): void
+    protected function listAction(): ResponseInterface
     {
+        $this->generateDropdownMenu('list');
+        $this->generateButtons('list');
         $qbankFileRepository = GeneralUtility::makeInstance(QbankFileRepository::class);
         $qbankFiles = $qbankFileRepository->findAll();
-        $this->view->assign('qbankFiles', $qbankFiles);
+        $this->moduleTemplate->assign('qbankFiles', $qbankFiles);
+        return $this->moduleTemplate->renderResponse('Management/List');
     }
 
     /**
      * Update metadata for file.
      */
-    public function synchronizeMetadataAction(): void
+    public function synchronizeMetadataAction()
     {
-        $files = $this->arguments['files'] ?? [$this->arguments['file']];
+        if ($this->request->hasArgument('files')) {
+            $files = $this->request->getArgument('files');
+        } elseif ($this->request->hasArgument('file')) {
+            $files = [$this->request->getArgument('file')];
+        } else {
+            $this->moduleTemplate->addFlashMessage(
+                'No files could be syncronized',
+                'Syncronize',
+                \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::ERROR
+            );
+            return $this->rediectResponse('list');
+        }
 
         foreach ($files as $file) {
             $file = (int)$file;
@@ -278,30 +254,44 @@ final class ManagementController
 
             try {
                 $this->qbankService->synchronizeMetadata($file);
-            } catch (\Pixelant\Qbank\Exception\MediaPermanentlyDeletedException $th) {
+            } catch (MediaPermanentlyDeletedException $th) {
                 $this->moduleTemplate->addFlashMessage(
                     $th->getMessage(),
                     '',
-                    FlashMessage::ERROR
+                    AbstractMessage::ERROR
                 );
             }
         }
 
         $this->moduleTemplate->addFlashMessage(
-            $this->getLanguageService()->getLL('be.action.updated-metadata'),
+            LocalizationUtility::translate(
+                'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-metadata',
+                'qbank'
+            ),
             '',
-            FlashMessage::OK
+            \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::OK
         );
 
-        $this->forward('list');
+        return $this->rediectResponse('list');
     }
 
     /**
      * Replace image for file.
      */
-    public function replaceLocalMediaAction(): void
+    public function replaceLocalMediaAction()
     {
-        $files = $this->arguments['files'] ?? [$this->arguments['file']];
+        if ($this->request->hasArgument('files')) {
+            $files = $this->request->getArgument('files');
+        } elseif ($this->request->hasArgument('file')) {
+            $files = [$this->request->getArgument('file')];
+        } else {
+            $this->moduleTemplate->addFlashMessage(
+                'No files could be syncronized',
+                'Syncronize',
+                \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::ERROR
+            );
+            return $this->rediectResponse('list');
+        }
 
         foreach ($files as $file) {
             $file = (int)$file;
@@ -313,27 +303,26 @@ final class ManagementController
             $this->qbankService->replaceLocalMedia($file);
 
             $this->moduleTemplate->addFlashMessage(
-                $this->getLanguageService()->getLL('be.action.updated-file'),
+                LocalizationUtility::translate(
+                    'LLL:EXT:qbank/Resources/Private/Language/locallang.xlf:be.action.updated-file',
+                    'qbank'
+                ),
                 '',
-                FlashMessage::OK
+                \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::OK
             );
         }
 
-        $this->forward('list');
+        return $this->rediectResponse('list');
     }
 
     /**
-     * Forward execution to $action.
+     * Redirect to $action to avoid parameters in URL.
      *
      * @param string $action
      */
-    private function forward(string $action): void
+    private function rediectResponse(string $action): ResponseInterface
     {
-        $this->initializeView($action);
-
-        $methodName = $action . 'Action';
-
-        $this->{$methodName}();
+        return new RedirectResponse($this->backendUriBuilder->buildUriFromRoute('file_qbank', ['action' => $action]));
     }
 
     /**

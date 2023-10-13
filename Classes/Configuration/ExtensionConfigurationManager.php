@@ -295,8 +295,6 @@ class ExtensionConfigurationManager implements SingletonInterface
      * Set the value of autoUpdate.
      *
      * @param int $autoUpdate
-     *
-     * @return void
      */
     public function setAutoUpdate(int $autoUpdate): void
     {

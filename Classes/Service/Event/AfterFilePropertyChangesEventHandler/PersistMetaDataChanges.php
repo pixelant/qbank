@@ -6,6 +6,7 @@ namespace Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandler;
 
 use Pixelant\Qbank\Exception\PersistMetaDataChangesException;
 use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEvent;
+use Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandlerInterface;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEventHandler\MetaDataFilePropertyChangeEventHandler;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -13,7 +14,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Persist the changes that have previously been made in the MetaDatafilePropertyChangeEventHandler.
  */
-class PersistMetaDataChanges implements \Pixelant\Qbank\Service\Event\AfterFilePropertyChangesEventHandlerInterface
+class PersistMetaDataChanges implements AfterFilePropertyChangesEventHandlerInterface
 {
     /**
      * {@inheritdoc}

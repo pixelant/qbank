@@ -1,14 +1,14 @@
 {
 	"name": "pixelant/qbank",
-	"type": "typo3-cms-extension",
 	"description": "Integration of QBank DAM for TYPO3",
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"type": "typo3-cms-extension",
 	"keywords": [
 		"typo3",
 		"qbank",
 		"integration"
-	],
-	"license": [
-		"GPL-2.0-or-later"
 	],
 	"authors": [
 		{
@@ -19,25 +19,53 @@
 		}
 	],
 	"require": {
-		"php": "~7.2.0 || ~7.3.0 || ~7.4.0 || ~8.0",
-		"qbnk/qbank3api-phpwrapper": "^4.9 || ^5.1",
-		"typo3/cms-core": "^10.4 || ^11.5.2"
+		"php": "^8.0",
+		"qbnk/qbank3api-phpwrapper": "^7.0",
+		"typo3/cms-core": "^12.4"
+	},
+	"require-dev": {
+		"codeception/codeception": "^5.0.11",
+		"ergebnis/composer-normalize": "^2.39",
+		"friendsofphp/php-cs-fixer": "^3.34.1",
+		"helmich/typo3-typoscript-lint": "3.1.0",
+		"phpspec/prophecy-phpunit": "^1.0",
+		"phpstan/extension-installer": "^1.2.0",
+		"phpstan/phpstan": "^1.8.10",
+		"phpstan/phpstan-phpunit": "^1.1.1",
+		"phpstan/phpstan-strict-rules": "^1.4.4",
+		"phpunit/phpunit": "^10.4.1",
+		"saschaegerer/phpstan-typo3": "1.9.0",
+		"seld/jsonlint": "^1.10",
+		"squizlabs/php_codesniffer": "3.7.2",
+		"typo3/cms-fluid-styled-content": "^12.4",
+		"typo3/coding-standards": "^0.7.1",
+		"typo3/testing-framework": "^8.0.6"
 	},
 	"replace": {
 		"typo3-ter/qbank": "self.version"
 	},
-	"require-dev": {
-		"codeception/codeception": "^4.1.5",
-		"helhum/typo3-composer-setup": "^0.5.7",
-		"nimut/testing-framework": "^5.0.3",
-		"phpunit/phpunit": "^8.5.28",
-		"seld/jsonlint": "^1.9",
-		"typo3/cms-fluid-styled-content": "^10.4 || ^11.5.2"
-	},
 	"suggest": {
 		"typo3/cms-filemetadata": "For additional meta data fields."
 	},
+	"prefer-stable": true,
+	"autoload": {
+		"psr-4": {
+			"Pixelant\\Qbank\\": "Classes"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Pixelant\\Qbank\\Tests\\": "Tests"
+		}
+	},
 	"config": {
+		"allow-plugins": {
+			"ergebnis/composer-normalize": true,
+			"phpstan/extension-installer": true,
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true
+		},
+		"bin-dir": ".Build/bin",
 		"preferred-install": {
 			"*": "dist"
 		},
@@ -50,17 +78,6 @@
 			"web-dir": ".Build/public"
 		}
 	},
-	"autoload": {
-		"psr-4": {
-			"Pixelant\\Qbank\\": "Classes"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"Pixelant\\Qbank\\Tests\\": "Tests"
-		}
-	},
-	"prefer-stable": true,
 	"scripts": {
 		"post-autoload-dump": [
 			"@link-extension"
@@ -68,61 +85,101 @@
 		"ci": [
 			"@ci:static"
 		],
-		"ci:composer:normalize": "php ./tools/composer-normalize --dry-run",
+		"ci:composer:normalize": "@composer normalize --no-check-lock --dry-run",
 		"ci:dynamic": [
 			"@ci:tests"
 		],
-		"ci:json:lint": "find . ! -path '*.Build/*' -name '*.json' | xargs .Build/vendor/bin/jsonlint -q",
+		"ci:json:lint": "find . ! -path '*.Build/*' ! -path '*node_modules/*' -name '*.json' | xargs -r php .Build/bin/jsonlint -q",
 		"ci:php": [
+			"@ci:php:copypaste",
 			"@ci:php:cs-fixer",
-			"@ci:php:sniff"
-		],
-		"ci:php:copypaste": "php ./tools/phpcpd Classes Configuration Tests",
-		"ci:php:cs-fixer": "php ./tools/php-cs-fixer fix --config .php_cs.php -v --dry-run --using-cache false --diff --diff-format=udiff",
-		"ci:php:lint": "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l",
-		"ci:php:sniff": "php ./tools/phpcs Classes Configuration Tests",
-		"ci:php:stan": "php ./tools/phpstan analyse Classes",
-		"ci:static": [
 			"@ci:php:lint",
 			"@ci:php:sniff",
-			"@ci:ts:lint"
+			"@ci:php:stan"
+		],
+		"ci:php:copypaste": "@php ./tools/phpcpd Classes",
+		"ci:php:cs-fixer": "php-cs-fixer fix --config .php-cs-fixer.php -v --dry-run --using-cache no --diff",
+		"ci:php:lint": "find .*.php *.php Classes Configuration Tests -name '*.php' -print0 | xargs -r -0 -n 1 -P 4 php -l",
+		"ci:php:sniff": ".Build/bin/phpcs Classes Configuration Tests",
+		"ci:php:stan": "phpstan --no-progress",
+		"ci:static": [
+			"@ci:composer:normalize",
+			"@ci:json:lint",
+			"@ci:php:copypaste",
+			"@ci:php:cs-fixer",
+			"@ci:php:lint",
+			"@ci:php:sniff",
+			"@ci:php:stan",
+			"@ci:ts:lint",
+			"@ci:yaml:lint"
 		],
 		"ci:tests": [
 			"@ci:tests:unit",
 			"@ci:tests:functional"
 		],
-		"ci:tests:functional": "find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo \"Running functional test suite {}\"; .Build/vendor/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';",
-		"ci:tests:unit": ".Build/vendor/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit",
-		"ci:ts:lint": "php ./tools/typo3-typoscript-lint -c Configuration/TsLint.yml --ansi -n --fail-on-warnings -vvv Configuration/TypoScript",
-		"ci:yaml:lint": "find . ! -path '*.Build/*' ! -path '*Resources/Private/node_modules/*' -name '*.yml' | xargs php ./tools/yaml-lint",
+		"ci:tests:functional": "Build/Scripts/runTests.sh -s functional",
+		"ci:tests:unit": "Build/Scripts/runTests.sh",
+		"ci:ts:lint": "typoscript-lint -c Configuration/TsLint.yml --ansi -n --fail-on-warnings -vvv Configuration/TypoScript",
+		"ci:yaml:lint": "find . ! -path '*.Build/*' ! -path '*node_modules/*' -regextype egrep -regex '.*.ya?ml$' | xargs -r php ./.Build/bin/yaml-lint",
+		"docs:generate": [
+			"docker run --rm t3docs/render-documentation show-shell-commands > tempfile.sh; echo 'dockrun_t3rd makehtml' >> tempfile.sh; bash tempfile.sh; rm tempfile.sh"
+		],
 		"fix:php": [
 			"@fix:php:cs",
 			"@fix:php:sniff"
 		],
-		"fix:php:cs": "./tools/php-cs-fixer fix --config .php_cs.php",
-		"fix:php:sniff": ".Build/vendor/bin/phpcs Classes Configuration Tests",
+		"fix:php:cs": "php-cs-fixer fix --config .php-cs-fixer.php",
+		"fix:php:sniff": "phpcbf Classes Configuration Tests",
 		"link-extension": [
 			"@php -r 'is_dir($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/\") || mkdir($extFolder, 0777, true);'",
-			"@php -r 'file_exists($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/qbank\") || symlink(__DIR__,$extFolder);'"
+			"@php -r 'file_exists($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/tea\") || symlink(__DIR__,$extFolder);'"
 		],
+		"phpstan:baseline": ".Build/bin/phpstan  --generate-baseline=phpstan-baseline.neon",
 		"prepare-release": [
-			".gitignore",
+			"rm .gitignore",
 			"rm -rf .Build",
+			"rm -rf .ddev",
 			"rm -rf .github",
 			"rm -rf .gitlab",
 			"rm -rf Tests",
 			"rm -rf tools",
 			"rm .editorconfig",
 			"rm .gitattributes",
-			"rm .php_cs.php",
-			"rm Resources/Private/.eslintignore",
-			"rm Resources/Private/.eslintrc.json",
-			"rm Resources/Private/.prettierrc.js",
-			"rm Resources/Private/package.json",
-			"rm Resources/Private/stylelint.config.js",
-			"rm codeception.yml",
+			"rm .php-cs-fixer.php",
+			"rm .eslintignore",
+			"rm .eslintrc.json",
+			"rm .prettierrc.js",
+			"rm package.json",
+			"rm stylelint.config.js",
 			"rm phive.xml",
+			"rm phpstan-baseline.neon",
+			"rm phpstan.neon",
 			"rm phpcs.xml"
 		]
+	},
+	"scripts-descriptions": {
+		"ci": "Runs all dynamic and static code checks.",
+		"ci:composer:normalize": "Checks the composer.json.",
+		"ci:dynamic": "Runs all PHPUnit tests (unit and functional).",
+		"ci:json:lint": "Lints the JSON files.",
+		"ci:php": "Runs all static checks for the PHP files.",
+		"ci:php:copypaste": "Checks for copy'n'pasted PHP code.",
+		"ci:php:cs-fixer": "Checks the code style with the PHP Coding Standards Fixer (PHP-CS-Fixer).",
+		"ci:php:lint": "Lints the PHP files for syntax errors.",
+		"ci:php:sniff": "Checks the code style with PHP_CodeSniffer (PHPCS).",
+		"ci:php:stan": "Checks the PHP types using PHPStan.",
+		"ci:static": "Runs all static code checks (syntax, style, types).",
+		"ci:tests": "Runs all PHPUnit tests (unit and functional).",
+		"ci:tests:functional": "Runs the functional tests.",
+		"ci:tests:unit": "Runs the unit tests.",
+		"ci:ts:lint": "Lints the TypoScript files.",
+		"ci:yaml:lint": "Lints the YAML files.",
+		"coverage:create-directories": "Creates the directories needed for recording and merging the code coverage reports.",
+		"docs:generate": "Renders the extension ReST documentation.",
+		"fix:php": "Runs all fixers for the PHP code.",
+		"fix:php:cs": "Fixes the code style with PHP-CS-Fixer.",
+		"fix:php:sniff": "Fixes the code style with PHP_CodeSniffer.",
+		"phpstan:baseline": "Updates the PHPStan baseline file to match the code.",
+		"prepare-release": "Removes development-only files in preparation of a TER release."
 	}
 }

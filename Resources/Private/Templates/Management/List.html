@@ -1,11 +1,13 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-            xmlns:qb="http://typo3.org/ns/TYPO3/CMS/Qbank/ViewHelpers"
-            xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
-            data-namespace-typo3-fluid="true">
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+    xmlns:qb="http://typo3.org/ns/TYPO3/CMS/Qbank/ViewHelpers"
+    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+    data-namespace-typo3-fluid="true">
 
-<f:layout name="Default" />
+<f:layout name="Module" />
 
-<f:section name="content">
+<f:section name="Content">
     <h1><f:translate key="be.list.title" /></h1>
     <p><f:translate key="be.list.description" /></p>
 
@@ -33,7 +35,7 @@
             </thead>
             <tbody>
                 <f:for each="{qbankFiles}" as="qbankFile">
-                    <tr>
+                    <tr data-filelist-element="true" data-filelist-type="file" data-filelist-identifier="{qbankFile.storage}:{qbankFile.identifier}" data-filelist-name="{qbankFile.name}" data-filelist-uid="{qbankFile.uid}">
                         <td>
                             <f:if condition="{qbankFile.tx_qbank_remote_is_deleted}">
                                 <f:then><core:icon identifier="tx-qbank-logo" overlay="overlay-missing" size="small" /></f:then>
@@ -44,17 +46,17 @@
                             </be:link.editRecord>
                         </td>
                         <td>
-                            <f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_file_timestamp}</f:format.date>
+                            <f:format.date format="{dateTimeFormat}">{qbankFile.tx_qbank_file_timestamp}</f:format.date>
                         </td>
                         <td>
                             <f:if condition="{qbankFile.tx_qbank_metadata_timestamp}">
-                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_metadata_timestamp}</f:format.date></f:then>
+                                <f:then><f:format.date format="{dateTimeFormat}">{qbankFile.tx_qbank_metadata_timestamp}</f:format.date></f:then>
                                 <f:else>-</f:else>
                             </f:if>
                         </td>
                         <td>
                             <f:if condition="{qbankFile.tx_qbank_remote_change_timestamp}">
-                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_remote_change_timestamp}</f:format.date></f:then>
+                                <f:then><f:format.date format="{dateTimeFormat}">{qbankFile.tx_qbank_remote_change_timestamp}</f:format.date></f:then>
                                 <f:else>-</f:else>
                             </f:if>
                         </td>
@@ -71,7 +73,7 @@
                         </td>
                         <td>
                             <f:if condition="{qbankFile.tx_qbank_status_updated_timestamp}">
-                                <f:then><f:format.date format="{settings.dateFormat}">{qbankFile.tx_qbank_status_updated_timestamp}</f:format.date></f:then>
+                                <f:then><f:format.date format="{dateTimeFormat}">{qbankFile.tx_qbank_status_updated_timestamp}</f:format.date></f:then>
                                 <f:else>-</f:else>
                             </f:if>
                         </td>
@@ -81,15 +83,13 @@
                                     <core:icon identifier="actions-open" />
                                 </be:link.editRecord>
                             </div>
-
-                            <a class="btn btn-default"
-                                href="#"
-                                data-filelist-show-item-type="_FILE"
-                                data-filelist-show-item-identifier="{qbankFile.storage}:{qbankFile.identifier}"
-                                title="Show references">
-                                    <core:icon identifier="actions-document-info" />
-                            </a>
-
+                            <button type="button" data-filelist-action="show" class="btn btn-default">
+                                <span class="t3js-icon icon icon-size-small icon-state-default icon-actions-document-info" data-identifier="actions-document-info" aria-hidden="true">
+                                    <span class="icon-markup">
+                                        <svg class="icon-color"><use xlink:href="/_assets/1ee1d3e909b58d32e30dcea666dd3224/Icons/T3Icons/sprites/actions.svg#actions-info"></use></svg>
+                                    </span>
+                                </span>
+                            </button>
                             <f:if condition="{qbankFile.tx_qbank_remote_is_deleted}">
                                 <f:then>
                                     <core:icon identifier="actions-delete" />
@@ -103,7 +103,6 @@
                                         class="btn btn-success">
                                         <core:icon identifier="actions-database-reload" /> {f:translate(key: 'be.action.update-metadata')}
                                     </f:be.link>
-
                                     <f:be.link
                                         route="file_qbank"
                                         parameters="{action: 'replaceLocalMedia', file: qbankFile.uid}"

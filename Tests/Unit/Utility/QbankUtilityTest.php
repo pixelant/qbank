@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Unit\Utility;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\Qbank\Utility\QbankUtility;
 use QBNK\QBank\API\Exception\RequestException;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Test case.
@@ -15,7 +15,7 @@ use QBNK\QBank\API\Exception\RequestException;
  */
 class QbankUtilityTest extends UnitTestCase
 {
-    protected $resetSingletonInstances = true;
+    protected bool $resetSingletonInstances = true;
 
     /**
      * @test

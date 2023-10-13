@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Pixelant\Qbank\Unit\TypeConverter;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\Qbank\TypeConverter\FloatTypeConverter;
 use QBNK\QBank\API\Model\PropertyType;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Test case.

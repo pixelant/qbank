@@ -16,7 +16,7 @@ class FileReferenceUrlEvent implements StoppableEventInterface
     /**
      * @var string|null
      */
-    protected $url = null;
+    protected $url;
 
     /**
      * @var FileReference

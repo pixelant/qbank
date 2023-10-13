@@ -32,13 +32,7 @@ class SysFileReferenceRepository
                     $queryBuilder->createNamedParameter($fileId, \PDO::PARAM_INT)
                 )
             )
-            ->andWhere(
-                $queryBuilder->expr()->eq(
-                    'table_local',
-                    $queryBuilder->createNamedParameter('sys_file', \PDO::PARAM_STR)
-                )
-            )
-            ->execute();
+            ->executeQuery();
 
         if (!method_exists($fileReferenceData, 'fetchAllAssociative')) {
             return $fileReferenceData->fetchAll(FetchMode::ASSOCIATIVE);
