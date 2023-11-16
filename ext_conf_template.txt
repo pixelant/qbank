@@ -13,11 +13,11 @@ host =
 # cat=basic/configure/6; type=string; label=Target folder for downloaded files:
 downloadFolder = 1:user_upload/qbank
 
+# cat=basic/configure/7; type=string; label=Deployment sites: Comma-separated list of deployment sites.
+deploymentSites =
+
 # cat=basic/configure/8; type=options[No autoupdate=0,Metadata=1,File=2,Metadata and file=3]; label=Allow update of metadata and file from command (scheduler/cli):
 autoUpdate = 0
 
 # cat=optional/setting/1; type=int; label=Event session source ID: Setting this will enable usage reporting. To get a session source issued, contact support@qbank.se.
 sessionSource =
-
-# cat=optional/setting/2; type=string; label=Deployment sites: Comma-separated list of deployment sites. Empty means show all.
-deploymentSites =
