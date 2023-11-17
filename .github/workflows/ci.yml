@@ -21,6 +21,7 @@ jobs:
       matrix:
         php-version:
           - 8.1
+          - 8.2
   typoscript-lint:
     name: "TypoScript linter"
     runs-on: ubuntu-20.04
@@ -80,6 +81,7 @@ jobs:
           - "php:sniff"
         php-version:
           - 8.1
+          - 8.2
   xliff-lint:
     name: "Xliff linter"
     runs-on: ubuntu-20.04
@@ -135,5 +137,6 @@ jobs:
           - lowest
         php-version:
           - 8.1
+          - 8.2
         typo3-version:
           - ^12.4
