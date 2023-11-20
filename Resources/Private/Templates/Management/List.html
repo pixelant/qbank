@@ -11,6 +11,8 @@
     <h1><f:translate key="be.list.title" /></h1>
     <p><f:translate key="be.list.description" /></p>
 
+    <f:render partial="ApiStatus" arguments="{apiStatus: apiStatus}" />
+
     <f:if condition="{qbankFiles -> f:count()}">
         <f:render section="table" arguments="{_all}" />
     </f:if>

@@ -33,6 +33,7 @@ use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -90,7 +91,24 @@ class ManagementController extends ActionController
      */
     protected function initializeView(): void
     {
+        $apiStatus = [];
+        try {
+            $checkStatus = $this->qbankService->fetchMediaProperties();
+        } catch (\Throwable $th) {
+            $apiStatus = [
+                'errorMessage' => $th->getMessage(),
+                'errorCode' => $th->getCode(),
+            ];
+            $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(__CLASS__);
+            $logger->error(
+                sprintf(
+                    'Failed to connect to QBank API: "%s"',
+                    $th->getMessage()
+                )
+            );
+        }
         $this->moduleTemplate->assignMultiple([
+            'apiStatus' => $apiStatus,
             'dateFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'],
             'timeFormat' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
             'dateTimeFormat' =>
@@ -192,7 +210,11 @@ class ManagementController extends ActionController
     {
         $this->generateDropdownMenu('overview');
         $this->generateButtons('overview');
-        $properties = $this->qbankService->fetchMediaProperties();
+        try {
+            $properties = $this->qbankService->fetchMediaProperties();
+        } catch (\Throwable $th) {
+            $properties = [];
+        }
         $this->moduleTemplate->assign('properties', $properties);
         return $this->moduleTemplate->renderResponse('Management/Overview');
     }
@@ -206,9 +228,14 @@ class ManagementController extends ActionController
         $this->generateButtons('mappings');
         $mappingRepository = GeneralUtility::makeInstance(MappingRepository::class);
         $mappings = $mappingRepository->findAll();
+        try {
+            $mediaProperties = $this->qbankService->fetchMediaProperties();
+        } catch (\Throwable $th) {
+            $mediaProperties = [];
+        }
         $this->moduleTemplate->assignMultiple([
             'mappings' => $mappings,
-            'mediaProperties' => $this->qbankService->fetchMediaProperties(),
+            'mediaProperties' => $mediaProperties,
             'fileProperties' => PropertyUtility::getFileProperties(),
         ]);
         return $this->moduleTemplate->renderResponse('Management/Mappings');

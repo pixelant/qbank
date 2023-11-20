@@ -115,6 +115,15 @@ class UpdateQbankFileStatusCommand extends Command
 
                     continue;
                 }
+            } catch (\Throwable $th) {
+                $io->writeln(
+                    sprintf(
+                        'QBank file [%s] was not found: "%s"',
+                        $file['tx_qbank_id'],
+                        $th->getMessage()
+                    )
+                );
+                break;
             }
 
             $remoteUpdate = (int)$media->getUpdated()->getTimestamp();

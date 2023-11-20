@@ -1,0 +1,10 @@
+<f:if condition="{apiStatus -> f:count()}">
+    <div role="alert" class="alert alert-danger alert-dismissible">
+        <div class="media">
+            <div class="media-body">
+                <h4 class="alert-title">{f:translate(key: 'LLL:EXT:qbank/Resources/Private/Language/locallang_mod_qbank.xlf:api_error')}</h4>
+                <p class="alert-message">{apiStatus.errorMessage}</p>
+            </div>
+        </div>
+    </div>
+</f:if>

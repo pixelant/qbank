@@ -117,12 +117,12 @@ jobs:
         run: |
           composer require --no-progress typo3/minimal:"$TYPO3"
           composer show
-      - if: "matrix.composer-dependencies == 'lowest'"
+      - if: matrix.composer-dependencies == 'lowest'
         name: "Install lowest dependencies with composer"
         run: |
           composer update --no-ansi --no-interaction --no-progress --with-dependencies --prefer-lowest
           composer show
-      - if: "matrix.composer-dependencies == 'highest'"
+      - if: matrix.composer-dependencies == 'highest'
         name: "Install highest dependencies with composer"
         run: |
           composer update --no-ansi --no-interaction --no-progress --with-dependencies

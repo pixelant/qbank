@@ -21,6 +21,9 @@
 			<trans-unit id="target_property">
 				<source>TYPO3 property</source>
 			</trans-unit>
+			<trans-unit id="api_error">
+				<source>Connection to QBank API failed</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

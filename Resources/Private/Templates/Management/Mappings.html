@@ -10,6 +10,9 @@
 <f:section name="Content">
     <h1><f:translate key="be.mappings.title" /></h1>
     <p><f:translate key="be.mappings.description" /></p>
+
+    <f:render partial="ApiStatus" arguments="{apiStatus: apiStatus}" />
+
     <f:if condition="{mappings -> f:count()}">
         <f:render section="table" arguments="{_all}" />
     </f:if>
@@ -31,7 +34,10 @@
                 <f:for each="{mappings}" as="mapping">
                     <tr>
                         <td>
-                            <f:translate key="{mediaProperties.{mapping.source_property}.label}" default="{mediaProperties.{mapping.source_property}.label}"/>
+                            <f:if condition="{mediaProperties.{mapping.source_property}.label}">
+                                <f:then><f:translate key="{mediaProperties.{mapping.source_property}.label}" default="{mediaProperties.{mapping.source_property}.label}"/></f:then>
+                                <f:else>({mapping.source_property})</f:else>
+                            </f:if>
                         </td>
                         <td>
                             <f:alias map="{
