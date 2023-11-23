@@ -50,7 +50,6 @@ class QbankMedia {
       // Since the web component is used in a modal and therefore in outer frames, we have to import the module in the
       // top level scope. Not doing so causes issues in at least Firefox.
       // await topLevelModuleImport('@typo3/backend/form-engine/element/online-media-form-element.js');
-      console.log('QbankMedia');
       this.registerEvents();
     });
   }
@@ -62,12 +61,8 @@ class QbankMedia {
   }
 
   validateMedia(trigger, media) {
-    console.log('addMedia');
     const allowedExtensions = trigger.dataset.fileAllowed.split(',');
     const modalIllegalExtension = trigger.dataset.modalIllegalExtension;
-    console.log('allowedExtensions', allowedExtensions);
-    console.log('media.extension', media.extension);
-    console.log('modalIllegalExtension', modalIllegalExtension);
 
     if (allowedExtensions.indexOf(media.extension) === -1) {
       Notification.error(modalIllegalExtension.replace('{0}', media.extension), media.extension);
@@ -78,11 +73,8 @@ class QbankMedia {
   }
 
   addMedia(trigger, modalElement, media) {
-    console.log('addMedia');
     const irreObjectUid = trigger.dataset.fileIrreObject;
     const msgRequestFailed = trigger.dataset.modalRequestFailed ?? '';
-    console.log('irreObjectUid', irreObjectUid);
-    console.log('msgRequestFailed', msgRequestFailed);
 
     NProgress.start();
 
@@ -90,7 +82,6 @@ class QbankMedia {
       mediaId: media.mediaId
     }).then(async (response) => {
       const data = await response.resolve();
-      console.log('data', data);
       if (data.success && data.fileUid) {
         const message = {
           actionName: 'typo3:foreignRelation:insert',
@@ -111,11 +102,6 @@ class QbankMedia {
     const qbankHost = trigger.dataset.qbankHost || '';
     const qbankDeploymentsites = trigger.dataset.qbankDeploymentsites || '';
     const qbankToken = trigger.dataset.qbankToken || '';
-
-    console.log('qbankHost' , qbankHost);
-    console.log('qbankDeploymentsites' , qbankDeploymentsites);
-    // console.log('qbankToken' , qbankToken);
-
     const onlineMediaForm = document.createElement('iframe');
     onlineMediaForm.setAttribute('extensions', trigger.dataset.onlineMediaAllowed);
 
@@ -157,11 +143,7 @@ class QbankMedia {
         },
         qbMedia: 'qbMedia'
       },
-      onReady: function () {
-        console.log('qBankIframe onReady');
-      },
       onSelect: function (media, crop, previousUsage) {
-        console.log('qBankIframe onSelect');
         if (window.qbMedia.validateMedia(trigger, media)) {
           window.qbMedia.addMedia(trigger, modalElement, media)
         }

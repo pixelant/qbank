@@ -17,8 +17,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PropertyUtility
 {
-    protected static $filePropertyTypeConverterCache = [];
-
     /**
      * Returns the file properties array from $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['qbank']['fileProperties'].
      *
@@ -29,12 +27,10 @@ class PropertyUtility
         $properties = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['qbank']['fileProperties'] ?? [];
 
         foreach ($properties as $key => &$property) {
-            if (is_callable($property['label'])) {
-                $property['label'] = $property['label']() ?? $key;
-            }
-
             if (!isset($property['label'])) {
-                $property['label'] = $key;
+                $property['label'] = $GLOBALS['TCA']['sys_file']['columns'][$key]['label']
+                    ?? $GLOBALS['TCA']['sys_file_metadata']['columns'][$key]['label']
+                    ?? $key;
             }
         }
 
@@ -50,10 +46,6 @@ class PropertyUtility
      */
     public static function getTypeConverterForFileProperty(string $filePropertyName): TypeConverterInterface
     {
-        if (isset(self::$filePropertyTypeConverterCache[$filePropertyName])) {
-            return self::$filePropertyTypeConverterCache[$filePropertyName];
-        }
-
         $propertyConfiguration = self::getFileProperties()[$filePropertyName] ?? null;
 
         if (!isset($propertyConfiguration['typeConverter'])) {

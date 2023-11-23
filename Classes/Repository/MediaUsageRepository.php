@@ -81,7 +81,7 @@ class MediaUsageRepository extends AbstractRepository
 
         $result = [];
         foreach ($usages as $usage) {
-            if ($usage->getContext()['localID'] === $localId) {
+            if (($usage->getContext()['localID'] ?? '') === $localId) {
                 $result[] = $usage;
             }
         }
@@ -103,7 +103,7 @@ class MediaUsageRepository extends AbstractRepository
             return $this->api->media()->listUsages($qbankId);
         }
 
-        return $this->api->media()->listUsages($qbankId, $sessionSourceId);
+        return $this->api->media()->listUsages($qbankId, (string)$sessionSourceId);
     }
 
     /**

@@ -20,6 +20,7 @@ use Pixelant\Qbank\Service\Event\ExtractMediaPropertyValuesEvent;
 use Pixelant\Qbank\Service\Event\FilePropertyChangeEvent;
 use Pixelant\Qbank\Service\Event\FileReferenceUrlEvent;
 use Pixelant\Qbank\Service\Event\ResolvePageTitleEvent;
+use Pixelant\Qbank\Utility\MessageUtility;
 use Pixelant\Qbank\Utility\PropertyUtility;
 use Pixelant\Qbank\Utility\QbankUtility;
 use QBNK\QBank\API\Exception\RequestException;
@@ -37,6 +38,7 @@ use TYPO3\CMS\Core\Resource\FileReference;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
@@ -252,6 +254,17 @@ class QbankService implements SingletonInterface
                     1625149218
                 );
             }
+        } catch (\Throwable $th) {
+            MessageUtility::enqueueMessage(
+                sprintf(
+                    'Could not synchronize metadata for file [%s]: "%s"',
+                    $fileId,
+                    $th->getMessage()
+                ),
+                'QBank',
+                ContextualFeedbackSeverity::ERROR
+            );
+            return;
         }
 
         $metaDataMappings = GeneralUtility::makeInstance(MappingRepository::class)->findAllAsKeyValuePairs(false);
