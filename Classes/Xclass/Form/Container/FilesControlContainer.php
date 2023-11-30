@@ -114,9 +114,11 @@ class FilesControlContainer extends CoreFilesControlContainer
         /** @var ExtensionConfigurationManager $extensionConfigurationManager */
         $extensionConfigurationManager = GeneralUtility::makeInstance(ExtensionConfigurationManager::class);
 
-        $languageField = $GLOBALS['TCA'][$this->data['tableName']]['ctrl']['languageField'];
-
         $languageId = -1;
+        if (isset($GLOBALS['TCA'][$this->data['tableName']]['ctrl']['languageField'])) {
+            $languageField = $GLOBALS['TCA'][$this->data['tableName']]['ctrl']['languageField'];
+        }
+
         if ($languageField) {
             $languageId = (int)$this->data['databaseRow'][$languageField];
         }
