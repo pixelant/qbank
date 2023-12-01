@@ -1,4 +1,5 @@
 /*.idea
+.DS_Store
 /.Build/*
 /.fleet
 /.php-cs-fixer.cache
