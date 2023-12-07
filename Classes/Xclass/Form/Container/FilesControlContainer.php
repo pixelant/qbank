@@ -119,7 +119,7 @@ class FilesControlContainer extends CoreFilesControlContainer
             $languageField = $GLOBALS['TCA'][$this->data['tableName']]['ctrl']['languageField'];
         }
 
-        if ($languageField) {
+        if (isset($languageField)) {
             $languageId = (int)$this->data['databaseRow'][$languageField];
         }
 
