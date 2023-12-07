@@ -93,10 +93,21 @@
 	 * Returns an object with user AND potential connector config override for the current user
 	 */
             this.getUser = function() {
-                var delayed = new QBCJQ.Deferred(), userRequest = this.call("accounts/me"), object = {};
+                var delayed = new QBCJQ.Deferred(), userRequest = this.call("accounts/me"), settingsRequest = this.call("accounts/settings.json/connector_override"), object = {};
                 userRequest.then(function(user) {
                     object.user = user;
                     if (object.settings !== undefined) {
+                        delayed.resolve(object);
+                    }
+                });
+                settingsRequest.then(function(settings) {
+                    object.settings = JSON.parse(settings);
+                    if (object.user) {
+                        delayed.resolve(object);
+                    }
+                }, function() {
+                    object.settings = false;
+                    if (object.user) {
                         delayed.resolve(object);
                     }
                 });
